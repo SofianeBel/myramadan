@@ -25,6 +25,29 @@ const MOSQUE_SLUG_KEY = 'mosqueSlug'
 const MOSQUE_NAME_KEY = 'mosqueName'
 const CITY_KEY = 'userCity'
 const COUNTRY_KEY = 'userCountry'
+const LAT_KEY = 'userLat'
+const LON_KEY = 'userLon'
+const CALC_METHOD_KEY = 'calculationMethod'
+const DEFAULT_METHOD = 12 // UOIF
+
+const VALID_METHODS = [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+
+const CALCULATION_METHODS = [
+  { id: 12, name: 'UOIF', desc: 'Union des Organisations Islamiques de France' },
+  { id: 3, name: 'MWL', desc: 'Ligue Islamique Mondiale' },
+  { id: 2, name: 'ISNA', desc: "Societe Islamique d'Amerique du Nord" },
+  { id: 5, name: 'Egypte', desc: "Autorite Generale Egyptienne d'Arpentage" },
+  { id: 4, name: 'Umm Al-Qura', desc: 'Universite Umm Al-Qura, La Mecque' },
+  { id: 1, name: 'Karachi', desc: 'Universite des Sciences Islamiques, Karachi' },
+  { id: 7, name: 'Teheran', desc: "Institut de Geophysique, Universite de Teheran" },
+  { id: 8, name: 'Golfe', desc: 'Region du Golfe' },
+  { id: 9, name: 'Koweit', desc: 'Koweit' },
+  { id: 10, name: 'Qatar', desc: 'Qatar' },
+  { id: 11, name: 'Singapour', desc: 'Majlis Ugama Islam Singapura' },
+  { id: 13, name: 'DIYANET', desc: 'Direction des Affaires Religieuses (Turquie)' },
+  { id: 14, name: 'Russie', desc: 'Administration Spirituelle des Musulmans de Russie' },
+  { id: 15, name: 'Moonsighting', desc: 'Comite Moonsighting International' },
+]
 
 let debounceTimer = null
 
@@ -54,6 +77,73 @@ export function getCity() {
 /** Get saved country (fallback for Aladhan) */
 export function getCountry() {
   return storage.get(COUNTRY_KEY) || 'France'
+}
+
+/** Get saved calculation method (default: UOIF = 12) */
+export function getCalculationMethod() {
+  const val = storage.get(CALC_METHOD_KEY)
+  if (val !== null && VALID_METHODS.includes(val)) return val
+  return DEFAULT_METHOD
+}
+
+/** Save calculation method */
+export function saveCalculationMethod(method) {
+  storage.set(CALC_METHOD_KEY, method)
+}
+
+/** Get saved GPS coordinates or null */
+export function getUserCoords() {
+  const lat = storage.get(LAT_KEY)
+  const lon = storage.get(LON_KEY)
+  if (lat !== null && lon !== null) return { lat, lon }
+  return null
+}
+
+/** Save GPS coordinates to persistent storage */
+export function saveUserCoords(lat, lon) {
+  storage.set(LAT_KEY, lat)
+  storage.set(LON_KEY, lon)
+  userCoords = { lat, lon }
+}
+
+/**
+ * Request geolocation from the browser.
+ * Persists coordinates on success. Silent fallback on failure.
+ * Reuses cached coords if already available.
+ * @returns {Promise<{ lat: number, lon: number } | null>}
+ */
+export function requestGeolocation() {
+  // Reuse in-memory cache if available
+  if (userCoords) return Promise.resolve(userCoords)
+
+  // Reuse persisted coords
+  const saved = getUserCoords()
+  if (saved) {
+    userCoords = saved
+    return Promise.resolve(saved)
+  }
+
+  if (!navigator.geolocation) {
+    console.warn('[settings] Geolocation not available')
+    return Promise.resolve(null)
+  }
+
+  return new Promise((resolve) => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude
+        const lon = position.coords.longitude
+        saveUserCoords(lat, lon)
+        console.log(`[settings] Geolocation saved: ${lat}, ${lon}`)
+        resolve({ lat, lon })
+      },
+      (error) => {
+        console.warn('[settings] Geolocation denied:', error.message)
+        resolve(null)
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    )
+  })
 }
 
 // ─── Setters ─────────────────────────────────────────────────────
@@ -119,6 +209,7 @@ export function initSettings(onSave) {
   const tabList = document.getElementById('tab-list')
   const tabMap = document.getElementById('tab-map')
   const tabNotifs = document.getElementById('tab-notifs')
+  const tabCalc = document.getElementById('tab-calc')
 
   tabButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -129,9 +220,11 @@ export function initSettings(onSave) {
       if (tabList) tabList.classList.toggle('hidden', tab !== 'list')
       if (tabMap) tabMap.classList.toggle('hidden', tab !== 'map')
       if (tabNotifs) tabNotifs.classList.toggle('hidden', tab !== 'notifs')
+      if (tabCalc) tabCalc.classList.toggle('hidden', tab !== 'calc')
 
       if (tab === 'map') initMap()
       if (tab === 'notifs') populateNotifSettings()
+      if (tab === 'calc') populateCalcSettings()
     })
   })
 
@@ -147,6 +240,7 @@ export function initSettings(onSave) {
     if (tabList) tabList.classList.remove('hidden')
     if (tabMap) tabMap.classList.add('hidden')
     if (tabNotifs) tabNotifs.classList.add('hidden')
+    if (tabCalc) tabCalc.classList.add('hidden')
 
     // Pre-fill
     if (searchInput) searchInput.value = ''
@@ -155,6 +249,12 @@ export function initSettings(onSave) {
       selectedLabel.textContent = pendingName || 'Aucune mosquée sélectionnée'
       selectedLabel.style.opacity = pendingName ? '1' : '0.5'
       selectedLabel.style.color = ''
+    }
+
+    // Clear mosque button visibility
+    const clearMosqueBtn = document.getElementById('clear-mosque-btn')
+    if (clearMosqueBtn) {
+      clearMosqueBtn.style.display = pendingSlug ? 'inline-block' : 'none'
     }
 
     modal.classList.remove('hidden')
@@ -228,6 +328,23 @@ export function initSettings(onSave) {
   if (cancelBtn) {
     cancelBtn.addEventListener('click', () => {
       modal.classList.add('hidden')
+    })
+  }
+
+  // ── Clear mosque button ──
+  const clearMosqueBtn = document.getElementById('clear-mosque-btn')
+  if (clearMosqueBtn) {
+    clearMosqueBtn.addEventListener('click', () => {
+      pendingSlug = null
+      pendingName = null
+      storage.remove(MOSQUE_SLUG_KEY)
+      storage.remove(MOSQUE_NAME_KEY)
+      if (selectedLabel) {
+        selectedLabel.textContent = 'Horaires calcules (aucune mosquee)'
+        selectedLabel.style.opacity = '0.5'
+        selectedLabel.style.color = ''
+      }
+      clearMosqueBtn.style.display = 'none'
     })
   }
 
@@ -306,7 +423,7 @@ export function initSettings(onSave) {
       (position) => {
         const lat = position.coords.latitude
         const lon = position.coords.longitude
-        userCoords = { lat, lon }
+        saveUserCoords(lat, lon)
         centerMapOnUser(lat, lon)
       },
       (error) => {
@@ -525,6 +642,42 @@ export function initSettings(onSave) {
         })
       }
       notifSettingsInitialized = true
+    }
+  }
+
+  // ─── Calculation Method Settings (inside initSettings closure) ─────
+
+  let calcSettingsPopulated = false
+
+  function populateCalcSettings() {
+    const methodSelect = document.getElementById('calc-method-select')
+    const mosqueHint = document.getElementById('calc-mosque-hint')
+
+    if (methodSelect) {
+      // Populate options once
+      if (!calcSettingsPopulated) {
+        CALCULATION_METHODS.forEach((m) => {
+          const opt = document.createElement('option')
+          opt.value = m.id
+          opt.textContent = `${m.name} — ${m.desc}`
+          methodSelect.appendChild(opt)
+        })
+        calcSettingsPopulated = true
+      }
+
+      methodSelect.value = String(getCalculationMethod())
+
+      methodSelect.onchange = () => {
+        const newMethod = parseInt(methodSelect.value, 10)
+        saveCalculationMethod(newMethod)
+        // Invalidate Aladhan cache so next load fetches with new method
+        storage.remove('prayerTimesCache')
+      }
+    }
+
+    // Show/hide mosque hint
+    if (mosqueHint) {
+      mosqueHint.style.display = pendingSlug ? 'flex' : 'none'
     }
   }
 }
