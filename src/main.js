@@ -9,7 +9,7 @@
 import './style.css'
 import storage from './modules/storage.js'
 import { fetchMawaqitTimes, fetchPrayerTimes, fetchHijriDate } from './modules/prayer-times.js'
-import { updateFasting } from './modules/fasting.js'
+import { updateFasting, updateFastingReference } from './modules/fasting.js'
 import { startCountdown, stopCountdown } from './modules/countdown.js'
 import { renderPrayerSchedule } from './modules/schedule.js'
 import { updateDates } from './modules/hijri-date.js'
@@ -19,6 +19,7 @@ import { initSplash } from './modules/splash.js'
 import { initOnboarding } from './modules/onboarding.js'
 import { getMosqueSlug, getCity, getCountry, getCalculationMethod, getMethodAngles, getUserCoords, requestGeolocation, updateLocationDisplay, initSettings } from './modules/settings.js'
 import { startNotifications, stopNotifications, isNotificationsEnabled, loadPrefs, savePrefs } from './modules/notifications.js'
+import { getOffset, getOffsetDateForAladhan, initDateNavigation } from './modules/date-navigation.js'
 
 // Intervals
 let fastingInterval = null
@@ -28,8 +29,9 @@ let fastingInterval = null
  * Strategy: Mawaqit (if mosque set) → Aladhan (fallback)
  * Hijri date: always from Aladhan (Mawaqit doesn't provide it)
  */
-async function loadPrayerData(mosqueSlug) {
+async function loadPrayerData(mosqueSlug, offset = 0) {
   let timings = null
+  const isToday = offset === 0
   const method = getCalculationMethod()
   const angles = getMethodAngles()
   const coords = getUserCoords()
@@ -42,29 +44,38 @@ async function loadPrayerData(mosqueSlug) {
     angles,
   }
 
-  // 1. Try Mawaqit if a mosque is configured
-  if (mosqueSlug) {
+  // For non-today dates, Mawaqit doesn't support date queries → use Aladhan only
+  const aladhanDate = isToday ? null : getOffsetDateForAladhan()
+
+  // 1. Try Mawaqit only for today
+  if (mosqueSlug && isToday) {
     const mawaqitData = await fetchMawaqitTimes(mosqueSlug)
     if (mawaqitData) {
       timings = mawaqitData.timings
     }
   }
 
-  // 2. Fallback to Aladhan if no mosque or Mawaqit failed
+  // 2. Fallback (or non-today): Aladhan with optional date
   if (!timings) {
-    const aladhanData = await fetchPrayerTimes(locationParams)
+    const aladhanData = await fetchPrayerTimes(locationParams, aladhanDate)
     if (aladhanData) {
       timings = aladhanData.timings
-      // Aladhan also provides hijri date
-      updateDates(aladhanData.hijriDate)
+      updateDates(aladhanData.hijriDate, offset)
     }
   }
 
-  // 3. Always fetch Hijri date from Aladhan (even if Mawaqit provided times)
-  if (mosqueSlug) {
+  // 3. Hijri date from Aladhan
+  if (mosqueSlug && isToday && timings) {
+    // Mawaqit provided times for today — fetch Hijri separately
     const hijriDate = await fetchHijriDate(locationParams)
     if (hijriDate) {
-      updateDates(hijriDate)
+      updateDates(hijriDate, 0)
+    }
+  } else if (mosqueSlug && !isToday) {
+    // Mosque set but non-today — Hijri needs date param
+    const hijriDate = await fetchHijriDate(locationParams, aladhanDate)
+    if (hijriDate) {
+      updateDates(hijriDate, offset)
     }
   }
 
@@ -73,21 +84,44 @@ async function loadPrayerData(mosqueSlug) {
     return
   }
 
-  // 4. Refresh all UI modules with timings
-  renderPrayerSchedule(timings)
+  // 4. Render prayer schedule (mode-aware)
+  renderPrayerSchedule(timings, isToday)
 
-  updateFasting(timings.Fajr, timings.Maghrib)
-  if (fastingInterval) clearInterval(fastingInterval)
-  fastingInterval = setInterval(() => {
+  // 5. Today-only widgets
+  setTodayOnlyWidgetsVisible(isToday)
+
+  if (isToday) {
     updateFasting(timings.Fajr, timings.Maghrib)
-  }, 60_000) // Every minute
+    if (fastingInterval) clearInterval(fastingInterval)
+    fastingInterval = setInterval(() => {
+      updateFasting(timings.Fajr, timings.Maghrib)
+    }, 60_000)
 
-  stopCountdown()
-  startCountdown(timings)
+    stopCountdown()
+    startCountdown(timings)
 
-  // 5. Start notification check loop
-  stopNotifications()
-  startNotifications(timings)
+    stopNotifications()
+    startNotifications(timings)
+  } else {
+    // Show times as reference, no live progress
+    updateFastingReference(timings.Fajr, timings.Maghrib)
+    if (fastingInterval) { clearInterval(fastingInterval); fastingInterval = null }
+    stopCountdown()
+    stopNotifications()
+  }
+}
+
+/**
+ * Show/hide today-only widgets (countdown, fasting progress).
+ */
+function setTodayOnlyWidgetsVisible(isToday) {
+  const countdownCard = document.querySelector('.countdown-card')
+  if (countdownCard) {
+    countdownCard.style.opacity = isToday ? '' : '0.4'
+    countdownCard.style.pointerEvents = isToday ? '' : 'none'
+  }
+  const progressContainer = document.querySelector('.progress-container')
+  if (progressContainer) progressContainer.style.display = isToday ? '' : 'none'
 }
 
 /**
@@ -133,21 +167,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   const mosqueSlug = getMosqueSlug()
   await loadPrayerData(mosqueSlug)
 
-  // 5. Daily verse/hadith
-  updateDailyContent()
-
-  // 6. Interactive effects
-  setupInteractiveEffects()
-
-  // 7. Onboarding tour (first visit only)
-  setTimeout(() => initOnboarding(), 500)
-
-  // 8. Settings modal (re-fetches data on mosque change)
-  initSettings(async (newMosqueSlug) => {
-    await loadPrayerData(newMosqueSlug)
+  // 5. Date navigation (arrows to browse past/future prayer times)
+  initDateNavigation(async (offset) => {
+    const slug = getMosqueSlug()
+    await loadPrayerData(slug, offset)
   })
 
-  // 9. Quick-toggle reminder button
+  // 6. Daily verse/hadith
+  updateDailyContent()
+
+  // 7. Interactive effects
+  setupInteractiveEffects()
+
+  // 8. Onboarding tour (first visit only)
+  setTimeout(() => initOnboarding(), 500)
+
+  // 9. Settings modal (re-fetches data on mosque change, preserves date offset)
+  initSettings(async (newMosqueSlug) => {
+    await loadPrayerData(newMosqueSlug, getOffset())
+  })
+
+  // 10. Quick-toggle reminder button
   const reminderBtn = document.getElementById('reminder-btn')
   if (reminderBtn) {
     function updateReminderBtn() {

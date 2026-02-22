@@ -66,6 +66,32 @@ export function updateFasting(fajrTime, maghribTime) {
 }
 
 /**
+ * Show Suhoor/Iftar times as reference for a non-today date.
+ * No progress calculation — just display times.
+ * @param {string} fajrTime - "HH:MM" Fajr time
+ * @param {string} maghribTime - "HH:MM" Maghrib time
+ */
+export function updateFastingReference(fajrTime, maghribTime) {
+  const suhoorEl = document.getElementById('suhoor-time')
+  const iftarEl = document.getElementById('iftar-time')
+  const suhoorStatus = document.getElementById('suhoor-status')
+  const iftarStatus = document.getElementById('iftar-status')
+  const progressFill = document.querySelector('.progress-fill')
+  const progressPct = document.getElementById('progress-percentage')
+  const timeRemaining = document.getElementById('time-remaining')
+
+  if (!suhoorEl || !iftarEl) return
+
+  suhoorEl.textContent = fajrTime
+  iftarEl.textContent = maghribTime
+  if (suhoorStatus) suhoorStatus.textContent = '--'
+  if (iftarStatus) iftarStatus.textContent = '--'
+  if (progressFill) progressFill.style.width = '0%'
+  if (progressPct) progressPct.textContent = '--'
+  if (timeRemaining) timeRemaining.textContent = ''
+}
+
+/**
  * Format total minutes to human-readable string.
  * @param {number} totalMinutes
  * @returns {string}
