@@ -17,7 +17,7 @@ import { updateDailyContent } from './modules/daily-content.js'
 import { initTheme } from './modules/theme.js'
 import { initSplash } from './modules/splash.js'
 import { initOnboarding } from './modules/onboarding.js'
-import { getMosqueSlug, getCity, getCountry, getCalculationMethod, getUserCoords, requestGeolocation, updateLocationDisplay, initSettings } from './modules/settings.js'
+import { getMosqueSlug, getCity, getCountry, getCalculationMethod, getMethodAngles, getUserCoords, requestGeolocation, updateLocationDisplay, initSettings } from './modules/settings.js'
 import { startNotifications, stopNotifications, isNotificationsEnabled, loadPrefs, savePrefs } from './modules/notifications.js'
 
 // Intervals
@@ -31,6 +31,7 @@ let fastingInterval = null
 async function loadPrayerData(mosqueSlug) {
   let timings = null
   const method = getCalculationMethod()
+  const angles = getMethodAngles()
   const coords = getUserCoords()
   const locationParams = {
     lat: coords?.lat,
@@ -38,6 +39,7 @@ async function loadPrayerData(mosqueSlug) {
     city: getCity(),
     country: getCountry(),
     method,
+    angles,
   }
 
   // 1. Try Mawaqit if a mosque is configured

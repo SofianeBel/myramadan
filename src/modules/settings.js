@@ -32,21 +32,26 @@ const DEFAULT_METHOD = 12 // UOIF
 
 const VALID_METHODS = [1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
+/**
+ * Calculation methods list.
+ * `angles` (optional): real Fajr/Isha angles to override Aladhan's incorrect values.
+ * When angles are set, buildAladhanUrl() uses method=99 + methodSettings.
+ */
 const CALCULATION_METHODS = [
-  { id: 12, name: 'UOIF', desc: 'Union des Organisations Islamiques de France' },
-  { id: 3, name: 'MWL', desc: 'Ligue Islamique Mondiale' },
-  { id: 2, name: 'ISNA', desc: "Societe Islamique d'Amerique du Nord" },
-  { id: 5, name: 'Egypte', desc: "Autorite Generale Egyptienne d'Arpentage" },
-  { id: 4, name: 'Umm Al-Qura', desc: 'Universite Umm Al-Qura, La Mecque' },
-  { id: 1, name: 'Karachi', desc: 'Universite des Sciences Islamiques, Karachi' },
-  { id: 7, name: 'Teheran', desc: "Institut de Geophysique, Universite de Teheran" },
-  { id: 8, name: 'Golfe', desc: 'Region du Golfe' },
-  { id: 9, name: 'Koweit', desc: 'Koweit' },
-  { id: 10, name: 'Qatar', desc: 'Qatar' },
-  { id: 11, name: 'Singapour', desc: 'Majlis Ugama Islam Singapura' },
-  { id: 13, name: 'DIYANET', desc: 'Direction des Affaires Religieuses (Turquie)' },
+  { id: 12, name: 'UOIF', desc: 'Union des Organisations Islamiques de France (15°/15°)', angles: { fajr: 15, isha: 15 } },
+  { id: 3, name: 'MWL', desc: 'Ligue Islamique Mondiale (18°/17°)' },
+  { id: 2, name: 'ISNA', desc: "Societe Islamique d'Amerique du Nord (15°/15°)" },
+  { id: 5, name: 'Egypte', desc: "Autorite Generale Egyptienne d'Arpentage (19.5°/17.5°)" },
+  { id: 4, name: 'Umm Al-Qura', desc: 'Universite Umm Al-Qura, La Mecque (18.5°/90 min)' },
+  { id: 1, name: 'Karachi', desc: 'Universite des Sciences Islamiques, Karachi (18°/18°)' },
+  { id: 7, name: 'Teheran', desc: "Institut de Geophysique, Universite de Teheran (17.7°/14°)" },
+  { id: 8, name: 'Golfe', desc: 'Region du Golfe (19.5°/90 min)' },
+  { id: 9, name: 'Koweit', desc: 'Koweit (18°/17.5°)' },
+  { id: 10, name: 'Qatar', desc: 'Qatar (18°/90 min)' },
+  { id: 11, name: 'Singapour', desc: 'Majlis Ugama Islam Singapura (20°/18°)' },
+  { id: 13, name: 'DIYANET', desc: 'Direction des Affaires Religieuses, Turquie (18°/17°)' },
   { id: 14, name: 'Russie', desc: 'Administration Spirituelle des Musulmans de Russie' },
-  { id: 15, name: 'Moonsighting', desc: 'Comite Moonsighting International' },
+  { id: 15, name: 'Moonsighting', desc: 'Comite Moonsighting International (18°/18°)' },
 ]
 
 let debounceTimer = null
@@ -89,6 +94,16 @@ export function getCalculationMethod() {
 /** Save calculation method */
 export function saveCalculationMethod(method) {
   storage.set(CALC_METHOD_KEY, method)
+}
+
+/**
+ * Get custom angle overrides for the current method, if any.
+ * Returns { fajr, isha } or null if Aladhan's built-in angles are correct.
+ */
+export function getMethodAngles() {
+  const method = getCalculationMethod()
+  const entry = CALCULATION_METHODS.find((m) => m.id === method)
+  return entry?.angles || null
 }
 
 /** Get saved GPS coordinates or null */
