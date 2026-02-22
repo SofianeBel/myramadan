@@ -25,6 +25,7 @@ ehthumbs.db
 *.swo
 *~
 .claude/
+.claude.local.md
 
 # Logs
 *.log
