@@ -183,18 +183,32 @@ export async function fetchMawaqitTimes(mosqueSlug) {
 
 // ─── Aladhan API (fallback + Hijri date) ─────────────────────────
 
-/** Build Aladhan URL: use coords if available, fallback to city/country */
-function buildAladhanUrl({ lat, lon, city = 'Paris', country = 'France', method = 12 }) {
+/**
+ * Build Aladhan URL: use coords if available, fallback to city/country.
+ * When custom angles are provided, uses method=99 + methodSettings override
+ * (fixes Aladhan's incorrect angles for UOIF: 12° instead of real 15°).
+ */
+function buildAladhanUrl({ lat, lon, city = 'Paris', country = 'France', method = 12, angles = null }) {
+  let base
   if (lat != null && lon != null) {
-    return `${ALADHAN_BY_COORDS}?latitude=${lat}&longitude=${lon}&method=${method}`
+    base = `${ALADHAN_BY_COORDS}?latitude=${lat}&longitude=${lon}`
+  } else {
+    base = `${ALADHAN_BY_CITY}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}`
   }
-  return `${ALADHAN_BY_CITY}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=${method}`
+
+  if (angles && typeof angles.fajr === 'number' && typeof angles.isha === 'number') {
+    // Use custom method (99) with real angles override
+    // methodSettings format: fajr_angle, maghrib (null = sunset default), isha_angle
+    return `${base}&method=99&methodSettings=${angles.fajr},null,${angles.isha}`
+  }
+  return `${base}&method=${method}`
 }
 
 /** Build a cache fingerprint string for location params */
-function locationCacheKey({ lat, lon, city, country, method }) {
-  if (lat != null && lon != null) return `${lat},${lon},${method}`
-  return `${city},${country},${method}`
+function locationCacheKey({ lat, lon, city, country, method, angles }) {
+  const angleSuffix = angles ? `,${angles.fajr}/${angles.isha}` : ''
+  if (lat != null && lon != null) return `${lat},${lon},${method}${angleSuffix}`
+  return `${city},${country},${method}${angleSuffix}`
 }
 
 /**
