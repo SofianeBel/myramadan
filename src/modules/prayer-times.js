@@ -8,7 +8,8 @@
 import { fetch as tauriFetch } from '@tauri-apps/plugin-http'
 import storage from './storage.js'
 
-const ALADHAN_BASE = 'https://api.aladhan.com/v1/timingsByCity'
+const ALADHAN_BY_CITY = 'https://api.aladhan.com/v1/timingsByCity'
+const ALADHAN_BY_COORDS = 'https://api.aladhan.com/v1/timings'
 const MAWAQIT_SEARCH = 'https://mawaqit.net/api/2.0/mosque/search'
 const MAWAQIT_CACHE_KEY = 'mawaqitCache'
 const ALADHAN_CACHE_KEY = 'prayerTimesCache'
@@ -182,15 +183,28 @@ export async function fetchMawaqitTimes(mosqueSlug) {
 
 // ─── Aladhan API (fallback + Hijri date) ─────────────────────────
 
+/** Build Aladhan URL: use coords if available, fallback to city/country */
+function buildAladhanUrl({ lat, lon, city = 'Paris', country = 'France', method = 12 }) {
+  if (lat != null && lon != null) {
+    return `${ALADHAN_BY_COORDS}?latitude=${lat}&longitude=${lon}&method=${method}`
+  }
+  return `${ALADHAN_BY_CITY}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=${method}`
+}
+
+/** Build a cache fingerprint string for location params */
+function locationCacheKey({ lat, lon, city, country, method }) {
+  if (lat != null && lon != null) return `${lat},${lon},${method}`
+  return `${city},${country},${method}`
+}
+
 /**
  * Fetch Hijri date from Aladhan API.
- * @param {string} city
- * @param {string} country
+ * @param {{ lat?, lon?, city?, country?, method? }} params
  * @returns {Promise<Object|null>} Hijri date object
  */
-export async function fetchHijriDate(city = 'Paris', country = 'France') {
+export async function fetchHijriDate(params = {}) {
   try {
-    const url = `${ALADHAN_BASE}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=2`
+    const url = buildAladhanUrl(params)
     const response = await fetch(url)
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
@@ -210,20 +224,21 @@ export async function fetchHijriDate(city = 'Paris', country = 'France') {
 
 /**
  * Fetch prayer times from Aladhan API (fallback when no mosque is set).
- * @param {string} city
- * @param {string} country
+ * Uses GPS coordinates if available, otherwise city/country.
+ * @param {{ lat?, lon?, city?, country?, method? }} params
  * @returns {Promise<{ timings: Object, hijriDate: Object } | null>}
  */
-export async function fetchPrayerTimes(city = 'Paris', country = 'France') {
+export async function fetchPrayerTimes(params = {}) {
   const cached = loadCache(ALADHAN_CACHE_KEY)
   const today = new Date().toISOString().slice(0, 10)
+  const cacheKey = locationCacheKey(params)
 
-  if (cached && cached.date === today && cached.city === city && cached.country === country) {
+  if (cached && cached.date === today && cached.locationKey === cacheKey) {
     return cached.data
   }
 
   try {
-    const url = `${ALADHAN_BASE}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}&method=2`
+    const url = buildAladhanUrl(params)
     const response = await fetch(url)
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
@@ -241,8 +256,7 @@ export async function fetchPrayerTimes(city = 'Paris', country = 'France') {
 
     saveCache(ALADHAN_CACHE_KEY, {
       date: today,
-      city,
-      country,
+      locationKey: cacheKey,
       data: result,
     })
 
