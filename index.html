@@ -361,6 +361,9 @@
                 <button class="settings-tab" data-tab="notifs">
                     <i class="fa-solid fa-bell"></i> Rappels
                 </button>
+                <button class="settings-tab" data-tab="calc">
+                    <i class="fa-solid fa-calculator"></i> Calcul
+                </button>
             </div>
 
             <!-- Tab: List (text search) -->
@@ -450,6 +453,20 @@
                     </label>
                 </div>
 
+                <!-- Autostart toggle -->
+                <div class="notif-divider"></div>
+                <p class="notif-section-title">Systeme</p>
+
+                <div class="notif-setting-row">
+                    <label class="notif-label">
+                        <i class="fa-solid fa-power-off"></i> Lancer au demarrage
+                    </label>
+                    <label class="notif-toggle">
+                        <input type="checkbox" id="notif-autostart">
+                        <span class="notif-toggle-slider"></span>
+                    </label>
+                </div>
+
                 <!-- Per-prayer toggles -->
                 <div class="notif-divider"></div>
                 <p class="notif-section-title">Prieres individuelles</p>
@@ -464,7 +481,32 @@
                 </button>
             </div>
 
+            <!-- Tab: Calculation Method -->
+            <div class="settings-tab-content hidden" id="tab-calc">
+                <div id="calc-mosque-hint" class="calc-hint" style="display: none;">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span>Une mosquee est selectionnee. Les horaires proviennent de la mosquee. La methode ci-dessous s'applique en mode calcule (sans mosquee).</span>
+                </div>
+
+                <div class="notif-setting-row" style="flex-direction: column; align-items: stretch; gap: 8px;">
+                    <label class="notif-label">
+                        <i class="fa-solid fa-calculator"></i> Methode de calcul
+                    </label>
+                    <select id="calc-method-select" class="notif-select" style="width: 100%; padding: 10px 14px;">
+                        <!-- Options populated by JS -->
+                    </select>
+                </div>
+
+                <div class="notif-divider"></div>
+                <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
+                    La methode determine les angles utilises pour calculer Fajr et Isha. En France, la methode UOIF est recommandee.
+                </p>
+            </div>
+
             <p id="selected-mosque-name" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); opacity: 0.5; margin: 12px 0 0 0;">Aucune mosquée sélectionnée</p>
+            <button id="clear-mosque-btn" class="btn-text" style="font-size: 0.78rem; display: none; margin-top: 4px; color: var(--text-muted);">
+                <i class="fa-solid fa-xmark"></i> Dissocier la mosquee
+            </button>
             <div class="onboarding-controls">
                 <button id="settings-cancel" class="btn-text">Annuler</button>
                 <button id="settings-save" class="btn-primary btn-small">Enregistrer</button>

@@ -1692,6 +1692,26 @@ body {
     margin: 12px 0 8px;
 }
 
+/* Calculation method hint */
+.calc-hint {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--clr-gold-dim, rgba(212, 175, 55, 0.1));
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.calc-hint i {
+    color: var(--clr-gold, #D4AF37);
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
 .notif-section-title {
     font-size: 0.8rem;
     font-weight: 600;

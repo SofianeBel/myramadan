@@ -15,13 +15,24 @@ src-tauri/target/
 # OS files
 .DS_Store
 Thumbs.db
+Desktop.ini
+ehthumbs.db
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+.claude/
 
 # Logs
 *.log
+npm-debug.log*
+
+# Testing
+coverage/
 
 # Misc
-NUL
+*.tsbuildinfo
+.omc/

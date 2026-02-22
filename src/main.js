@@ -7,6 +7,7 @@
  */
 
 import './style.css'
+import storage from './modules/storage.js'
 import { fetchMawaqitTimes, fetchPrayerTimes, fetchHijriDate } from './modules/prayer-times.js'
 import { updateFasting } from './modules/fasting.js'
 import { startCountdown, stopCountdown } from './modules/countdown.js'
@@ -16,7 +17,7 @@ import { updateDailyContent } from './modules/daily-content.js'
 import { initTheme } from './modules/theme.js'
 import { initSplash } from './modules/splash.js'
 import { initOnboarding } from './modules/onboarding.js'
-import { getMosqueSlug, getCity, getCountry, updateLocationDisplay, initSettings } from './modules/settings.js'
+import { getMosqueSlug, getCity, getCountry, getCalculationMethod, getUserCoords, requestGeolocation, updateLocationDisplay, initSettings } from './modules/settings.js'
 import { startNotifications, stopNotifications, isNotificationsEnabled, loadPrefs, savePrefs } from './modules/notifications.js'
 
 // Intervals
@@ -29,6 +30,15 @@ let fastingInterval = null
  */
 async function loadPrayerData(mosqueSlug) {
   let timings = null
+  const method = getCalculationMethod()
+  const coords = getUserCoords()
+  const locationParams = {
+    lat: coords?.lat,
+    lon: coords?.lon,
+    city: getCity(),
+    country: getCountry(),
+    method,
+  }
 
   // 1. Try Mawaqit if a mosque is configured
   if (mosqueSlug) {
@@ -40,9 +50,7 @@ async function loadPrayerData(mosqueSlug) {
 
   // 2. Fallback to Aladhan if no mosque or Mawaqit failed
   if (!timings) {
-    const city = getCity()
-    const country = getCountry()
-    const aladhanData = await fetchPrayerTimes(city, country)
+    const aladhanData = await fetchPrayerTimes(locationParams)
     if (aladhanData) {
       timings = aladhanData.timings
       // Aladhan also provides hijri date
@@ -52,7 +60,7 @@ async function loadPrayerData(mosqueSlug) {
 
   // 3. Always fetch Hijri date from Aladhan (even if Mawaqit provided times)
   if (mosqueSlug) {
-    const hijriDate = await fetchHijriDate(getCity(), getCountry())
+    const hijriDate = await fetchHijriDate(locationParams)
     if (hijriDate) {
       updateDates(hijriDate)
     }
@@ -104,8 +112,14 @@ function setupInteractiveEffects() {
  * Main initialization sequence.
  */
 document.addEventListener('DOMContentLoaded', async () => {
+  // 0. Initialize persistent storage (loads from disk into memory cache)
+  await storage.init()
+
   // 1. Theme (restore before anything visual)
   initTheme()
+
+  // 1.5. Request geolocation (must complete before loading prayer data)
+  await requestGeolocation()
 
   // 2. Splash screen (waits for animation to complete)
   await initSplash()

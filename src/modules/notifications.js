@@ -5,7 +5,7 @@
  * - Pre-prayer notifications (X minutes before)
  * - At-prayer-time Adhan playback
  * - Iftar/Suhoor special notifications
- * - User preferences (localStorage)
+ * - User preferences (persistent storage via storage.js)
  */
 
 import {
@@ -14,6 +14,7 @@ import {
   sendNotification,
 } from '@tauri-apps/plugin-notification'
 import { timeToMinutes } from './prayer-times.js'
+import storage from './storage.js'
 
 // ─── Constants ──────────────────────────────────────────────────
 
@@ -55,12 +56,11 @@ let lastDateStr = ''
 
 // ─── Preferences ────────────────────────────────────────────────
 
-/** Load notification preferences from localStorage */
+/** Load notification preferences from persistent storage */
 export function loadPrefs() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { ...DEFAULT_PREFS }
-    const saved = JSON.parse(raw)
+    const saved = storage.get(STORAGE_KEY)
+    if (!saved) return { ...DEFAULT_PREFS }
     return {
       ...DEFAULT_PREFS,
       ...saved,
@@ -71,10 +71,10 @@ export function loadPrefs() {
   }
 }
 
-/** Save notification preferences to localStorage */
+/** Save notification preferences to persistent storage */
 export function savePrefs(prefs) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs))
+    storage.set(STORAGE_KEY, prefs)
   } catch { /* ignore */ }
 }
 
@@ -129,8 +129,12 @@ function playChime() {
   try {
     const chime = new Audio('/audio/notification.mp3')
     chime.volume = 0.8
-    chime.play().catch(() => {})
-  } catch { /* ignore */ }
+    chime.play().catch((err) => {
+      console.warn('[notifications] Chime play error:', err)
+    })
+  } catch (err) {
+    console.warn('[notifications] Chime creation error:', err)
+  }
 }
 
 /** Stop any currently playing Adhan audio */
@@ -270,11 +274,19 @@ export function isNotificationsEnabled() {
  */
 export function previewAdhan(key, duration = 10000) {
   stopAdhan()
-  if (!ADHAN_FILES[key]) return
+  if (!ADHAN_FILES[key]) {
+    console.warn('[notifications] No adhan file for key:', key)
+    return
+  }
 
-  currentAudio = new Audio(ADHAN_FILES[key])
+  const src = ADHAN_FILES[key]
+  console.log('[notifications] Preview adhan:', key, src)
+
+  currentAudio = new Audio(src)
   currentAudio.volume = 1.0
-  currentAudio.play().catch(() => {})
+  currentAudio.play().catch((err) => {
+    console.error('[notifications] Preview play error:', err)
+  })
 
   setTimeout(() => stopAdhan(), duration)
 }
