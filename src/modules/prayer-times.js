@@ -6,6 +6,7 @@
  */
 
 import { fetch as tauriFetch } from '@tauri-apps/plugin-http'
+import storage from './storage.js'
 
 const ALADHAN_BASE = 'https://api.aladhan.com/v1/timingsByCity'
 const MAWAQIT_SEARCH = 'https://mawaqit.net/api/2.0/mosque/search'
@@ -278,14 +279,13 @@ export function getPrayerList(timings) {
 
 function saveCache(key, data) {
   try {
-    localStorage.setItem(key, JSON.stringify(data))
+    storage.set(key, data)
   } catch (_) { /* ignore */ }
 }
 
 function loadCache(key) {
   try {
-    const raw = localStorage.getItem(key)
-    return raw ? JSON.parse(raw) : null
+    return storage.get(key)
   } catch (_) {
     return null
   }

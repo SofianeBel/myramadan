@@ -4,6 +4,8 @@
 
 import { searchMosques, searchMosquesByLocation } from './prayer-times.js'
 import { loadPrefs, savePrefs, stopAdhan, previewAdhan } from './notifications.js'
+import { enable as enableAutostart, disable as disableAutostart, isEnabled as isAutostartEnabled } from '@tauri-apps/plugin-autostart'
+import storage from './storage.js'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 
@@ -36,36 +38,36 @@ let userCoords = null // { lat, lon } cached after first geolocation
 
 /** Get saved mosque slug or null */
 export function getMosqueSlug() {
-  return localStorage.getItem(MOSQUE_SLUG_KEY) || null
+  return storage.get(MOSQUE_SLUG_KEY)
 }
 
 /** Get saved mosque display name or null */
 export function getMosqueName() {
-  return localStorage.getItem(MOSQUE_NAME_KEY) || null
+  return storage.get(MOSQUE_NAME_KEY)
 }
 
 /** Get saved city (fallback for Aladhan) */
 export function getCity() {
-  return localStorage.getItem(CITY_KEY) || 'Paris'
+  return storage.get(CITY_KEY) || 'Paris'
 }
 
 /** Get saved country (fallback for Aladhan) */
 export function getCountry() {
-  return localStorage.getItem(COUNTRY_KEY) || 'France'
+  return storage.get(COUNTRY_KEY) || 'France'
 }
 
 // ─── Setters ─────────────────────────────────────────────────────
 
 /** Save mosque selection */
 export function saveMosque(slug, name) {
-  localStorage.setItem(MOSQUE_SLUG_KEY, slug)
-  localStorage.setItem(MOSQUE_NAME_KEY, name)
+  storage.set(MOSQUE_SLUG_KEY, slug)
+  storage.set(MOSQUE_NAME_KEY, name)
 }
 
 /** Save city/country (used for Aladhan hijri date fallback) */
 export function saveLocation(city, country) {
-  localStorage.setItem(CITY_KEY, city)
-  localStorage.setItem(COUNTRY_KEY, country)
+  storage.set(CITY_KEY, city)
+  storage.set(COUNTRY_KEY, country)
 }
 
 // ─── Display ─────────────────────────────────────────────────────
@@ -485,6 +487,29 @@ export function initSettings(onSave) {
           savePrefs(prefs)
         }
         gridEl.appendChild(item)
+      }
+    }
+
+    // Autostart toggle
+    const autostartEl = document.getElementById('notif-autostart')
+    if (autostartEl) {
+      isAutostartEnabled().then((enabled) => {
+        autostartEl.checked = enabled
+      }).catch(() => {
+        autostartEl.checked = false
+      })
+
+      autostartEl.onchange = async () => {
+        try {
+          if (autostartEl.checked) {
+            await enableAutostart()
+          } else {
+            await disableAutostart()
+          }
+        } catch (err) {
+          console.warn('[settings] Autostart toggle error:', err)
+          autostartEl.checked = !autostartEl.checked
+        }
       }
     }
 
