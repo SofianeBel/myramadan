@@ -65,10 +65,46 @@ export async function searchMosques(query) {
       slug: m.slug || '',
       localisation: m.localisation || '',
       uuid: m.uuid || '',
+      latitude: m.latitude || null,
+      longitude: m.longitude || null,
+      proximity: m.proximity || null,
       times: m.times || null,
     }))
   } catch (err) {
     console.error('[prayer-times] Mawaqit search error:', err)
+    return []
+  }
+}
+
+/**
+ * Search nearby mosques on Mawaqit by GPS coordinates.
+ * @param {number} lat - Latitude
+ * @param {number} lon - Longitude
+ * @returns {Promise<Array<{ name, slug, localisation, uuid, latitude, longitude, proximity, times }>>}
+ */
+export async function searchMosquesByLocation(lat, lon) {
+  try {
+    const url = `${MAWAQIT_SEARCH}?lat=${lat}&lon=${lon}`
+    const response = await tauriFetch(url, { method: 'GET' })
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`)
+
+    const results = await response.json()
+
+    if (!Array.isArray(results)) return []
+
+    return results.map((m) => ({
+      name: m.name || m.label || '',
+      slug: m.slug || '',
+      localisation: m.localisation || '',
+      uuid: m.uuid || '',
+      latitude: m.latitude || null,
+      longitude: m.longitude || null,
+      proximity: m.proximity || null,
+      times: m.times || null,
+    }))
+  } catch (err) {
+    console.error('[prayer-times] Mawaqit geo search error:', err)
     return []
   }
 }

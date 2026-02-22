@@ -287,7 +287,7 @@
                             <span class="unit">Sec</span>
                         </div>
                     </div>
-                    <button class="btn-primary ripple-btn"><i class="fa-solid fa-bell bell-icon"></i> Activer le
+                    <button id="reminder-btn" class="btn-primary ripple-btn"><i class="fa-solid fa-bell bell-icon"></i> Activer le
                         rappel</button>
                 </div>
 
@@ -346,17 +346,125 @@
 
     <!-- Settings Modal -->
     <div id="settings-modal" class="onboarding-overlay hidden">
-        <div class="onboarding-tooltip" style="top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 360px;">
+        <div class="onboarding-tooltip settings-tooltip" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
             <h3>Paramètres</h3>
-            <p>Recherchez votre mosquée pour des horaires précis via Mawaqit.</p>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
-                <div>
+            <p>Recherchez votre mosquée par nom ou trouvez-en une proche sur la carte.</p>
+
+            <!-- Tab Switcher -->
+            <div class="settings-tabs">
+                <button class="settings-tab active" data-tab="list">
+                    <i class="fa-solid fa-mosque"></i> Mosquee
+                </button>
+                <button class="settings-tab" data-tab="map">
+                    <i class="fa-solid fa-map-location-dot"></i> Carte
+                </button>
+                <button class="settings-tab" data-tab="notifs">
+                    <i class="fa-solid fa-bell"></i> Rappels
+                </button>
+            </div>
+
+            <!-- Tab: List (text search) -->
+            <div class="settings-tab-content" id="tab-list">
+                <div style="margin-bottom: 12px;">
                     <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Rechercher une mosquée</label>
                     <input type="text" id="settings-mosque-search" placeholder="Nom ou ville..." style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none;">
                 </div>
                 <div id="mosque-results" style="max-height: 200px; overflow-y: auto; scrollbar-width: thin;"></div>
-                <p id="selected-mosque-name" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); opacity: 0.5; margin: 0;">Aucune mosquée sélectionnée</p>
             </div>
+
+            <!-- Tab: Map -->
+            <div class="settings-tab-content hidden" id="tab-map">
+                <div id="mosque-map"></div>
+            </div>
+
+            <!-- Tab: Notifications -->
+            <div class="settings-tab-content hidden" id="tab-notifs">
+
+                <!-- Master toggle -->
+                <div class="notif-setting-row">
+                    <label class="notif-label">
+                        <i class="fa-solid fa-bell"></i> Activer les rappels
+                    </label>
+                    <label class="notif-toggle">
+                        <input type="checkbox" id="notif-enabled">
+                        <span class="notif-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <!-- Advance time selector -->
+                <div class="notif-setting-row">
+                    <label class="notif-label">
+                        <i class="fa-solid fa-clock"></i> Rappel avant
+                    </label>
+                    <select id="notif-advance" class="notif-select">
+                        <option value="5">5 min</option>
+                        <option value="10" selected>10 min</option>
+                        <option value="15">15 min</option>
+                        <option value="30">30 min</option>
+                    </select>
+                </div>
+
+                <!-- Adhan choice (regular prayers) -->
+                <div class="notif-setting-row">
+                    <label class="notif-label">
+                        <i class="fa-solid fa-volume-high"></i> Adhan (prieres)
+                    </label>
+                    <select id="notif-adhan-regular" class="notif-select">
+                        <option value="makkah">Makkah</option>
+                        <option value="madina">Madina</option>
+                        <option value="none">Aucun</option>
+                    </select>
+                </div>
+
+                <!-- Adhan choice (Fajr) -->
+                <div class="notif-setting-row">
+                    <label class="notif-label">
+                        <i class="fa-solid fa-cloud-moon"></i> Adhan Fajr
+                    </label>
+                    <select id="notif-adhan-fajr" class="notif-select">
+                        <option value="fajr">Fajr special</option>
+                        <option value="makkah">Makkah</option>
+                        <option value="madina">Madina</option>
+                        <option value="none">Aucun</option>
+                    </select>
+                </div>
+
+                <!-- Iftar / Suhoor special notifications -->
+                <div class="notif-setting-row">
+                    <label class="notif-label">
+                        <i class="fa-solid fa-utensils"></i> Rappel Iftar
+                    </label>
+                    <label class="notif-toggle">
+                        <input type="checkbox" id="notif-iftar" checked>
+                        <span class="notif-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="notif-setting-row">
+                    <label class="notif-label">
+                        <i class="fa-solid fa-moon"></i> Rappel Suhoor
+                    </label>
+                    <label class="notif-toggle">
+                        <input type="checkbox" id="notif-suhoor" checked>
+                        <span class="notif-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <!-- Per-prayer toggles -->
+                <div class="notif-divider"></div>
+                <p class="notif-section-title">Prieres individuelles</p>
+
+                <div class="notif-prayer-grid" id="notif-prayer-toggles">
+                    <!-- Generated by JS -->
+                </div>
+
+                <!-- Preview / Test button -->
+                <button class="btn-primary btn-small notif-test-btn" id="notif-test" style="margin-top: 12px;">
+                    <i class="fa-solid fa-play"></i> Tester le son
+                </button>
+            </div>
+
+            <p id="selected-mosque-name" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); opacity: 0.5; margin: 12px 0 0 0;">Aucune mosquée sélectionnée</p>
             <div class="onboarding-controls">
                 <button id="settings-cancel" class="btn-text">Annuler</button>
                 <button id="settings-save" class="btn-primary btn-small">Enregistrer</button>

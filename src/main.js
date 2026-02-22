@@ -17,6 +17,7 @@ import { initTheme } from './modules/theme.js'
 import { initSplash } from './modules/splash.js'
 import { initOnboarding } from './modules/onboarding.js'
 import { getMosqueSlug, getCity, getCountry, updateLocationDisplay, initSettings } from './modules/settings.js'
+import { startNotifications, stopNotifications, isNotificationsEnabled, loadPrefs, savePrefs } from './modules/notifications.js'
 
 // Intervals
 let fastingInterval = null
@@ -73,6 +74,10 @@ async function loadPrayerData(mosqueSlug) {
 
   stopCountdown()
   startCountdown(timings)
+
+  // 5. Start notification check loop
+  stopNotifications()
+  startNotifications(timings)
 }
 
 /**
@@ -125,4 +130,27 @@ document.addEventListener('DOMContentLoaded', async () => {
   initSettings(async (newMosqueSlug) => {
     await loadPrayerData(newMosqueSlug)
   })
+
+  // 9. Quick-toggle reminder button
+  const reminderBtn = document.getElementById('reminder-btn')
+  if (reminderBtn) {
+    function updateReminderBtn() {
+      if (isNotificationsEnabled()) {
+        reminderBtn.classList.add('reminder-active')
+        reminderBtn.innerHTML = '<i class="fa-solid fa-bell bell-icon"></i> Rappel active'
+      } else {
+        reminderBtn.classList.remove('reminder-active')
+        reminderBtn.innerHTML = '<i class="fa-solid fa-bell bell-icon"></i> Activer le rappel'
+      }
+    }
+
+    updateReminderBtn()
+
+    reminderBtn.addEventListener('click', () => {
+      const prefs = loadPrefs()
+      prefs.enabled = !prefs.enabled
+      savePrefs(prefs)
+      updateReminderBtn()
+    })
+  }
 })

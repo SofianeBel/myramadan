@@ -904,24 +904,24 @@ body {
 }
 
 /* Highlighted (e.g. Maghrib/Iftar indicator, without being selected) */
-.prayer-item.highlight-iftar {
+.prayer-item.highlight-iftar:not(.selected) {
     border-color: var(--clr-gold);
     background: linear-gradient(to bottom, var(--clr-sand), var(--clr-sand-light));
 }
 
-.prayer-item.highlight-iftar .prayer-name span {
+.prayer-item.highlight-iftar:not(.selected) .prayer-name span {
     color: var(--clr-gold);
     font-weight: 700;
 }
 
 /* Highlighted Fasting Start (Suhoor/Fajr) */
-.prayer-item.highlight-suhoor {
+.prayer-item.highlight-suhoor:not(.selected) {
     border-color: #5D8AA8;
     /* Air Force Blue/Dawn color */
     background: linear-gradient(to bottom, #F0F4F8, #FFFFFF);
 }
 
-.prayer-item.highlight-suhoor .prayer-name span {
+.prayer-item.highlight-suhoor:not(.selected) .prayer-name span {
     color: #5D8AA8;
     font-weight: 700;
 }
@@ -1428,4 +1428,317 @@ body {
     background: var(--nav-hover) !important;
     box-shadow: 0 0 0 2px var(--clr-gold), 0 10px 20px rgba(0, 0, 0, 0.5) !important;
     opacity: 1 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Settings Modal — Map Tab & Tabs
+   ═══════════════════════════════════════════════════════════════════ */
+
+.settings-tooltip {
+    min-width: 460px !important;
+    max-width: 540px;
+    width: 90vw;
+}
+
+/* Tab Switcher */
+.settings-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--clr-sand);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 16px;
+}
+
+.settings-tab {
+    flex: 1;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.settings-tab:hover {
+    color: var(--text-main);
+}
+
+.settings-tab.active {
+    background: var(--bg-card);
+    color: var(--clr-gold);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .settings-tab.active,
+[data-theme="midnight"] .settings-tab.active,
+[data-theme="amoled"] .settings-tab.active {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--clr-gold);
+}
+
+.settings-tab-content.hidden {
+    display: none;
+}
+
+/* Map Container */
+#mosque-map {
+    height: 350px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--clr-sand-dark);
+    z-index: 1;
+}
+
+/* Dark mode: invert OSM tiles to dark scheme */
+[data-theme="dark"] #mosque-map .leaflet-tile-pane,
+[data-theme="midnight"] #mosque-map .leaflet-tile-pane,
+[data-theme="amoled"] #mosque-map .leaflet-tile-pane {
+    filter: brightness(0.65) contrast(1.2) saturate(0.3) hue-rotate(180deg) invert(1);
+}
+
+/* Dark mode: Leaflet zoom controls */
+[data-theme="dark"] .leaflet-control-zoom a,
+[data-theme="midnight"] .leaflet-control-zoom a,
+[data-theme="amoled"] .leaflet-control-zoom a {
+    background: rgba(20, 35, 58, 0.85) !important;
+    color: #F4EBD0 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Leaflet popup override for dark mode */
+[data-theme="dark"] .leaflet-popup-content-wrapper,
+[data-theme="midnight"] .leaflet-popup-content-wrapper,
+[data-theme="amoled"] .leaflet-popup-content-wrapper {
+    background: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="dark"] .leaflet-popup-tip,
+[data-theme="midnight"] .leaflet-popup-tip,
+[data-theme="amoled"] .leaflet-popup-tip {
+    background: var(--bg-card) !important;
+}
+
+[data-theme="dark"] .leaflet-popup-content .map-select-btn,
+[data-theme="midnight"] .leaflet-popup-content .map-select-btn,
+[data-theme="amoled"] .leaflet-popup-content .map-select-btn {
+    background: var(--clr-green) !important;
+}
+
+[data-theme="dark"] .leaflet-popup-content div[style*="color: #666"],
+[data-theme="midnight"] .leaflet-popup-content div[style*="color: #666"],
+[data-theme="amoled"] .leaflet-popup-content div[style*="color: #666"] {
+    color: var(--text-muted) !important;
+}
+
+[data-theme="dark"] .leaflet-popup-content div[style*="color: #1A4D2E"],
+[data-theme="midnight"] .leaflet-popup-content div[style*="color: #1A4D2E"],
+[data-theme="amoled"] .leaflet-popup-content div[style*="color: #1A4D2E"] {
+    color: var(--clr-gold) !important;
+}
+
+/* User location marker — blue pulsing dot */
+.user-location-marker {
+    width: 16px;
+    height: 16px;
+    background: #4285F4;
+    border: 3px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4);
+    animation: locationPulse 2s infinite;
+}
+
+@keyframes locationPulse {
+    0% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4); }
+    70% { box-shadow: 0 0 0 14px rgba(66, 133, 244, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+}
+
+/* Mosque marker icon */
+.mosque-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--clr-green, #1A4D2E);
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 14px;
+}
+
+.mosque-marker i {
+    line-height: 1;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Notification Settings
+   ═══════════════════════════════════════════════════════════════════ */
+
+.notif-setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(122, 139, 128, 0.15);
+}
+
+.notif-setting-row:last-of-type {
+    border-bottom: none;
+}
+
+.notif-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.notif-label i {
+    color: var(--clr-gold);
+    width: 18px;
+    text-align: center;
+}
+
+/* Toggle switch (iOS style) */
+.notif-toggle {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.notif-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.notif-toggle-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--clr-sand-dark);
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.notif-toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+.notif-toggle input:checked+.notif-toggle-slider {
+    background: var(--clr-green);
+}
+
+.notif-toggle input:checked+.notif-toggle-slider::before {
+    transform: translateX(20px);
+}
+
+/* Select dropdown */
+.notif-select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--clr-sand-dark);
+    background: var(--clr-sand);
+    color: var(--text-main);
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.notif-select:focus {
+    border-color: var(--clr-gold);
+}
+
+[data-theme="dark"] .notif-select {
+    background: rgba(30, 48, 77, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.notif-divider {
+    height: 1px;
+    background: rgba(122, 139, 128, 0.15);
+    margin: 12px 0 8px;
+}
+
+.notif-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+/* Per-prayer toggle grid */
+.notif-prayer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 16px;
+}
+
+.notif-prayer-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.notif-prayer-item span {
+    color: var(--text-main);
+}
+
+/* Notification test button */
+.notif-test-btn {
+    width: 100%;
+}
+
+/* Active reminder button state */
+.btn-primary.reminder-active {
+    background: var(--clr-gold);
+    color: var(--clr-dark-green);
+}
+
+.btn-primary.reminder-active .bell-icon {
+    animation: bell-ring 0.5s ease-in-out;
+}
+
+@keyframes bell-ring {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    50% { transform: rotate(-15deg); }
+    75% { transform: rotate(10deg); }
 }
