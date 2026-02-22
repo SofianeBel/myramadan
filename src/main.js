@@ -118,8 +118,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 1. Theme (restore before anything visual)
   initTheme()
 
-  // 1.5. Request geolocation (fire-and-forget, runs during splash)
-  requestGeolocation()
+  // 1.5. Request geolocation (must complete before loading prayer data)
+  await requestGeolocation()
 
   // 2. Splash screen (waits for animation to complete)
   await initSplash()

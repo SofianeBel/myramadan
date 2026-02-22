@@ -337,8 +337,6 @@ export function initSettings(onSave) {
     clearMosqueBtn.addEventListener('click', () => {
       pendingSlug = null
       pendingName = null
-      storage.remove(MOSQUE_SLUG_KEY)
-      storage.remove(MOSQUE_NAME_KEY)
       if (selectedLabel) {
         selectedLabel.textContent = 'Horaires calcules (aucune mosquee)'
         selectedLabel.style.opacity = '0.5'
@@ -353,6 +351,9 @@ export function initSettings(onSave) {
     saveBtn.addEventListener('click', () => {
       if (pendingSlug && pendingName) {
         saveMosque(pendingSlug, pendingName)
+      } else if (!pendingSlug) {
+        storage.remove(MOSQUE_SLUG_KEY)
+        storage.remove(MOSQUE_NAME_KEY)
       }
 
       updateLocationDisplay()

@@ -12,9 +12,9 @@
     "security": {
       "csp": {
         "default-src": "'self'",
-        "connect-src": "ipc: http://ipc.localhost",
+        "connect-src": "ipc: http://ipc.localhost https://api.aladhan.com",
         "media-src": "'self'",
-        "style-src": "'self' 'unsafe-inline' https://fonts.googleapis.com",
+        "style-src": "'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
         "img-src": "'self' https://*.tile.openstreetmap.org data: blob:",
         "font-src": "'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com data:"
       }
