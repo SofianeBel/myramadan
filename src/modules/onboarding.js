@@ -2,6 +2,8 @@
  * onboarding.js — Interactive guided tour (4 steps)
  */
 
+import storage from './storage.js'
+
 const tourSteps = [
   {
     title: 'Bienvenue sur GuideME',
@@ -35,7 +37,7 @@ let currentStep = 0
  * Start the onboarding tour (only on first visit).
  */
 export function initOnboarding() {
-  if (localStorage.getItem('tourCompleted') === 'true') return
+  if (storage.get('tourCompleted') === true) return
 
   const overlay = document.getElementById('onboarding-overlay')
   const btnNext = document.getElementById('btn-next-tour')
@@ -147,5 +149,5 @@ function endTour() {
     el.classList.remove('tour-highlight')
   })
 
-  localStorage.setItem('tourCompleted', 'true')
+  storage.set('tourCompleted', true)
 }

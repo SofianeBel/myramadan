@@ -7,6 +7,7 @@
  */
 
 import './style.css'
+import storage from './modules/storage.js'
 import { fetchMawaqitTimes, fetchPrayerTimes, fetchHijriDate } from './modules/prayer-times.js'
 import { updateFasting } from './modules/fasting.js'
 import { startCountdown, stopCountdown } from './modules/countdown.js'
@@ -104,6 +105,9 @@ function setupInteractiveEffects() {
  * Main initialization sequence.
  */
 document.addEventListener('DOMContentLoaded', async () => {
+  // 0. Initialize persistent storage (loads from disk into memory cache)
+  await storage.init()
+
   // 1. Theme (restore before anything visual)
   initTheme()
 

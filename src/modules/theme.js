@@ -1,6 +1,8 @@
 /**
- * theme.js — Dark/Light theme toggle with localStorage persistence
+ * theme.js — Dark/Light theme toggle with persistent storage
  */
+
+import storage from './storage.js'
 
 /**
  * Initialize theme from saved preference and set up toggle.
@@ -10,7 +12,7 @@ export function initTheme() {
   const rootElement = document.documentElement
 
   // Restore saved theme (default: dark)
-  const savedTheme = localStorage.getItem('theme') || 'dark'
+  const savedTheme = storage.get('theme') || 'dark'
   rootElement.setAttribute('data-theme', savedTheme)
   updateThemeIcon(savedTheme === 'dark')
 
@@ -21,7 +23,7 @@ export function initTheme() {
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
 
       rootElement.setAttribute('data-theme', newTheme)
-      localStorage.setItem('theme', newTheme)
+      storage.set('theme', newTheme)
       updateThemeIcon(newTheme === 'dark')
     })
   }
