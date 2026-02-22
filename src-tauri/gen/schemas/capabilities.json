@@ -1,0 +1,1 @@
+{"main-capability":{"identifier":"main-capability","description":"Capability for the main window","local":true,"windows":["main"],"permissions":["core:default",{"identifier":"http:default","allow":[{"url":"https://mawaqit.net/**"},{"url":"https://api.aladhan.com/**"}]},"store:default"]}}

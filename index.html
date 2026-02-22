@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GuideME - Ramadan Edition</title>
+    <link rel="stylesheet" href="/src/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="splash-screen">
+        <div class="splash-content">
+            <svg class="splash-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <!-- Animated Moon Path -->
+                <path class="moon-path" d="M50 15 A35 35 0 1 0 85 50 A25 25 0 1 1 50 15 Z" />
+                <!-- Animated Stars -->
+                <circle class="star star-1" cx="75" cy="25" r="2" />
+                <circle class="star star-2" cx="87" cy="42" r="1.5" />
+                <circle class="star star-3" cx="60" cy="12" r="1" />
+            </svg>
+            <h1 class="splash-title">GuideME</h1>
+            <p class="splash-subtitle">Ramadan Edition</p>
+        </div>
+    </div>
+
+    <div class="app-container" style="opacity: 0;"> <!-- Hidden initially via CSS until JS reveals it -->
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <svg class="sidebar-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="28"
+                    height="28">
+                    <path fill="currentColor" d="M50 15 A35 35 0 1 0 85 50 A25 25 0 1 1 50 15 Z" />
+                </svg>
+                <span>GuideME</span>
+            </div>
+
+            <nav class="menu">
+                <a href="#" class="menu-item active">
+                    <i class="fa-solid fa-house"></i>
+                    <span>Tableau de bord</span>
+                    <div class="menu-item-bg"></div>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>Horaires</span>
+                    <div class="menu-item-bg"></div>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-book-quran"></i>
+                    <span>Coran & Invocations</span>
+                    <div class="menu-item-bg"></div>
+                </a>
+                <a href="#" class="menu-item">
+                    <i class="fa-solid fa-compass"></i>
+                    <span>Qibla</span>
+                    <div class="menu-item-bg"></div>
+                </a>
+            </nav>
+
+            <div class="bottom-menu">
+                <a href="#" class="menu-item" id="theme-toggle">
+                    <i class="fa-solid fa-moon anim-spin-hover"></i>
+                    <span>Mode Sombre</span>
+                    <div class="menu-item-bg"></div>
+                </a>
+                <a href="#" class="menu-item" id="settings-btn">
+                    <i class="fa-solid fa-gear anim-spin-hover"></i>
+                    <span>Paramètres</span>
+                    <div class="menu-item-bg"></div>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sahara Night Background (Visible only in dark mode) -->
+            <div class="sahara-bg">
+                <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+
+                    <!-- Celestial Panning Group (Stars and Moon) -->
+                    <g class="celestial-sky">
+                        <!-- Stars -->
+                        <g class="sahara-stars">
+                            <!-- Star Field (Small and varying opacities) -->
+                            <circle cx="200" cy="150" r="3" fill="#FFF" class="star star-1" />
+                            <circle cx="450" cy="80" r="3.5" fill="#FFF" class="star star-2" />
+                            <circle cx="800" cy="220" r="2.5" fill="#FFF" class="star star-3" />
+                            <circle cx="1100" cy="100" r="4" fill="#FFF" class="star star-1" />
+                            <circle cx="1500" cy="180" r="2" fill="#FFF" class="star star-2" />
+                            <circle cx="1750" cy="90" r="3" fill="#FFF" class="star star-3" />
+                            <circle cx="100" cy="350" r="3.5" fill="#FFF" class="star star-1" />
+                            <circle cx="350" cy="420" r="2" fill="#FFF" class="star star-2" />
+                            <circle cx="650" cy="310" r="3.2" fill="#FFF" class="star star-3" />
+                            <circle cx="950" cy="450" r="2.8" fill="#FFF" class="star star-1" />
+                            <circle cx="1300" cy="380" r="3.5" fill="#FFF" class="star star-2" />
+                            <circle cx="1650" cy="480" r="2.5" fill="#FFF" class="star star-3" />
+                            <circle cx="1850" cy="250" r="3.5" fill="#FFF" class="star star-1" />
+                            <circle cx="500" cy="200" r="3" fill="#FFF" class="star star-2" />
+                            <circle cx="1400" cy="120" r="2.5" fill="#FFF" class="star star-3" />
+                        </g>
+
+                        <!-- Moon (Sized down, crescent) -->
+                        <path class="sahara-moon" d="M 1200 200 A 35 35 0 1 0 1235 235 A 25 25 0 1 1 1200 200 Z"
+                            fill="#F4EBD0" filter="drop-shadow(0 0 15px rgba(244, 235, 208, 0.4))" />
+                    </g>
+
+                    <!-- Back Dunes (Raised to be visible) -->
+                    <path class="dune dune-back" d="M0 600 Q480 300 960 600 T1920 500 L1920 1080 L0 1080 Z"
+                        fill="#1A2A42" />
+
+                    <!-- Mid Dunes -->
+                    <path class="dune dune-mid" d="M0 750 Q600 450 1200 750 T1920 650 L1920 1080 L0 1080 Z"
+                        fill="#122036" />
+
+                    <!-- Front Dunes -->
+                    <path class="dune dune-front" d="M-100 1080 Q400 600 900 850 T2000 800 L2000 1080 Z"
+                        fill="#0A1526" />
+
+                    <!-- Bedouin Tent -->
+                    <g transform="translate(300, 715) scale(4)">
+                        <!-- Tent -->
+                        <path d="M0 10 L10 0 L20 10 L15 10 L15 15 L5 15 L5 10 Z" fill="#060C17" />
+                        <!-- Tent lines/ropes -->
+                        <path d="M10 0 L-4 15 M10 0 L24 15" stroke="#FFFFFF" stroke-width="0.5" opacity="0.2" />
+                        <!-- Campfire glow -->
+                        <circle cx="30" cy="14" r="3" fill="#FF8C00" opacity="0.5" filter="blur(2px)" />
+                        <!-- Campfire flame -->
+                        <path class="fire-flicker" d="M30 15 Q29 11 30 9 Q31 11 30 15 Z" fill="#FFB020" />
+                    </g>
+
+                    <!-- Camels driving across the dune -->
+                    <g transform="translate(1300, 600) scale(1.5)" fill="#060C17">
+                        <!-- Camel 1 -->
+                        <path d="M10 15 C8 10 12 5 15 8 C18 10 16 15 16 15 L18 25 L16 25 L14 18 L12 25 L10 25 Z" />
+                        <!-- Camel 1 legs detailing -->
+                        <path d="M12 25 L12 28 M14 25 L14 28 M16 25 L16 28 M18 25 L18 28" stroke="#060C17"
+                            stroke-width="1.5" />
+                        <!-- Camel 2 (smaller/behind) -->
+                        <g transform="translate(18, 5) scale(0.8)">
+                            <path d="M10 15 C8 10 12 5 15 8 C18 10 16 15 16 15 L18 25 L16 25 L14 18 L12 25 L10 25 Z" />
+                            <path d="M12 25 L12 28 M14 25 L14 28 M16 25 L16 28 M18 25 L18 28" stroke="#060C17"
+                                stroke-width="1.5" />
+                        </g>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Sahara Day Background (Visible in light mode) -->
+            <div class="sahara-bg-light">
+                <svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Celestial Panning Group (Sun and birds) -->
+                    <g class="celestial-sky">
+                        <!-- Sun -->
+                        <circle cx="1200" cy="200" r="45" fill="#E5B83B"
+                            filter="drop-shadow(0 0 25px rgba(229, 184, 59, 0.5))" />
+
+                        <!-- Birds -->
+                        <g fill="#A08C6D" transform="scale(0.8)">
+                            <path d="M400 300 Q410 290 420 300 Q410 295 400 300 Z" />
+                            <path d="M430 280 Q440 270 450 280 Q440 275 430 280 Z" />
+                            <path d="M380 270 Q390 260 400 270 Q390 265 380 270 Z" />
+                            <path d="M1500 250 Q1510 240 1520 250 Q1510 245 1500 250 Z" />
+                            <path d="M1450 220 Q1460 210 1470 220 Q1460 215 1450 220 Z" />
+                        </g>
+                    </g>
+
+                    <!-- Back Dunes -->
+                    <path class="dune dune-back" d="M0 600 Q480 300 960 600 T1920 500 L1920 1080 L0 1080 Z"
+                        fill="#E5D8BC" />
+
+                    <!-- Mid Dunes -->
+                    <path class="dune dune-mid" d="M0 750 Q600 450 1200 750 T1920 650 L1920 1080 L0 1080 Z"
+                        fill="#D1C5A8" />
+
+                    <!-- Front Dunes -->
+                    <path class="dune dune-front" d="M-100 1080 Q400 600 900 850 T2000 800 L2000 1080 Z"
+                        fill="#C1B494" />
+
+                    <!-- Veiled man and camels driving across the dune -->
+                    <g transform="translate(1300, 600) scale(1.5)" fill="#8A744C">
+                        <!-- Veiled Man -->
+                        <path d="M-22 25 L-20 12 Q-17 8 -15 12 L-14 25 Z" /> <!-- body cloak -->
+                        <circle cx="-18" cy="8" r="3.5" /> <!-- head -->
+                        <path d="M-20 7 Q-15 5 -12 10" fill="none" stroke="#8A744C" stroke-width="1.5" />
+                        <!-- veil/scarf flowing -->
+                        <path d="M-20 25 L-20 30 M-16 25 L-16 30" stroke="#8A744C" stroke-width="1.5" /> <!-- legs -->
+                        <path d="M-15 15 Q-10 18 -5 25" stroke="#8A744C" stroke-width="1" fill="none" /> <!-- stick -->
+
+                        <!-- Leash to camel 1 -->
+                        <path d="M-15 14 Q0 22 10 15" stroke="#8A744C" fill="none" stroke-width="0.7" />
+
+                        <!-- Camel 1 -->
+                        <path d="M10 15 C8 10 12 5 15 8 C18 10 16 15 16 15 L18 25 L16 25 L14 18 L12 25 L10 25 Z" />
+                        <!-- Camel 1 legs detailing -->
+                        <path d="M12 25 L12 29 M14 25 L14 29 M16 25 L16 29 M18 25 L18 29" stroke="#8A744C"
+                            stroke-width="1.5" />
+
+                        <!-- Leash to camel 2 -->
+                        <path d="M18 15 Q25 22 28 15" stroke="#8A744C" fill="none" stroke-width="0.7" />
+
+                        <!-- Camel 2 (smaller/behind) -->
+                        <g transform="translate(18, 5) scale(0.8)">
+                            <path d="M10 15 C8 10 12 5 15 8 C18 10 16 15 16 15 L18 25 L16 25 L14 18 L12 25 L10 25 Z" />
+                            <path d="M12 25 L12 29 M14 25 L14 29 M16 25 L16 29 M18 25 L18 29" stroke="#8A744C"
+                                stroke-width="1.5" />
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <!-- Header -->
+            <header class="top-header animate-entry" style="--anim-delay: 0.1s;">
+                <div class="date-info">
+                    <h1 id="gregorian-date">Journée actuelle</h1>
+                    <p id="hijri-date">Ramadan 1445</p>
+                </div>
+                <div class="user-profile">
+                    <div class="location interactive-element">
+                        <i class="fa-solid fa-location-dot anim-bounce-hover"></i>
+                        <span>Paris, France</span>
+                    </div>
+                    <div class="avatar interactive-element">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+
+                <!-- Fasting Card (Suhoor/Iftar) -->
+                <div class="card premium-card fasting-card animate-entry" style="--anim-delay: 0.2s;">
+                    <div class="card-header">
+                        <h2>Temps de Jeûne</h2>
+                        <i class="fa-solid fa-utensils floating-icon"></i>
+                    </div>
+
+                    <div class="fasting-times">
+                        <div class="time-block suhoor">
+                            <span class="label">Début (Suhoor)</span>
+                            <span class="time" id="suhoor-time">--:--</span>
+                            <span class="status" id="suhoor-status">--</span>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="time-block iftar">
+                            <span class="label">Rupture (Iftar)</span>
+                            <span class="time" id="iftar-time">--:--</span>
+                            <span class="status" id="iftar-status">--</span>
+                        </div>
+                    </div>
+
+                    <div class="progress-container">
+                        <div class="progress-labels">
+                            <span>Temps écoulé</span>
+                            <span id="progress-percentage">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                        <p class="time-remaining" id="time-remaining">Chargement...</p>
+                    </div>
+                </div>
+
+                <!-- Next Prayer Countdown -->
+                <div class="card countdown-card animate-entry" style="--anim-delay: 0.3s;">
+                    <div class="card-header">
+                        <h2>Prochaine Prière</h2>
+                        <span class="badge breathing-badge" id="next-prayer-badge">--</span>
+                    </div>
+                    <div class="countdown-display">
+                        <div class="time-unit pop-in" style="--anim-delay: 0.4s;">
+                            <span class="number" id="cd-hours">--</span>
+                            <span class="unit">Heures</span>
+                        </div>
+                        <span class="colon blink">:</span>
+                        <div class="time-unit pop-in" style="--anim-delay: 0.5s;">
+                            <span class="number" id="cd-minutes">--</span>
+                            <span class="unit">Min</span>
+                        </div>
+                        <span class="colon blink">:</span>
+                        <div class="time-unit pop-in" style="--anim-delay: 0.6s;">
+                            <span class="number" id="cd-seconds">--</span>
+                            <span class="unit">Sec</span>
+                        </div>
+                    </div>
+                    <button class="btn-primary ripple-btn"><i class="fa-solid fa-bell bell-icon"></i> Activer le
+                        rappel</button>
+                </div>
+
+                <!-- Daily Schedule -->
+                <div class="card schedule-card full-width animate-entry" style="--anim-delay: 0.4s;">
+                    <div class="card-header">
+                        <h2>Horaires du jour</h2>
+                        <div class="date-selector interactive-element">
+                            <i class="fa-solid fa-chevron-left"></i>
+                            <span>Aujourd'hui</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </div>
+                    </div>
+
+                    <div class="prayer-list" id="prayer-list">
+                        <!-- Dynamically generated by schedule.js -->
+                    </div>
+
+                    <!-- Legend Section -->
+                    <div class="schedule-legend">
+                        <div class="legend-item">
+                            <span class="legend-color color-completed"></span>
+                            <span class="legend-text">Passée</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color color-active"></span>
+                            <span class="legend-text">Prière en cours</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color color-selected"></span>
+                            <span class="legend-text">Sélectionnée</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color color-suhoor"></span>
+                            <span class="legend-text">Début du jeûne</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color color-iftar"></span>
+                            <span class="legend-text">Rupture du jeûne</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Daily Quote / Hadith -->
+                <div class="card quote-card full-width animate-entry" style="--anim-delay: 0.5s;">
+                    <div class="quote-icon floating-icon"><i class="fa-solid fa-quote-left"></i></div>
+                    <div class="quote-content">
+                        <p class="arabic-text" id="daily-arabic"></p>
+                        <p class="translation" id="daily-translation"></p>
+                        <span class="reference" id="daily-reference"></span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="onboarding-overlay hidden">
+        <div class="onboarding-tooltip" style="top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 360px;">
+            <h3>Paramètres</h3>
+            <p>Recherchez votre mosquée pour des horaires précis via Mawaqit.</p>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                <div>
+                    <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Rechercher une mosquée</label>
+                    <input type="text" id="settings-mosque-search" placeholder="Nom ou ville..." style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none;">
+                </div>
+                <div id="mosque-results" style="max-height: 200px; overflow-y: auto; scrollbar-width: thin;"></div>
+                <p id="selected-mosque-name" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); opacity: 0.5; margin: 0;">Aucune mosquée sélectionnée</p>
+            </div>
+            <div class="onboarding-controls">
+                <button id="settings-cancel" class="btn-text">Annuler</button>
+                <button id="settings-save" class="btn-primary btn-small">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Overlay -->
+    <div id="onboarding-overlay" class="onboarding-overlay hidden">
+        <div class="onboarding-tooltip">
+            <h3 id="onboarding-title">Bienvenue !</h3>
+            <p id="onboarding-text">Suivez ce guide rapide pour découvrir les fonctionnalités.</p>
+            <div class="onboarding-controls">
+                <button id="btn-skip-tour" class="btn-text">Passer</button>
+                <button id="btn-next-tour" class="btn-primary btn-small">Suivant</button>
+            </div>
+            <div class="onboarding-dots">
+                <!-- Dots generated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,1431 @@
+:root {
+    /* Base Color Palette (Light) */
+    --clr-dark-green: #0B2B1B;
+    --clr-green: #1A4D2E;
+    --clr-light-green: #296D44;
+    --clr-gold: #D4AF37;
+    --clr-gold-light: #E5B83B;
+    --clr-gold-dim: rgba(212, 175, 55, 0.2);
+    --clr-sand: #F4EBD0;
+    --clr-sand-light: #FDFBF7;
+    --clr-sand-dark: #D1C5A8;
+
+    /* UI Colors */
+    --bg-main: var(--clr-sand-light);
+    --bg-sidebar: var(--clr-dark-green);
+    --bg-card: #FFFFFF;
+    --text-main: var(--clr-dark-green);
+    --text-light: var(--clr-sand);
+    --text-muted: #7A8B80;
+    --nav-hover: rgba(255, 255, 255, 0.05);
+
+    --shadow-sm: 0 4px 6px rgba(11, 43, 27, 0.05);
+    --shadow-md: 0 10px 20px rgba(11, 43, 27, 0.08);
+    --shadow-gold: 0 8px 16px rgba(212, 175, 55, 0.15);
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-full: 9999px;
+
+    --font-main: 'Outfit', sans-serif;
+}
+
+[data-theme="dark"] {
+    /* UI Colors (Sahara Night Theme) */
+    --bg-main: #0B1320;
+    /* Deep twilight blue */
+    --bg-sidebar: rgba(11, 19, 32, 0.85);
+    /* Translucent sidebar */
+    --bg-card: rgba(20, 35, 58, 0.55);
+    /* Glassmorphism card */
+    --text-main: #F4EBD0;
+    /* Sand color for main text */
+    --text-muted: #8CA0BE;
+    /* Muted blue-grey */
+    --nav-hover: rgba(212, 175, 55, 0.15);
+
+    --shadow-sm: 0 8px 16px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 16px 32px rgba(0, 0, 0, 0.6);
+
+    /* Modify specific sand elements for dark mode */
+    --clr-sand: rgba(30, 48, 77, 0.6);
+    /* Translucent dark blue for badges/secondary cards */
+    --clr-sand-dark: rgba(45, 68, 105, 0.8);
+
+    /* Used for glassmorphism */
+    --glass-blur: blur(12px);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* ---------------------------------
+   1. SPLASH SCREEN (LAUNCH ANIMATION) 
+   --------------------------------- */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--clr-dark-green);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
+}
+
+.splash-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: scale(0.9);
+    animation: zoomInSplash 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.splash-logo {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 20px;
+    overflow: visible;
+}
+
+.moon-path {
+    fill: var(--clr-gold);
+    stroke: var(--clr-gold-light);
+    stroke-width: 0;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: drawMoon 1.5s ease-out forwards, moonGlow 3s ease-in-out infinite alternate;
+}
+
+.star {
+    fill: #FFF;
+    opacity: 0;
+    transform-origin: center;
+}
+
+.star-1 {
+    animation: twinkle 2s ease-in-out 0.8s infinite;
+}
+
+.star-2 {
+    animation: twinkle 2.5s ease-in-out 1.2s infinite;
+}
+
+.star-3 {
+    animation: twinkle 1.8s ease-in-out 1.5s infinite;
+}
+
+.splash-title {
+    color: var(--clr-gold);
+    font-size: 3rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out 0.5s forwards;
+}
+
+.splash-subtitle {
+    color: #F4EBD0;
+    font-size: 1.2rem;
+    font-weight: 300;
+    opacity: 0;
+    letter-spacing: 4px;
+    animation: fadeInUp 0.8s ease-out 0.7s forwards;
+}
+
+@keyframes drawMoon {
+    to {
+        stroke-dashoffset: 0;
+        fill: var(--clr-gold);
+        stroke-width: 0;
+    }
+}
+
+@keyframes moonGlow {
+    from {
+        filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4));
+    }
+
+    to {
+        filter: drop-shadow(0 0 15px rgba(212, 175, 55, 1));
+    }
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.2;
+        transform: scale(0.8);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes zoomInSplash {
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hide splash */
+.splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* ---------------------------------
+   2. MAIN APP ENTRY ANIMATIONS
+   --------------------------------- */
+.app-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background: transparent;
+    transition: opacity 0.5s ease-in;
+}
+
+.app-container.app-ready {
+    opacity: 1 !important;
+}
+
+.animate-entry {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.app-ready .animate-entry {
+    animation: entrySlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--anim-delay, 0s);
+}
+
+@keyframes entrySlideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------------------------------
+   3. LAYOUT & UI COMPONENTS
+   --------------------------------- */
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background-color: var(--bg-sidebar);
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    position: relative;
+    border-right: 1px solid rgba(212, 175, 55, 0.1);
+}
+
+.sidebar .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--clr-gold);
+    margin-bottom: 3rem;
+    padding: 0 10px;
+}
+
+.sidebar-logo-svg {
+    color: var(--clr-gold);
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    color: var(--text-light);
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 500;
+    opacity: 0.8;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease, opacity 0.3s ease;
+    z-index: 1;
+}
+
+.menu-item .menu-item-bg {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: var(--nav-hover);
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+    z-index: -1;
+}
+
+.menu-item:hover {
+    opacity: 1;
+}
+
+.menu-item:hover .menu-item-bg {
+    transform: translateX(100%);
+}
+
+.menu-item.active {
+    color: var(--clr-gold);
+    opacity: 1;
+    border-left: 3px solid var(--clr-gold);
+}
+
+.menu-item.active .menu-item-bg {
+    left: 0;
+    background-color: var(--clr-gold-dim);
+    transition: none;
+    /* override hover animation for active */
+}
+
+.menu-item i {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.menu-item:hover i {
+    transform: scale(1.15) rotate(-5deg);
+}
+
+.menu-item.active i {
+    color: var(--clr-gold);
+}
+
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 3rem;
+    overflow-y: auto;
+    background-color: transparent;
+}
+
+/* Header */
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2.5rem;
+}
+
+.date-info h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.date-info p {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #fff;
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-sm);
+    font-weight: 500;
+    color: var(--clr-green);
+    transition: all 0.3s ease;
+}
+
+.location i {
+    color: var(--clr-gold);
+}
+
+.avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: var(--clr-gold);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--clr-dark-green);
+    font-size: 1.2rem;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 24px;
+}
+
+.card {
+    background-color: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-5px);
+}
+
+.card.full-width {
+    grid-column: 1 / -1;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-header h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--clr-dark-green);
+}
+
+/* Premium Card (Fasting) */
+.premium-card {
+    background: linear-gradient(135deg, var(--clr-dark-green) 0%, var(--clr-green) 100%);
+    color: #F4EBD0;
+    position: relative;
+    overflow: hidden;
+}
+
+.premium-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 60%);
+    animation: rotateGlow 20s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotateGlow {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.premium-card .card-header h2 {
+    color: var(--clr-gold);
+}
+
+.premium-card .card-header i {
+    color: #F4EBD0;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.fasting-times {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding: 16px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.time-block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.time-block .label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.time-block .time {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--clr-gold);
+}
+
+.time-block .status {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    margin-top: 4px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.status.pulse {
+    background-color: rgba(212, 175, 55, 0.2);
+    color: var(--clr-gold);
+    position: relative;
+    animation: pulseSoft 2s infinite;
+}
+
+@keyframes pulseSoft {
+    0% {
+        box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 6px rgba(212, 175, 55, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+    }
+}
+
+.time-block.iftar {
+    text-align: right;
+}
+
+.divider {
+    width: 1px;
+    height: 50px;
+    background-color: rgba(212, 175, 55, 0.3);
+}
+
+.progress-container {
+    background: rgba(0, 0, 0, 0.15);
+    padding: 16px;
+    border-radius: 12px;
+    position: relative;
+    z-index: 1;
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.progress-bar {
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--clr-gold) 0%, var(--clr-gold-light) 100%);
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    100% {
+        left: 200%;
+    }
+}
+
+.time-remaining {
+    font-size: 0.85rem;
+    text-align: center;
+    opacity: 0.8;
+}
+
+/* Countdown Card */
+.countdown-card {
+    align-items: center;
+    justify-content: space-between;
+}
+
+.badge {
+    background-color: var(--clr-gold-dim);
+    color: var(--clr-green);
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.breathing-badge {
+    animation: breathe 3s ease-in-out infinite;
+}
+
+@keyframes breathe {
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+}
+
+.countdown-display {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--clr-sand);
+    border: 1px solid var(--clr-sand-dark);
+    padding: 12px 16px;
+    border-radius: 12px;
+    min-width: 70px;
+    opacity: 0;
+}
+
+.app-ready .pop-in {
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation-delay: var(--anim-delay, 0s);
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.time-unit .number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--clr-dark-green);
+    line-height: 1;
+}
+
+.time-unit .unit {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.colon {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    line-height: 1;
+    margin-top: 10px;
+}
+
+.blink {
+    animation: textBlink 1s infinite alternate;
+}
+
+@keyframes textBlink {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0.3;
+    }
+}
+
+.btn-primary {
+    width: 100%;
+    background-color: var(--clr-green);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary:active {
+    transform: scale(0.95);
+}
+
+.btn-primary:hover {
+    background-color: var(--clr-dark-green);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover .bell-icon {
+    animation: ringBell 0.4s ease-in-out;
+}
+
+@keyframes ringBell {
+    0% {
+        transform: rotate(0);
+    }
+
+    25% {
+        transform: rotate(15deg);
+    }
+
+    50% {
+        transform: rotate(-10deg);
+    }
+
+    75% {
+        transform: rotate(5deg);
+    }
+
+    100% {
+        transform: rotate(0);
+    }
+}
+
+/* Ripple effect container */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: rippleAnim 0.6s linear;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+@keyframes rippleAnim {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Schedule Card */
+.date-selector {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--clr-green);
+    cursor: pointer;
+}
+
+.date-selector i {
+    padding: 6px;
+    background: var(--clr-sand);
+    border-radius: 50%;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.date-selector i:hover {
+    background: var(--clr-sand-dark);
+    transform: scale(1.1);
+}
+
+.prayer-list {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.prayer-item {
+    flex: 1;
+    background: var(--clr-sand);
+    padding: 16px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.prayer-item:hover {
+    background: var(--clr-sand-dark);
+    transform: translateY(-4px);
+}
+
+.prayer-name {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.prayer-name span {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    /* Reset to subtle */
+    display: block;
+    text-align: center;
+}
+
+.prayer-time {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--clr-dark-green);
+}
+
+.prayer-item i {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+}
+
+/* 1. Passed Prayers (Completed) */
+.prayer-item.completed {
+    opacity: 0.5;
+    background: var(--bg-main);
+    border: 2px dashed rgba(122, 139, 128, 0.3);
+}
+
+.prayer-item.completed:hover {
+    opacity: 0.8;
+}
+
+/* 2. Current/Next Active Prayer */
+.prayer-item.active-time {
+    border-color: var(--clr-green);
+    background: #E8F5E9;
+    /* Very light green tint */
+    box-shadow: var(--shadow-sm);
+    transform: scale(1.05);
+}
+
+.prayer-item.active-time .prayer-time {
+    color: var(--clr-green);
+}
+
+/* 3. User Selected Prayer (via click) */
+.prayer-item.selected {
+    background: var(--clr-green);
+    color: white;
+    border-color: var(--clr-green);
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+.prayer-item.selected .prayer-name,
+.prayer-item.selected .prayer-name span,
+.prayer-item.selected .prayer-time {
+    color: white;
+}
+
+.prayer-item.selected i {
+    color: var(--clr-gold) !important;
+}
+
+/* Highlighted (e.g. Maghrib/Iftar indicator, without being selected) */
+.prayer-item.highlight-iftar {
+    border-color: var(--clr-gold);
+    background: linear-gradient(to bottom, var(--clr-sand), var(--clr-sand-light));
+}
+
+.prayer-item.highlight-iftar .prayer-name span {
+    color: var(--clr-gold);
+    font-weight: 700;
+}
+
+/* Highlighted Fasting Start (Suhoor/Fajr) */
+.prayer-item.highlight-suhoor {
+    border-color: #5D8AA8;
+    /* Air Force Blue/Dawn color */
+    background: linear-gradient(to bottom, #F0F4F8, #FFFFFF);
+}
+
+.prayer-item.highlight-suhoor .prayer-name span {
+    color: #5D8AA8;
+    font-weight: 700;
+}
+
+.bell-ringing {
+    animation: gentleRing 3s infinite ease-in-out;
+    transform-origin: top center;
+}
+
+@keyframes gentleRing {
+
+    0%,
+    10%,
+    100% {
+        transform: rotate(0);
+    }
+
+    2%,
+    6% {
+        transform: rotate(10deg);
+    }
+
+    4%,
+    8% {
+        transform: rotate(-10deg);
+    }
+}
+
+/* Schedule Legend */
+.schedule-legend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(122, 139, 128, 0.2);
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.color-completed {
+    background-color: var(--bg-main);
+    border: 2px dashed rgba(122, 139, 128, 0.3);
+}
+
+.color-active {
+    background-color: #E8F5E9;
+    border: 2px solid var(--clr-green);
+}
+
+.color-suhoor {
+    background-color: #F0F4F8;
+    border: 2px solid #5D8AA8;
+}
+
+.color-selected {
+    background-color: var(--clr-green);
+    border: 2px solid var(--clr-green);
+}
+
+.color-iftar {
+    background-color: var(--clr-sand);
+    border: 2px solid var(--clr-gold);
+}
+
+/* Quote Card */
+.quote-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+    background: linear-gradient(to right, var(--bg-card) 0%, var(--clr-sand) 100%);
+}
+
+.floating-icon {
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.quote-icon {
+    font-size: 3rem;
+    color: var(--clr-gold-dim);
+}
+
+.arabic-text {
+    font-size: 1.4rem;
+    font-family: 'Amiri', 'Traditional Arabic', serif;
+    direction: rtl;
+    color: var(--clr-dark-green);
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
+
+.translation {
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    transition: opacity 0.5s ease;
+}
+
+.reference {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--clr-gold);
+    transition: opacity 0.5s ease;
+}
+
+/* Interactive Elements Base Effects */
+.interactive-element {
+    cursor: pointer;
+}
+
+.interactive-element:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.interactive-element:active {
+    transform: translateY(0);
+}
+
+.anim-spin-hover:hover {
+    animation: spinIcon 1s ease;
+}
+
+@keyframes spinIcon {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(180deg);
+    }
+}
+
+.anim-bounce-hover {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.interactive-element:hover .anim-bounce-hover {
+    transform: translateY(-3px) scale(1.1);
+}
+
+/* Sahara Background Layer (Night) */
+.sahara-bg {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Show night only in dark mode */
+[data-theme="dark"] .sahara-bg {
+    display: block;
+}
+
+.sahara-bg svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: bottom;
+}
+
+/* Sahara Background Layer (Day) */
+.sahara-bg-light {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Hide day in dark mode */
+[data-theme="dark"] .sahara-bg-light {
+    display: none;
+}
+
+.sahara-bg-light svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: bottom;
+}
+
+/* Animations for Sahara Elements */
+.celestial-sky {
+    transform-origin: 960px 1500px;
+    animation: panSky 120s linear infinite;
+}
+
+@keyframes panSky {
+    0% {
+        transform: rotate(-5deg);
+    }
+
+    50% {
+        transform: rotate(5deg);
+    }
+
+    100% {
+        transform: rotate(-5deg);
+    }
+}
+
+.star {
+    opacity: 1;
+    /* Max brightness */
+}
+
+/* specific high-contrast text overrides for Sahara Night */
+[data-theme="dark"] .prayer-time,
+[data-theme="dark"] .number,
+[data-theme="dark"] .arabic-text,
+[data-theme="dark"] .card-header h2,
+[data-theme="dark"] .menu-item span,
+[data-theme="dark"] .menu-item i,
+[data-theme="dark"] .time-block span.time,
+[data-theme="dark"] .progress-text,
+[data-theme="dark"] .prayer-item .time,
+[data-theme="dark"] .stat-value {
+    color: #FFFFFF;
+    /* High contrast white instead of dark green/blue */
+}
+
+[data-theme="dark"] .prayer-name,
+[data-theme="dark"] .time-unit .unit,
+[data-theme="dark"] .time-label,
+[data-theme="dark"] .progress-labels span,
+[data-theme="dark"] .location-picker,
+[data-theme="dark"] .date-info p,
+[data-theme="dark"] .prayer-item .name,
+[data-theme="dark"] .stat-label {
+    color: #A5B8D1;
+    /* Lighter soft blue-grey for secondary text */
+}
+
+/* Adjust the selected/active item in the sidebar */
+[data-theme="dark"] .menu-item.active span,
+[data-theme="dark"] .menu-item.active i,
+[data-theme="dark"] .highlight-gold {
+    color: var(--clr-gold-light);
+}
+
+/* Timeline/Prayer list overrides */
+[data-theme="dark"] .prayer-item.completed {
+    opacity: 0.6;
+}
+
+[data-theme="dark"] .prayer-item.selected {
+    background-color: rgba(26, 77, 46, 0.4);
+    /* Translucent green selection */
+    border-color: var(--clr-green);
+}
+
+/* Base twinkling rhythms */
+.star-1 {
+    animation: twinkleStar 3s ease-in-out infinite;
+}
+
+.star-2 {
+    animation: twinkleStar 4s ease-in-out infinite 1s;
+}
+
+.star-3 {
+    animation: twinkleStar 2.5s ease-in-out infinite 2s;
+}
+
+/* Chromatic aberration & intense white glow effect */
+@keyframes twinkleStar {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+        filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.4));
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.3);
+        /* Very subtle color aberration, but massively bright white at the core */
+        filter: drop-shadow(-1px 0 2px rgba(255, 0, 0, 0.4)) drop-shadow(1px 0 2px rgba(0, 255, 255, 0.4)) drop-shadow(0 0 12px rgba(255, 255, 255, 1)) drop-shadow(0 0 4px rgba(255, 255, 255, 1));
+    }
+}
+
+.fire-flicker {
+    animation: fireGlow 1.5s ease-in-out infinite alternate;
+    transform-origin: center bottom;
+}
+
+@keyframes fireGlow {
+    0% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Glassmorphism overrides for dark mode */
+[data-theme="dark"] .app-container,
+[data-theme="dark"] .main-content {
+    background-color: transparent;
+}
+
+[data-theme="dark"] .sidebar {
+    backdrop-filter: var(--glass-blur);
+    border-right: var(--glass-border);
+}
+
+[data-theme="dark"] .card {
+    background-color: var(--bg-card);
+    /* Ensure regular cards take the glassmorphism color */
+    backdrop-filter: var(--glass-blur);
+    border: var(--glass-border);
+}
+
+[data-theme="dark"] .card.primary {
+    /* Override the solid green background of the primary card in dark mode */
+    background-color: rgba(14, 25, 42, 0.45);
+    color: #FFFFFF;
+}
+
+/* Responsive adjustements */
+@media (max-width: 1024px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .prayer-list {
+        flex-wrap: wrap;
+    }
+
+    .prayer-item {
+        min-width: calc(33.33% - 12px);
+    }
+}
+
+/* ---------------------------------
+   Onboarding Overlay & Tutorial
+   --------------------------------- */
+.onboarding-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(11, 43, 27, 0.85);
+    /* Dark green tint by default */
+    z-index: 9999;
+    display: flex;
+    transition: opacity 0.4s ease, visibility 0.4s ease, background 0.4s ease;
+}
+
+[data-theme="dark"] .onboarding-overlay {
+    background: rgba(0, 0, 0, 0.85);
+    /* Darker tint for night mode */
+}
+
+.onboarding-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Tooltip Card */
+.onboarding-tooltip {
+    position: absolute;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    width: 320px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.onboarding-tooltip h3 {
+    color: var(--clr-dark-green);
+    margin-bottom: 8px;
+    font-size: 1.2rem;
+}
+
+[data-theme="dark"] .onboarding-tooltip h3 {
+    color: var(--text-main);
+}
+
+.onboarding-tooltip p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.onboarding-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.btn-small {
+    padding: 8px 16px !important;
+    font-size: 0.9rem !important;
+    border-radius: 8px !important;
+    width: auto !important;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-weight: 500;
+    font-family: var(--font-main);
+    transition: color 0.2s ease;
+}
+
+.btn-text:hover {
+    color: var(--clr-dark-green);
+}
+
+[data-theme="dark"] .btn-text:hover {
+    color: #FFF;
+}
+
+.onboarding-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.onboarding-dots .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(122, 139, 128, 0.3);
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.onboarding-dots .dot.active {
+    background: var(--clr-gold);
+    transform: scale(1.2);
+}
+
+/* Highlighted element during tour */
+.tour-highlight {
+    position: relative;
+    z-index: 10001 !important;
+    pointer-events: none !important;
+    /* Prevent clicking during tour */
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    /* Force exact match in background or pure color to overcome glassmorphism */
+}
+
+/* Specific highlight adjustment for regular cards */
+.card.tour-highlight {
+    box-shadow: 0 0 0 4px var(--clr-gold), 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Specific highlight for premium cards (Fasting) */
+.premium-card.tour-highlight {
+    background: linear-gradient(135deg, var(--clr-dark-green) 0%, var(--clr-green) 100%) !important;
+    box-shadow: 0 0 0 4px var(--clr-gold), 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* For sidebar item highlight */
+.menu-item.tour-highlight {
+    background: var(--nav-hover) !important;
+    box-shadow: 0 0 0 2px var(--clr-gold), 0 10px 20px rgba(0, 0, 0, 0.5) !important;
+    opacity: 1 !important;
+}

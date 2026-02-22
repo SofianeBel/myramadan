@@ -1,0 +1,24 @@
+{
+  "productName": "GuideME - Ramadan",
+  "version": "1.0.0",
+  "identifier": "com.guideme.ramadan",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "GuideME - Ramadan Edition",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 900,
+        "minHeight": 600,
+        "decorations": true,
+        "resizable": true
+      }
+    ]
+  }
+}
