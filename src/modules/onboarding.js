@@ -26,13 +26,19 @@ const tourSteps = [
   {
     title: 'Notifications',
     text: 'Vous pouvez maintenant cliquer sur les cloches de prière du jour pour activer ou désactiver les notifications individuellement.',
-    target: '.prayer-list',
+    target: '.schedule-card',
     position: 'top',
   },
   {
     title: 'Calendrier Mensuel',
     text: 'Nouveau ! Accédez à tout moment aux horaires complets du mois via ce nouvel onglet, avec une vue claire des jours à venir.',
     target: '#nav-horaires',
+    position: 'right',
+  },
+  {
+    title: 'Signaler un Bug',
+    text: "Une erreur ou un problème ? N'hésitez pas à nous le signaler via ce bouton pour nous aider à améliorer l'application.",
+    target: '#bug-report-btn',
     position: 'right',
   },
   {
@@ -103,15 +109,31 @@ function renderStep() {
   // Button text
   btnNext.textContent = currentStep === tourSteps.length - 1 ? 'Terminer' : 'Suivant'
 
-  // Cleanup highlights
-  document.querySelectorAll('.tour-highlight').forEach((el) => {
-    el.classList.remove('tour-highlight')
-  })
+  // Cleanup highlights and lifted ancestors
+  document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'))
+  document.querySelectorAll('.tour-lift').forEach(el => el.classList.remove('tour-lift'))
 
   if (step.target) {
     const el = document.querySelector(step.target)
     if (el) {
       el.classList.add('tour-highlight')
+
+      // Lift ancestor stacking contexts above overlay
+      let parent = el.parentElement
+      while (parent && parent !== document.body) {
+        const cs = getComputedStyle(parent)
+        if (
+          cs.zIndex !== 'auto' ||
+          (cs.backdropFilter && cs.backdropFilter !== 'none') ||
+          (cs.transform && cs.transform !== 'none') ||
+          (cs.filter && cs.filter !== 'none') ||
+          (parseFloat(cs.opacity) < 1)
+        ) {
+          parent.classList.add('tour-lift')
+        }
+        parent = parent.parentElement
+      }
+
       positionTooltip(tooltip, el, step.position)
     }
 
@@ -150,9 +172,16 @@ function positionTooltip(tooltip, targetEl, position) {
     left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2
   }
 
+  // Clamp horizontal
   if (left < 10) left = 10
   if (left + tooltip.offsetWidth > window.innerWidth - 10) {
     left = window.innerWidth - tooltip.offsetWidth - 10
+  }
+
+  // Clamp vertical: keep tooltip within viewport
+  if (top < 10) top = 10
+  if (top + tooltip.offsetHeight > window.innerHeight - 10) {
+    top = window.innerHeight - tooltip.offsetHeight - 10
   }
 
   tooltip.style.top = `${top}px`
@@ -163,9 +192,8 @@ function endTour() {
   const overlay = document.getElementById('onboarding-overlay')
   if (overlay) overlay.classList.add('hidden')
 
-  document.querySelectorAll('.tour-highlight').forEach((el) => {
-    el.classList.remove('tour-highlight')
-  })
+  document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'))
+  document.querySelectorAll('.tour-lift').forEach(el => el.classList.remove('tour-lift'))
 
   storage.set('tourCompleted', true)
 }
