@@ -56,6 +56,7 @@ main.js (orchestrateur)
 | `countdown.js` | Timer prochaine prière (tick 1s, wraparound minuit→Fajr) | `prayer-times.js` |
 | `fasting.js` | Progression Suhoor→Iftar (live + mode référence non-today) | `prayer-times.js` |
 | `schedule.js` | Rendu liste prières avec états (active, passed, selected) | `prayer-times.js`, `countdown.js` |
+| `bug-report.js` | Modal rapport de bug → GitHub Issues via Tauri HTTP | Tauri HTTP, Vite env |
 | `window.js` | Contrôles fenêtre custom (min, max, close) via `getCurrentWindow()` | Tauri window API |
 
 ### Stratégie API duale
@@ -98,6 +99,7 @@ main.js (orchestrateur)
 - **CSP stricte** : toute nouvelle URL externe → l'ajouter dans `tauri.conf.json` → `app.security.csp`, sinon bloquée **silencieusement**
 - **Mawaqit = Tauri HTTP only** : `tauriFetch` obligatoire, jamais `fetch()` browser
 - **Aladhan dans CSP** : déjà dans `connect-src`, ajouter toute nouvelle API ici
+- **GitHub API** (`api.github.com`) : création issues via bug report — **Tauri HTTP obligatoire** (même pattern que Mawaqit)
 - **Date Hijri** : toujours depuis Aladhan (Mawaqit ne la fournit pas)
 - **Géolocalisation** : fallback chain GPS → coords sauvegardées → Paris (48.8566, 2.3522)
 - **Méthode de calcul** : UOIF (method 12) par défaut, utilise `method=99` + angles custom quand `getMethodAngles()` retourne non-null
@@ -107,7 +109,8 @@ main.js (orchestrateur)
 - **System tray** : fermer la fenêtre = minimize to tray, pas quit
 - **`opacity: 0` initial** : `.app-container` masqué jusqu'à la fin du splash (révélé par JS)
 - **Images reçues** : toujours vérifier le vrai format avec `file <path>` — les extensions peuvent mentir (JPEG renommé en .png)
-- **Pas de .env** : aucune variable d'environnement, tout dans le Tauri store ou hardcodé
+- **Variables d'env Vite** : `.env.local` (gitignored) pour les secrets (`VITE_*`), `.env.example` pour la doc — accès via `import.meta.env.VITE_XXX`
+- **GitHub Push Protection** : jamais de token/secret hardcodé dans le source — utiliser `import.meta.env.VITE_*` depuis `.env.local`
 - **Fenêtre** : min 900×600, default 1200×800 (`tauri.conf.json`)
 - **Custom titlebar = permissions obligatoires** : `decorations: false` nécessite `core:window:allow-start-dragging`, `allow-minimize`, `allow-toggle-maximize`, `allow-close` dans `src-tauri/capabilities/default.json`
 - **Notifications dev mode** : `sendNotification()` fonctionne sans erreur mais Windows filtre les toast des apps non-installées — tester avec `npm run tauri:build` + install
