@@ -23,6 +23,7 @@ import { getOffset, getOffsetDateForAladhan, initDateNavigation } from './module
 import { initCalendar, refreshCalendar } from './modules/calendar.js'
 import { initWindowControls } from './modules/window.js'
 import { initSidebar } from './modules/sidebar.js'
+import { initBugReport } from './modules/bug-report.js'
 
 // Intervals
 let fastingInterval = null
@@ -254,6 +255,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 3.6 Setup sidebar
   initSidebar()
+
+  // 3.7 Setup bug report modal
+  initBugReport()
 
   // 3.8 Initialize Sakura Titlebar Effects
   initSakura()
