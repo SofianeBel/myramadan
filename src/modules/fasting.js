@@ -17,6 +17,14 @@ function getFastingElements() {
   }
 }
 
+/** Toggle visibility of progress bar and labels (hide when not fasting) */
+function toggleProgressBar(show) {
+  const labels = document.querySelector('.progress-labels')
+  const bar = document.querySelector('.progress-bar')
+  if (labels) labels.style.display = show ? '' : 'none'
+  if (bar) bar.style.display = show ? '' : 'none'
+}
+
 /**
  * Update the fasting card UI.
  * @param {string} fajrTime - "HH:MM" Fajr time (Suhoor ends)
@@ -45,9 +53,10 @@ export function updateFasting(fajrTime, maghribTime) {
     if (iftarStatus) iftarStatus.textContent = '--'
     if (progressFill) progressFill.style.width = '0%'
     if (progressPct) progressPct.textContent = '0%'
+    toggleProgressBar(false)
     if (timeRemaining) {
       const untilFajr = fajrMin - nowMin
-      timeRemaining.textContent = `Suhoor dans ${formatDuration(untilFajr)}`
+      timeRemaining.textContent = `Bon appétit ! Suhoor dans ${formatDuration(untilFajr)}`
     }
     return
   }
@@ -58,11 +67,13 @@ export function updateFasting(fajrTime, maghribTime) {
     if (iftarStatus) iftarStatus.textContent = 'C\'est l\'heure !'
     if (progressFill) progressFill.style.width = '100%'
     if (progressPct) progressPct.textContent = '100%'
+    toggleProgressBar(false)
     if (timeRemaining) timeRemaining.textContent = 'Le jeûne est terminé — Bon Iftar !'
     return
   }
 
   // During fasting
+  toggleProgressBar(true)
   const pct = Math.min(100, Math.max(0, Math.round((elapsed / fastingDuration) * 100)))
 
   if (suhoorStatus) suhoorStatus.textContent = 'En cours'
@@ -89,6 +100,7 @@ export function updateFastingReference(fajrTime, maghribTime) {
   if (iftarStatus) iftarStatus.textContent = '--'
   if (progressFill) progressFill.style.width = '0%'
   if (progressPct) progressPct.textContent = '--'
+  toggleProgressBar(false)
   if (timeRemaining) timeRemaining.textContent = ''
 }
 
