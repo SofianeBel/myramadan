@@ -19,6 +19,9 @@ npm run build            # Production build → dist/
 npm run tauri:dev        # App desktop avec hot reload (dev principal)
 npm run tauri:build      # Build installer desktop
 npm run preview          # Preview build local
+
+# Icons
+npx tauri icon <source.png>      # Génère toutes les icônes (ico, icns, png multi-tailles) depuis un PNG carré
 ```
 
 ## Architecture
@@ -102,6 +105,7 @@ main.js (orchestrateur)
 - **Leaflet map** : ne s'initialise qu'au clic sur l'onglet Carte (lazy init), appeler `invalidateSize()` si le conteneur change de taille
 - **System tray** : fermer la fenêtre = minimize to tray, pas quit
 - **`opacity: 0` initial** : `.app-container` masqué jusqu'à la fin du splash (révélé par JS)
+- **Images reçues** : toujours vérifier le vrai format avec `file <path>` — les extensions peuvent mentir (JPEG renommé en .png)
 - **Pas de .env** : aucune variable d'environnement, tout dans le Tauri store ou hardcodé
 - **Fenêtre** : min 900×600, default 1200×800 (`tauri.conf.json`)
 
@@ -114,3 +118,12 @@ main ← production stable (PR only)
 ```
 
 Commits : Conventional Commits (`feat:`, `fix:`, `refactor:`). Toujours créer les branches depuis `dev`.
+
+## Assets & Icons
+
+- **Static assets** (images HTML) : `public/` (servi tel quel par Vite)
+- **App logo** : `public/logo.png` — utilisé dans splash screen + sidebar
+- **Tauri icons** : `src-tauri/icons/` — générés via `npx tauri icon <source.png>` (nécessite un vrai PNG)
+- **Bundle config** : `bundle.icon` dans `tauri.conf.json` référence les icônes explicitement
+- **Sources locales** : `.assets/` (gitignored) — backups fichiers originaux (ex: `logo-original.png`)
+- **ImageMagick** disponible pour conversion d'images (`magick input.jpg output.png`)
