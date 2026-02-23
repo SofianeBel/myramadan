@@ -58,6 +58,14 @@ main.js (orchestrateur)
 | `schedule.js` | Rendu liste prières avec états (active, passed, selected) | `prayer-times.js`, `countdown.js` |
 | `bug-report.js` | Modal rapport de bug → GitHub Issues via Tauri HTTP | Tauri HTTP, Vite env |
 | `window.js` | Contrôles fenêtre custom (min, max, close) via `getCurrentWindow()` | Tauri window API |
+| `support.js` | Modal soutenir (dons + pubs "Prochainement"), tabs switching | `storage.js` |
+| `sidebar.js` | Navigation sidebar, items actifs, collapse/expand | — |
+| `theme.js` | Toggle dark/light, persistance via storage | `storage.js` |
+| `splash.js` | Écran de chargement initial, révèle `.app-container` | — |
+| `onboarding.js` | Tour guidé premier lancement | `storage.js` |
+| `calendar.js` | Vue calendrier mensuel des horaires | `prayer-times.js` |
+| `daily-content.js` | Contenu quotidien (hadith, doua, etc.) | `storage.js` |
+| `hijri-date.js` | Affichage date Hijri depuis Aladhan | `prayer-times.js` |
 
 ### Stratégie API duale
 
@@ -115,6 +123,13 @@ main.js (orchestrateur)
 - **Custom titlebar = permissions obligatoires** : `decorations: false` nécessite `core:window:allow-start-dragging`, `allow-minimize`, `allow-toggle-maximize`, `allow-close` dans `src-tauri/capabilities/default.json`
 - **Notifications dev mode** : `sendNotification()` fonctionne sans erreur mais Windows filtre les toast des apps non-installées — tester avec `npm run tauri:build` + install
 - **WebView2 mémoire** : ~300-500 MB normal pour Tauri, les animations CSS continues augmentent l'usage GPU
+
+## Variables d'environnement
+
+```bash
+# .env.local (gitignored) — requis pour bug report
+VITE_GITHUB_TOKEN=""   # GitHub PAT pour création issues (bug report)
+```
 
 ## Git flow
 
