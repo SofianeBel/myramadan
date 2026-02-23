@@ -4,19 +4,26 @@
 
 import { timeToMinutes, getCurrentMinutes, minutesToTime } from './prayer-times.js'
 
+/** Query all fasting-related DOM elements */
+function getFastingElements() {
+  return {
+    suhoorEl: document.getElementById('suhoor-time'),
+    iftarEl: document.getElementById('iftar-time'),
+    suhoorStatus: document.getElementById('suhoor-status'),
+    iftarStatus: document.getElementById('iftar-status'),
+    progressFill: document.querySelector('.progress-fill'),
+    progressPct: document.getElementById('progress-percentage'),
+    timeRemaining: document.getElementById('time-remaining'),
+  }
+}
+
 /**
  * Update the fasting card UI.
  * @param {string} fajrTime - "HH:MM" Fajr time (Suhoor ends)
  * @param {string} maghribTime - "HH:MM" Maghrib time (Iftar)
  */
 export function updateFasting(fajrTime, maghribTime) {
-  const suhoorEl = document.getElementById('suhoor-time')
-  const iftarEl = document.getElementById('iftar-time')
-  const suhoorStatus = document.getElementById('suhoor-status')
-  const iftarStatus = document.getElementById('iftar-status')
-  const progressFill = document.querySelector('.progress-fill')
-  const progressPct = document.getElementById('progress-percentage')
-  const timeRemaining = document.getElementById('time-remaining')
+  const { suhoorEl, iftarEl, suhoorStatus, iftarStatus, progressFill, progressPct, timeRemaining } = getFastingElements()
 
   if (!suhoorEl || !iftarEl) return
 
@@ -72,13 +79,7 @@ export function updateFasting(fajrTime, maghribTime) {
  * @param {string} maghribTime - "HH:MM" Maghrib time
  */
 export function updateFastingReference(fajrTime, maghribTime) {
-  const suhoorEl = document.getElementById('suhoor-time')
-  const iftarEl = document.getElementById('iftar-time')
-  const suhoorStatus = document.getElementById('suhoor-status')
-  const iftarStatus = document.getElementById('iftar-status')
-  const progressFill = document.querySelector('.progress-fill')
-  const progressPct = document.getElementById('progress-percentage')
-  const timeRemaining = document.getElementById('time-remaining')
+  const { suhoorEl, iftarEl, suhoorStatus, iftarStatus, progressFill, progressPct, timeRemaining } = getFastingElements()
 
   if (!suhoorEl || !iftarEl) return
 

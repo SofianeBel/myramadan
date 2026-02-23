@@ -71,7 +71,7 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
     if (hijriDate) {
       updateDates(hijriDate, 0)
     }
-  } else if (mosqueSlug && !isToday) {
+  } else if (mosqueSlug && !isToday && timings) {
     // Mosque set but non-today — Hijri needs date param
     const hijriDate = await fetchHijriDate(locationParams, aladhanDate)
     if (hijriDate) {

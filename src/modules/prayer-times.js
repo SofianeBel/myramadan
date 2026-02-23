@@ -188,13 +188,18 @@ export async function fetchMawaqitTimes(mosqueSlug) {
  * When custom angles are provided, uses method=99 + methodSettings override
  * (fixes Aladhan's incorrect angles for UOIF: 12° instead of real 15°).
  */
+const DATE_FORMAT_RE = /^\d{2}-\d{2}-\d{4}$/
+
 function buildAladhanUrl({ lat, lon, city = 'Paris', country = 'France', method = 12, angles = null, dateStr = null }) {
+  // Validate dateStr format before using in URL path
+  const safeDate = (dateStr && DATE_FORMAT_RE.test(dateStr)) ? dateStr : null
+
   let base
   if (lat != null && lon != null) {
-    const path = dateStr ? `${ALADHAN_BY_COORDS}/${dateStr}` : ALADHAN_BY_COORDS
+    const path = safeDate ? `${ALADHAN_BY_COORDS}/${safeDate}` : ALADHAN_BY_COORDS
     base = `${path}?latitude=${lat}&longitude=${lon}`
   } else {
-    const path = dateStr ? `${ALADHAN_BY_CITY}/${dateStr}` : ALADHAN_BY_CITY
+    const path = safeDate ? `${ALADHAN_BY_CITY}/${safeDate}` : ALADHAN_BY_CITY
     base = `${path}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}`
   }
 
@@ -245,9 +250,17 @@ export async function fetchHijriDate(params = {}, dateStr = null) {
  * @returns {Promise<{ timings: Object, hijriDate: Object } | null>}
  */
 export async function fetchPrayerTimes(params = {}, dateStr = null) {
-  const targetDate = dateStr
-    ? dateStr.split('-').reverse().join('-') // DD-MM-YYYY → YYYY-MM-DD
-    : new Date().toISOString().slice(0, 10)
+  let targetDate
+  if (dateStr && DATE_FORMAT_RE.test(dateStr)) {
+    const [dd, mm, yyyy] = dateStr.split('-')
+    targetDate = `${yyyy}-${mm}-${dd}` // DD-MM-YYYY → YYYY-MM-DD
+  } else {
+    const now = new Date()
+    const y = now.getFullYear()
+    const m = String(now.getMonth() + 1).padStart(2, '0')
+    const d = String(now.getDate()).padStart(2, '0')
+    targetDate = `${y}-${m}-${d}`
+  }
   const locKey = locationCacheKey(params)
 
   // Multi-date cache: Record<YYYY-MM-DD, { locationKey, data }>
@@ -281,6 +294,7 @@ export async function fetchPrayerTimes(params = {}, dateStr = null) {
     // Write into keyed cache, prune to 7 most recent dates
     const store = (typeof allCached === 'object' && !allCached.date) ? allCached : {}
     store[targetDate] = { locationKey: locKey, data: result }
+    // ISO date strings (YYYY-MM-DD) sort lexicographically = chronologically
     const keys = Object.keys(store).sort().slice(-7)
     const pruned = {}
     keys.forEach(k => { pruned[k] = store[k] })

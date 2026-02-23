@@ -5,8 +5,10 @@
  */
 
 const MAX_OFFSET = 30
+const DEBOUNCE_MS = 300
 
 let currentOffset = 0
+let debounceTimer = null
 
 /** Return current offset (days from today, negative = past) */
 export function getOffset() {
@@ -20,9 +22,13 @@ export function getOffsetDate() {
   return d
 }
 
-/** Return 'YYYY-MM-DD' string for the current offset (cache keys) */
+/** Return 'YYYY-MM-DD' string for the current offset (cache keys, local time) */
 export function getOffsetDateString() {
-  return getOffsetDate().toISOString().slice(0, 10)
+  const d = getOffsetDate()
+  const yyyy = d.getFullYear()
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  const dd = String(d.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
 }
 
 /** Return 'DD-MM-YYYY' for use in Aladhan URL path */
@@ -40,7 +46,7 @@ export function getDateLabel() {
   if (currentOffset === -1) return 'Hier'
   if (currentOffset === 1) return 'Demain'
   const d = getOffsetDate()
-  let label = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })
+  const label = d.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' })
   return label.charAt(0).toUpperCase() + label.slice(1)
 }
 
@@ -52,9 +58,9 @@ export function initDateNavigation(onDateChange) {
   const selector = document.querySelector('.date-selector')
   if (!selector) return
 
-  const prevBtn = selector.querySelector('.fa-chevron-left')
+  const prevBtn = document.getElementById('nav-prev')
   const label = selector.querySelector('span')
-  const nextBtn = selector.querySelector('.fa-chevron-right')
+  const nextBtn = document.getElementById('nav-next')
 
   if (!prevBtn || !label || !nextBtn) return
 
@@ -75,18 +81,23 @@ export function initDateNavigation(onDateChange) {
     }
   }
 
+  function debouncedDateChange(offset) {
+    if (debounceTimer) clearTimeout(debounceTimer)
+    debounceTimer = setTimeout(() => onDateChange(offset), DEBOUNCE_MS)
+  }
+
   prevBtn.addEventListener('click', () => {
     if (currentOffset <= -MAX_OFFSET) return
     currentOffset--
     updateUI()
-    onDateChange(currentOffset)
+    debouncedDateChange(currentOffset)
   })
 
   nextBtn.addEventListener('click', () => {
     if (currentOffset >= MAX_OFFSET) return
     currentOffset++
     updateUI()
-    onDateChange(currentOffset)
+    debouncedDateChange(currentOffset)
   })
 
   // Click on date label resets to today
@@ -94,7 +105,7 @@ export function initDateNavigation(onDateChange) {
     if (currentOffset === 0) return
     currentOffset = 0
     updateUI()
-    onDateChange(0)
+    debouncedDateChange(0)
   })
 
   updateUI()
