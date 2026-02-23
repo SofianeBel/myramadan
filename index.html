@@ -83,6 +83,13 @@
             </nav>
 
             <div class="bottom-menu">
+                <a href="#" class="menu-item" id="support-btn" style="position: relative;">
+                    <i class="fa-solid fa-hand-holding-heart anim-bounce-hover" style="color: var(--clr-gold);"></i>
+                    <span>Soutenir GuideME</span>
+                    <div class="menu-item-bg"></div>
+                    <span
+                        style="position: absolute; top: 6px; right: 12px; background: #FF3B30; color: white; font-size: 0.55rem; padding: 2px 6px; border-radius: 10px; font-weight: bold; animation: pulse 2s infinite;">NEW</span>
+                </a>
                 <a href="#" class="menu-item" id="bug-report-btn">
                     <i class="fa-solid fa-bug anim-bounce-hover"></i>
                     <span>Signaler un bug</span>
@@ -657,20 +664,6 @@
                         l'application</label>
                 </div>
 
-                <!-- GitHub Token Config -->
-                <details id="bug-token-section" style="margin-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 12px;">
-                    <summary style="font-size: 0.82rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px;">
-                        <i class="fa-brands fa-github"></i> Configuration GitHub
-                        <span id="bug-token-status" style="margin-left: auto; font-size: 0.78rem;">Aucun token configure</span>
-                    </summary>
-                    <div style="margin-top: 10px;">
-                        <input type="password" id="bug-github-token" placeholder="ghp_xxxx ou github_pat_xxxx"
-                            style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.85rem; outline: none;">
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">
-                            Token GitHub avec permission Issues. Stocke localement, jamais transmis ailleurs.
-                        </p>
-                    </div>
-                </details>
 
                 <div class="onboarding-controls"
                     style="margin-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;">
@@ -682,8 +675,10 @@
             <div id="bug-error-msg" class="hidden" style="text-align: center; padding: 20px 0 10px;">
                 <i class="fa-solid fa-circle-xmark"
                     style="font-size: 3.5rem; color: #F44336; margin-bottom: 20px; display: block;"></i>
-                <p style="font-size: 1.2rem; font-weight: 600; color: var(--text-main); margin-bottom: 10px;">Erreur d'envoi</p>
-                <p id="bug-error-detail" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.5;">Impossible d'envoyer le rapport. Vérifiez votre connexion internet.</p>
+                <p style="font-size: 1.2rem; font-weight: 600; color: var(--text-main); margin-bottom: 10px;">Erreur
+                    d'envoi</p>
+                <p id="bug-error-detail" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.5;">
+                    Impossible d'envoyer le rapport. Vérifiez votre connexion internet.</p>
                 <div style="margin-top: 30px; display: flex; gap: 12px; justify-content: center;">
                     <button id="bug-retry" class="btn-primary btn-small">Réessayer</button>
                     <button id="bug-close-error" class="btn-text">Fermer</button>
@@ -701,6 +696,70 @@
                     <button id="bug-close-success" class="btn-primary btn-small">Fermer</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Support / Ads Modal -->
+    <div id="support-modal" class="onboarding-overlay hidden">
+        <div class="onboarding-tooltip settings-tooltip"
+            style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 500px;">
+            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                <i class="fa-solid fa-hand-holding-heart" style="color: var(--clr-gold);"></i> Soutenir GuideME
+            </h3>
+            <p style="margin-bottom: 24px; color: var(--text-muted); font-size: 0.95rem; line-height: 1.5;">
+                Vous pouvez soutenir financièrement le développement de cette application gratuite en acceptant
+                l'affichage occasionnel de publicités non intrusives.
+            </p>
+
+            <form id="support-form" style="display: flex; flex-direction: column; gap: 16px;">
+
+                <!-- Activer les pubs -->
+                <div class="notif-setting-row"
+                    style="padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <label class="notif-label" style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-ad"></i> Activer les publicités
+                    </label>
+                    <label class="notif-toggle">
+                        <input type="checkbox" id="support-enabled">
+                        <span class="notif-toggle-slider"></span>
+                    </label>
+                </div>
+
+                <!-- Options étendues -->
+                <div id="support-options"
+                    style="display: flex; flex-direction: column; gap: 16px; opacity: 0.5; pointer-events: none; transition: opacity 0.3s ease;">
+                    <div class="notif-setting-row" style="flex-direction: column; align-items: stretch; gap: 8px;">
+                        <label class="notif-label">
+                            <i class="fa-solid fa-photo-film"></i> Format publicitaire
+                        </label>
+                        <select id="support-ad-type" class="notif-select" style="width: 100%; padding: 10px 14px;">
+                            <option value="video">Vidéo sponsorisée (Mieux rémunéré)</option>
+                            <option value="popup">Pop-up occasionnel</option>
+                            <option value="banner">Bannière discrète</option>
+                        </select>
+                    </div>
+
+                    <!-- Durée de la vidéo -->
+                    <div id="support-video-duration-row" class="notif-setting-row"
+                        style="flex-direction: column; align-items: stretch; gap: 8px;">
+                        <label class="notif-label">
+                            <i class="fa-solid fa-stopwatch"></i> Durée préférée (vidéo)
+                        </label>
+                        <select id="support-video-duration" class="notif-select"
+                            style="width: 100%; padding: 10px 14px;">
+                            <option value="15">15 secondes</option>
+                            <option value="30" selected>30 secondes</option>
+                            <option value="60">1 minute</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="onboarding-controls"
+                    style="margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;">
+                    <button type="button" id="support-cancel" class="btn-text">Annuler</button>
+                    <button type="submit" id="support-save" class="btn-primary btn-small">Enregistrer</button>
+                </div>
+            </form>
         </div>
     </div>
 
