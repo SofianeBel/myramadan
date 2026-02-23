@@ -657,6 +657,21 @@
                         l'application</label>
                 </div>
 
+                <!-- GitHub Token Config -->
+                <details id="bug-token-section" style="margin-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 12px;">
+                    <summary style="font-size: 0.82rem; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <i class="fa-brands fa-github"></i> Configuration GitHub
+                        <span id="bug-token-status" style="margin-left: auto; font-size: 0.78rem;">Aucun token configure</span>
+                    </summary>
+                    <div style="margin-top: 10px;">
+                        <input type="password" id="bug-github-token" placeholder="ghp_xxxx ou github_pat_xxxx"
+                            style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.85rem; outline: none;">
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">
+                            Token GitHub avec permission Issues. Stocke localement, jamais transmis ailleurs.
+                        </p>
+                    </div>
+                </details>
+
                 <div class="onboarding-controls"
                     style="margin-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;">
                     <button type="button" id="bug-cancel" class="btn-text">Annuler</button>
