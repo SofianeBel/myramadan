@@ -822,14 +822,21 @@ body {
 .prayer-list {
     display: flex;
     justify-content: space-between;
-    gap: 12px;
+    gap: 8px;
+    /* Slightly reduced gap */
     margin-top: 10px;
+    flex-wrap: wrap;
+    /* Allow wrapping if needed */
 }
 
 .prayer-item {
-    flex: 1;
+    flex: 1 1 12%;
+    /* Allow shrinking, base width */
+    min-width: 90px;
+    /* Prevent completely breaking */
     background: var(--clr-sand);
-    padding: 16px;
+    padding: 12px;
+    /* Slightly reduced padding */
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -863,6 +870,13 @@ body {
     font-size: 1.4rem;
     font-weight: 700;
     color: var(--clr-dark-green);
+}
+
+.prayer-time-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
 .prayer-item i {
@@ -959,6 +973,29 @@ body {
     8% {
         transform: rotate(-10deg);
     }
+}
+
+/* Notification bell toggle on prayer items */
+.notif-bell {
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: transform 0.2s ease, opacity 0.2s ease, color 0.2s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.notif-bell:hover {
+    transform: scale(1.3);
+}
+
+.notif-bell.notif-disabled {
+    opacity: 0.4;
+    color: var(--text-muted) !important;
+}
+
+.icon-gold {
+    color: var(--clr-gold);
 }
 
 /* Schedule Legend */
@@ -1298,10 +1335,12 @@ body {
 
     .prayer-list {
         flex-wrap: wrap;
+        gap: 8px;
     }
 
     .prayer-item {
-        min-width: calc(33.33% - 12px);
+        min-width: calc(33.33% - 8px);
+        padding: 12px;
     }
 }
 
@@ -1449,6 +1488,8 @@ body {
     min-width: 460px !important;
     max-width: 540px;
     width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 /* Tab Switcher */
@@ -1571,9 +1612,17 @@ body {
 }
 
 @keyframes locationPulse {
-    0% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4); }
-    70% { box-shadow: 0 0 0 14px rgba(66, 133, 244, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+    0% {
+        box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 14px rgba(66, 133, 244, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(66, 133, 244, 0);
+    }
 }
 
 /* Mosque marker icon */
@@ -1768,8 +1817,95 @@ body {
 }
 
 @keyframes bell-ring {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(15deg); }
-    50% { transform: rotate(-15deg); }
-    75% { transform: rotate(10deg); }
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(15deg);
+    }
+
+    50% {
+        transform: rotate(-15deg);
+    }
+
+    75% {
+        transform: rotate(10deg);
+    }
+}
+
+/* ---------------------------------
+   12. HORAIRES VIEW (CALENDAR)
+   --------------------------------- */
+.view-section {
+    display: none !important;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.dashboard-grid.view-section.active-view {
+    display: grid !important;
+    opacity: 1;
+}
+
+.horaires-view.view-section.active-view {
+    display: block !important;
+    opacity: 1;
+    animation: entrySlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Ensure hidden overrides */
+.hidden {
+    display: none !important;
+}
+
+.calendar-container {
+    margin-top: 10px;
+}
+
+.calendar-table th,
+.calendar-table td {
+    padding: 14px 16px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.95rem;
+}
+
+.calendar-table th {
+    font-weight: 600;
+    color: rgba(244, 235, 208, 0.6);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.calendar-table td {
+    color: #F4EBD0;
+    font-weight: 500;
+}
+
+.calendar-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.calendar-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.calendar-table .today-row td {
+    color: var(--clr-gold);
+    font-weight: 700;
+    background-color: var(--clr-gold-dim);
+}
+
+.calendar-table .today-row td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.calendar-table .today-row td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
 }

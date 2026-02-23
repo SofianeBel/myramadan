@@ -313,6 +313,43 @@ export async function fetchPrayerTimes(params = {}, dateStr = null) {
   }
 }
 
+/**
+ * Fetch calendar for a specific month and year from Aladhan API.
+ * @param {number} year 
+ * @param {number} month (1-12)
+ * @param {{ lat?, lon?, city?, country?, method?, angles? }} params 
+ */
+export async function fetchMonthCalendar(year, month, params = {}) {
+  const { lat, lon, city = 'Paris', country = 'France', method = 12, angles = null } = params;
+
+  let base;
+  if (lat != null && lon != null) {
+    base = `https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${lat}&longitude=${lon}`;
+  } else {
+    base = `https://api.aladhan.com/v1/calendarByCity/${year}/${month}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}`;
+  }
+
+  let url;
+  if (angles && typeof angles.fajr === 'number' && typeof angles.isha === 'number') {
+    url = `${base}&method=99&methodSettings=${angles.fajr},null,${angles.isha}`;
+  } else {
+    url = `${base}&method=${method}`;
+  }
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const json = await response.json();
+    if (json.code !== 200 || !json.data) throw new Error('Invalid API response');
+
+    // Returns array of days
+    return json.data;
+  } catch (err) {
+    console.error('[prayer-times] Aladhan calendar fetch error:', err);
+    return null;
+  }
+}
+
 // ─── Shared helpers ──────────────────────────────────────────────
 
 /**

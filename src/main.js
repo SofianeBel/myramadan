@@ -20,6 +20,7 @@ import { initOnboarding } from './modules/onboarding.js'
 import { getMosqueSlug, getCity, getCountry, getCalculationMethod, getMethodAngles, getUserCoords, requestGeolocation, updateLocationDisplay, initSettings } from './modules/settings.js'
 import { startNotifications, stopNotifications, isNotificationsEnabled, loadPrefs, savePrefs } from './modules/notifications.js'
 import { getOffset, getOffsetDateForAladhan, initDateNavigation } from './modules/date-navigation.js'
+import { initCalendar, refreshCalendar } from './modules/calendar.js'
 
 // Intervals
 let fastingInterval = null
@@ -145,6 +146,39 @@ function setupInteractiveEffects() {
 }
 
 /**
+ * Setup navigation between Dashboard and Horaires
+ */
+function setupNavigation() {
+  const navTabs = {
+    dashboard: { btn: document.getElementById('nav-dashboard'), view: document.getElementById('view-dashboard') },
+    horaires: { btn: document.getElementById('nav-horaires'), view: document.getElementById('view-horaires') }
+  };
+
+  Object.values(navTabs).forEach(tab => {
+    if (tab.btn) {
+      tab.btn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // Remove active class from all
+        Object.values(navTabs).forEach(t => {
+          if (t.btn) t.btn.classList.remove('active');
+          if (t.view) t.view.classList.remove('active-view');
+        });
+
+        // Add to current
+        tab.btn.classList.add('active');
+        if (tab.view) tab.view.classList.add('active-view');
+
+        // Initialize calendar on first visit
+        if (tab.btn === navTabs.horaires.btn) {
+          initCalendar();
+        }
+      });
+    }
+  });
+}
+
+/**
  * Main initialization sequence.
  */
 document.addEventListener('DOMContentLoaded', async () => {
@@ -162,6 +196,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 3. Display location in header
   updateLocationDisplay()
+
+  // 3.5. Setup navigation
+  setupNavigation()
 
   // 4. Load prayer data (Mawaqit or Aladhan)
   const mosqueSlug = getMosqueSlug()
@@ -185,6 +222,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 9. Settings modal (re-fetches data on mosque change, preserves date offset)
   initSettings(async (newMosqueSlug) => {
     await loadPrayerData(newMosqueSlug, getOffset())
+    await refreshCalendar()
   })
 
   // 10. Quick-toggle reminder button
