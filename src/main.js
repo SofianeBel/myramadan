@@ -21,9 +21,57 @@ import { getMosqueSlug, getCity, getCountry, getCalculationMethod, getMethodAngl
 import { startNotifications, stopNotifications, isNotificationsEnabled, loadPrefs, savePrefs } from './modules/notifications.js'
 import { getOffset, getOffsetDateForAladhan, initDateNavigation } from './modules/date-navigation.js'
 import { initCalendar, refreshCalendar } from './modules/calendar.js'
+import { initWindowControls } from './modules/window.js'
 
 // Intervals
 let fastingInterval = null
+
+/**
+ * Initialize Sakura petal animations in the titlebar
+ */
+function initSakura() {
+  const container = document.getElementById('sakura-container');
+  if (!container) return;
+
+  container.innerHTML = ''; // Clear any existing petals
+
+  // Create 15 petals on the branches
+  const numPetals = 15;
+
+  for (let i = 0; i < numPetals; i++) {
+    const petal = document.createElement('div');
+    petal.classList.add('sakura-petal');
+
+    // Size between 5px and 12px
+    const size = Math.random() * 7 + 5;
+    petal.style.width = `${size}px`;
+    petal.style.height = `${size}px`;
+
+    // Position on branches (left 0-35% or right 65-100%)
+    const isLeft = Math.random() > 0.5;
+    const leftPos = isLeft ? Math.random() * 35 : 65 + Math.random() * 35;
+    const topPos = Math.random() * 30 + 5; // 5px to 35px from top
+
+    petal.style.left = `${leftPos}%`;
+    petal.style.top = `${topPos}px`;
+
+    // Base rotation to look natural and target rotation for the subtle animation
+    const baseRotation = Math.random() * 360;
+    const targetRotation = baseRotation + (Math.random() > 0.5 ? 15 : -15);
+
+    petal.style.setProperty('--base-rot', `${baseRotation}deg`);
+    petal.style.setProperty('--target-rot', `${targetRotation}deg`);
+
+    // Subtle breathing animation durations
+    const breatheDuration = Math.random() * 2 + 3; // 3-5s
+    const delay = Math.random() * 3;
+
+    petal.style.animation = `breathe-sakura ${breatheDuration}s ease-in-out ${delay}s infinite alternate`;
+
+    container.appendChild(petal);
+  }
+}
+
 
 /**
  * Load prayer data and refresh all dependent UI.
@@ -185,6 +233,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 0. Initialize persistent storage (loads from disk into memory cache)
   await storage.init()
 
+  // Window controls
+  initWindowControls()
+
   // 1. Theme (restore before anything visual)
   initTheme()
 
@@ -199,6 +250,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 3.5. Setup navigation
   setupNavigation()
+
+  // 3.8 Initialize Sakura Titlebar Effects
+  initSakura()
 
   // 4. Load prayer data (Mawaqit or Aladhan)
   const mosqueSlug = getMosqueSlug()

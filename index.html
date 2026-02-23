@@ -12,7 +12,34 @@
 
 <body>
 
-    <!-- Splash Screen -->
+    <!-- Custom Titlebar -->
+    <div data-tauri-drag-region class="custom-titlebar">
+        <div class="titlebar-pattern" data-tauri-drag-region></div>
+        <!-- Sakura Petals Container -->
+        <div id="sakura-container" class="sakura-container" data-tauri-drag-region></div>
+
+        <div class="titlebar-center" data-tauri-drag-region>
+            <img src="/logo.png" alt="GuideME" class="titlebar-logo" data-tauri-drag-region />
+            <span class="titlebar-title" data-tauri-drag-region>GuideME</span>
+        </div>
+        <div class="titlebar-controls">
+            <div class="titlebar-button" id="titlebar-minimize">
+                <svg width="10" height="1" viewBox="0 0 10 1">
+                    <path d="M0,0.5 h10" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+            </div>
+            <div class="titlebar-button" id="titlebar-maximize">
+                <svg width="10" height="10" viewBox="0 0 10 10">
+                    <path d="M0.5,0.5 h9 v9 h-9 Z" fill="none" stroke="currentColor" stroke-width="1.2" />
+                </svg>
+            </div>
+            <div class="titlebar-button titlebar-close" id="titlebar-close">
+                <svg width="10" height="10" viewBox="0 0 10 10">
+                    <path d="M0.5,0.5 l9,9 M9.5,0.5 l-9,9" stroke="currentColor" stroke-width="1.2" />
+                </svg>
+            </div>
+        </div>
+    </div>
     <div id="splash-screen" class="splash-screen">
         <div class="splash-content">
             <img class="splash-logo" src="/logo.png" alt="GuideME Logo" />

@@ -120,6 +120,7 @@ body {
     from {
         filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
     }
+
     to {
         filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.8));
     }
@@ -170,11 +171,164 @@ body {
 }
 
 /* ---------------------------------
+   0. CUSTOM TITLEBAR
+   --------------------------------- */
+.custom-titlebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 54px;
+    background-color: var(--bg-sidebar);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20000;
+    user-select: none;
+    border-bottom: 2px solid var(--clr-dark-green);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    overflow: hidden;
+    /* Important to keep petals inside */
+}
+
+/* Base Sakura Container for Petals */
+.sakura-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.titlebar-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 1;
+    /* Organic Tree branches curving from the sides */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='54' preserveAspectRatio='none' viewBox='0 0 800 54'%3E%3C!-- Left Branch --%3E%3Cpath d='M-10,10 Q50,-5 120,20 T350,15' fill='none' stroke='%233E2723' stroke-width='4' stroke-linecap='round' opacity='0.8'/%3E%3Cpath d='M-5,25 Q40,35 150,15 T300,30' fill='none' stroke='%234E342E' stroke-width='3' stroke-linecap='round' opacity='0.7'/%3E%3Cpath d='M80,18 Q120,-5 180,10' fill='none' stroke='%233E2723' stroke-width='2' stroke-linecap='round' opacity='0.6'/%3E%3C!-- Right Branch --%3E%3Cpath d='M810,5 Q750,25 680,10 T450,25' fill='none' stroke='%233E2723' stroke-width='4' stroke-linecap='round' opacity='0.8'/%3E%3Cpath d='M805,30 Q760,15 650,35 T500,20' fill='none' stroke='%234E342E' stroke-width='3' stroke-linecap='round' opacity='0.7'/%3E%3Cpath d='M720,12 Q680,45 620,15' fill='none' stroke='%233E2723' stroke-width='2' stroke-linecap='round' opacity='0.6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    z-index: 0;
+}
+
+/* --- Sakura Petal Styles --- */
+.sakura-petal {
+    position: absolute;
+    background-color: #FFB7C5;
+    /* Default pink */
+    border-radius: 150% 0 150% 0;
+    /* Basic leaf shape */
+    transform-origin: center;
+    opacity: 0.8;
+    z-index: 1;
+    pointer-events: none;
+    box-shadow: 0 0 3px rgba(255, 183, 197, 0.4);
+}
+
+.sakura-petal::after {
+    content: "";
+    position: absolute;
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+    border-radius: 150% 0 150% 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, transparent 60%);
+}
+
+/* Subtle breathing animation for petals on the branches */
+@keyframes breathe-sakura {
+
+    0%,
+    100% {
+        transform: rotate(var(--base-rot)) scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: rotate(var(--target-rot)) scale(1.15);
+        opacity: 1;
+        box-shadow: 0 0 6px rgba(255, 183, 197, 0.6);
+    }
+}
+
+.titlebar-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    z-index: 2;
+    /* Ensure on top of petals */
+    pointer-events: none;
+}
+
+.titlebar-logo {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    object-fit: contain;
+}
+
+.titlebar-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--clr-gold);
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8), 0 0 1px rgba(0, 0, 0, 1);
+    /* Stronger shadow to pop against petals */
+    text-transform: uppercase;
+}
+
+.titlebar-controls {
+    display: flex;
+    height: 100%;
+    margin-left: auto;
+    z-index: 2;
+    /* Ensure on top of petals */
+}
+
+.titlebar-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 46px;
+    height: 100%;
+    color: var(--text-muted);
+    cursor: default;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.titlebar-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+}
+
+.titlebar-close:hover {
+    background-color: #E81123 !important;
+    color: #fff !important;
+}
+
+/* ---------------------------------
    2. MAIN APP ENTRY ANIMATIONS
    --------------------------------- */
 .app-container {
     width: 100%;
     height: 100%;
+    padding-top: 54px;
+    box-sizing: border-box;
     display: flex;
     background: transparent;
     transition: opacity 0.5s ease-in;
