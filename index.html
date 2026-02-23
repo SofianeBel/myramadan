@@ -664,6 +664,17 @@
                 </div>
             </form>
 
+            <div id="bug-error-msg" class="hidden" style="text-align: center; padding: 20px 0 10px;">
+                <i class="fa-solid fa-circle-xmark"
+                    style="font-size: 3.5rem; color: #F44336; margin-bottom: 20px; display: block;"></i>
+                <p style="font-size: 1.2rem; font-weight: 600; color: var(--text-main); margin-bottom: 10px;">Erreur d'envoi</p>
+                <p id="bug-error-detail" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.5;">Impossible d'envoyer le rapport. Vérifiez votre connexion internet.</p>
+                <div style="margin-top: 30px; display: flex; gap: 12px; justify-content: center;">
+                    <button id="bug-retry" class="btn-primary btn-small">Réessayer</button>
+                    <button id="bug-close-error" class="btn-text">Fermer</button>
+                </div>
+            </div>
+
             <div id="bug-success-msg" class="hidden" style="text-align: center; padding: 20px 0 10px;">
                 <i class="fa-solid fa-circle-check"
                     style="font-size: 3.5rem; color: #4CAF50; margin-bottom: 20px; display: block;"></i>
