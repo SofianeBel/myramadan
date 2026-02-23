@@ -188,12 +188,19 @@ export async function fetchMawaqitTimes(mosqueSlug) {
  * When custom angles are provided, uses method=99 + methodSettings override
  * (fixes Aladhan's incorrect angles for UOIF: 12° instead of real 15°).
  */
-function buildAladhanUrl({ lat, lon, city = 'Paris', country = 'France', method = 12, angles = null }) {
+const DATE_FORMAT_RE = /^\d{2}-\d{2}-\d{4}$/
+
+function buildAladhanUrl({ lat, lon, city = 'Paris', country = 'France', method = 12, angles = null, dateStr = null }) {
+  // Validate dateStr format before using in URL path
+  const safeDate = (dateStr && DATE_FORMAT_RE.test(dateStr)) ? dateStr : null
+
   let base
   if (lat != null && lon != null) {
-    base = `${ALADHAN_BY_COORDS}?latitude=${lat}&longitude=${lon}`
+    const path = safeDate ? `${ALADHAN_BY_COORDS}/${safeDate}` : ALADHAN_BY_COORDS
+    base = `${path}?latitude=${lat}&longitude=${lon}`
   } else {
-    base = `${ALADHAN_BY_CITY}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}`
+    const path = safeDate ? `${ALADHAN_BY_CITY}/${safeDate}` : ALADHAN_BY_CITY
+    base = `${path}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}`
   }
 
   if (angles && typeof angles.fajr === 'number' && typeof angles.isha === 'number') {
@@ -216,9 +223,9 @@ function locationCacheKey({ lat, lon, city, country, method, angles }) {
  * @param {{ lat?, lon?, city?, country?, method? }} params
  * @returns {Promise<Object|null>} Hijri date object
  */
-export async function fetchHijriDate(params = {}) {
+export async function fetchHijriDate(params = {}, dateStr = null) {
   try {
-    const url = buildAladhanUrl(params)
+    const url = buildAladhanUrl({ ...params, dateStr })
     const response = await fetch(url)
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
@@ -242,17 +249,33 @@ export async function fetchHijriDate(params = {}) {
  * @param {{ lat?, lon?, city?, country?, method? }} params
  * @returns {Promise<{ timings: Object, hijriDate: Object } | null>}
  */
-export async function fetchPrayerTimes(params = {}) {
-  const cached = loadCache(ALADHAN_CACHE_KEY)
-  const today = new Date().toISOString().slice(0, 10)
-  const cacheKey = locationCacheKey(params)
+export async function fetchPrayerTimes(params = {}, dateStr = null) {
+  let targetDate
+  if (dateStr && DATE_FORMAT_RE.test(dateStr)) {
+    const [dd, mm, yyyy] = dateStr.split('-')
+    targetDate = `${yyyy}-${mm}-${dd}` // DD-MM-YYYY → YYYY-MM-DD
+  } else {
+    const now = new Date()
+    const y = now.getFullYear()
+    const m = String(now.getMonth() + 1).padStart(2, '0')
+    const d = String(now.getDate()).padStart(2, '0')
+    targetDate = `${y}-${m}-${d}`
+  }
+  const locKey = locationCacheKey(params)
 
-  if (cached && cached.date === today && cached.locationKey === cacheKey) {
+  // Multi-date cache: Record<YYYY-MM-DD, { locationKey, data }>
+  const allCached = loadCache(ALADHAN_CACHE_KEY) || {}
+  // Graceful migration: old flat format has a 'date' key — ignore it
+  const cached = (typeof allCached === 'object' && !allCached.date)
+    ? allCached[targetDate]
+    : null
+
+  if (cached && cached.locationKey === locKey) {
     return cached.data
   }
 
   try {
-    const url = buildAladhanUrl(params)
+    const url = buildAladhanUrl({ ...params, dateStr })
     const response = await fetch(url)
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
@@ -268,11 +291,14 @@ export async function fetchPrayerTimes(params = {}) {
 
     const result = { timings, hijriDate }
 
-    saveCache(ALADHAN_CACHE_KEY, {
-      date: today,
-      locationKey: cacheKey,
-      data: result,
-    })
+    // Write into keyed cache, prune to 7 most recent dates
+    const store = (typeof allCached === 'object' && !allCached.date) ? allCached : {}
+    store[targetDate] = { locationKey: locKey, data: result }
+    // ISO date strings (YYYY-MM-DD) sort lexicographically = chronologically
+    const keys = Object.keys(store).sort().slice(-7)
+    const pruned = {}
+    keys.forEach(k => { pruned[k] = store[k] })
+    saveCache(ALADHAN_CACHE_KEY, pruned)
 
     return result
   } catch (err) {

@@ -1,160 +1,74 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
-## Project Overview
-
-**GuideME - Ramadan Edition** is a Tauri v2 desktop application for Ramadan: prayer times, fasting tracker, Qibla compass, daily Quran/Hadith, and notification reminders with Adhan playback. UI is fully in French. Built with vanilla JS (no framework), Vite, and Rust/Tauri backend.
-
-## Commands
-
-```bash
-npm run dev              # Vite dev server (port 1420)
-npm run build            # Vite production build → dist/
-npm run tauri:dev        # Tauri dev (launches desktop app with hot reload)
-npm run tauri:build      # Tauri production build (installer)
-npm run preview          # Preview production build locally
-```
-
-## Architecture
-
-### Tech Stack
-- **Frontend:** Vanilla JS (ES modules), HTML, CSS — no framework
-- **Desktop:** Tauri v2 (Rust backend) with plugins: `http`, `store`, `notification`, `autostart`
-- **Build:** Vite 7 (`vite.config.js`, port 1420, `esnext` target)
-- **Maps:** Leaflet.js (OpenStreetMap tiles)
+## Stack
+- **Frontend:** Vanilla JS (ES modules), HTML, CSS — pas de framework
+- **Desktop:** Tauri v2 (Rust) — plugins: `http`, `store`, `notification`, `autostart`
+- **Build:** Vite 7 (port 1420, `esnext` target)
+- **Maps:** Leaflet.js (OpenStreetMap)
 - **Icons:** Font Awesome 6.4 (CDN), Google Fonts (Outfit)
 
-### Entry Point & Initialization Sequence
+## Commandes
 
-`index.html` loads `src/main.js` which orchestrates startup in this order:
-
-1. `storage.init()` — Load persistent settings from Tauri store
-2. `initTheme()` — Restore dark/light mode
-3. `requestGeolocation()` — GPS coordinates (silent fallback to Paris)
-4. `initSplash()` — 2.5s animated splash screen
-5. `updateLocationDisplay()` — Show mosque name or city
-6. `loadPrayerData()` — Fetch prayer times (Mawaqit → Aladhan fallback)
-7. `updateDailyContent()` — Display verse/hadith by day of year
-8. `initOnboarding()` — First-visit guided tour (4 steps)
-9. `initSettings()` — Settings modal + Leaflet map init
-10. `startNotifications()` — 15s interval notification check loop
-
-### Module Map (`src/modules/`)
-
-| Module | Responsibility | Key Exports |
-|---|---|---|
-| `prayer-times.js` | Mawaqit & Aladhan API integration, time parsing | `loadPrayerData()`, `findNextPrayer()`, `parseTime()` |
-| `settings.js` | Settings modal, mosque search, map (Leaflet), geolocation, calculation method | `initSettings()`, `requestGeolocation()` |
-| `notifications.js` | OS notifications, Adhan audio playback, 15s check loop | `startNotifications()`, `initNotifications()` |
-| `storage.js` | Tauri plugin-store wrapper with in-memory cache | `storage.init()`, `storage.get()`, `storage.set()` |
-| `countdown.js` | Real-time countdown to next prayer (HH:MM:SS) | `startCountdown()` |
-| `fasting.js` | Suhoor→Iftar progress bar and time remaining | `updateFasting()` |
-| `schedule.js` | Daily prayer list rendering with visual states | `renderPrayerSchedule()` |
-| `hijri-date.js` | Gregorian + Hijri date display | `updateHijriDate()` |
-| `daily-content.js` | Rotating Quran verses & Hadith from JSON | `updateDailyContent()` |
-| `theme.js` | Dark/light mode toggle via `data-theme` attribute | `initTheme()`, `toggleTheme()` |
-| `onboarding.js` | 4-step guided tour (first visit only) | `initOnboarding()` |
-| `splash.js` | 2.5s animated startup screen | `initSplash()` |
-
-### Data Flow: Prayer Times
-
-```
-User selects mosque (Mawaqit)    User has no mosque (fallback)
-         │                                │
-         ▼                                ▼
-  Mawaqit API                      Aladhan API
-  /mosque/search?word=...         /timings?lat=...&lon=...&method=12
-         │                                │
-         ▼                                ▼
-  times[]: [Fajr,Sunrise,       timings: {Fajr,Sunrise,Dhuhr,
-  Dhuhr,Asr,Maghrib,Isha]       Asr,Maghrib,Isha,...}
-         │                                │
-         └──────────┬─────────────────────┘
-                    ▼
-           Normalized to 6 prayer times (HH:MM)
-           Cached daily in Tauri store
-                    │
-        ┌───────────┼───────────────┐
-        ▼           ▼               ▼
-   countdown.js  fasting.js   schedule.js
-   (next prayer) (progress)   (prayer list)
+```bash
+npm install              # Prérequis : Rust toolchain + Node.js 18+
+npm run dev              # Vite dev server (port 1420)
+npm run build            # Production build → dist/
+npm run tauri:dev        # App desktop avec hot reload
+npm run tauri:build      # Build installer desktop
+npm run preview          # Preview build local
 ```
 
-**Hijri date** always comes from Aladhan (Mawaqit doesn't provide it).
+## Structure du projet
 
-### Storage (`storage.js`)
+```
+src/
+├── main.js              # Point d'entrée, orchestre l'init de tous les modules
+├── style.css            # Styles + variables thème (dark/light)
+├── modules/             # 12 modules ES (prayer-times, settings, notifications, storage, etc.)
+├── data/
+│   └── daily-content.json  # 400+ entrées (arabe, français, référence)
+public/
+├── audio/               # adhan-{makkah,madina,fajr}.mp3 + notification.mp3
+src-tauri/
+├── tauri.conf.json      # Config app, CSP, dimensions fenêtre
+├── src/lib.rs           # Setup app, system tray, plugins
+└── Cargo.toml           # Dépendances Rust
+```
 
-Uses Tauri `plugin-store` writing to `guideme-settings.json`. In-memory `Map()` cache for sync reads, async write-through to disk.
+## APIs externes
 
-**Key stored values:**
-- `mosqueSlug`, `mosqueName` — Selected mosque
-- `userLat`, `userLon`, `userCity`, `userCountry` — Location
-- `calculationMethod` — Aladhan method ID (default: 12 = UOIF/France)
-- `mawaqitCache`, `prayerTimesCache` — Daily API response cache
-- `notificationPrefs` — Notification preferences object
-- `theme` — `'dark'` or `'light'`
-- `tourCompleted` — Onboarding shown flag
-
-### Notification System (`notifications.js`)
-
-- **Check interval:** 15 seconds
-- **Detection window:** 30 seconds (avoids duplicate fires)
-- **Two-tier:** Pre-prayer (X min before, chime sound) → At prayer time (Adhan audio)
-- **Special cases:** Suhoor replaces Fajr pre-notification, Maghrib pre-notification becomes Iftar reminder
-- **Per-prayer toggles** for granular control
-- **Adhan audio files:** `public/audio/adhan-{makkah,madina,fajr}.mp3` + `notification.mp3`
-
-### Tauri Backend (`src-tauri/`)
-
-- `lib.rs` — App setup, system tray (close-to-tray behavior), plugin registration
-- **Plugins:** `http` (CORS bypass for Mawaqit), `store` (persistence), `notification` (OS alerts), `autostart` (boot launch)
-- **System tray:** Left-click shows window, menu has "Ouvrir GuideME" / "Quitter"
-- **CSP** configured in `tauri.conf.json`: allows `api.aladhan.com`, OpenStreetMap tiles, Google Fonts, Font Awesome CDN
-
-### External APIs
-
-| API | Base URL | Purpose |
+| API | Usage | Appel depuis |
 |---|---|---|
-| **Mawaqit** | `https://mawaqit.net/api/2.0/mosque/search` | Mosque-specific prayer times |
-| **Aladhan** | `https://api.aladhan.com/v1/timings` | Calculated prayer times + Hijri date |
+| **Mawaqit** (`mawaqit.net/api/2.0/`) | Horaires mosquée spécifique | Plugin HTTP Tauri (Rust) — **CORS bypass obligatoire** |
+| **Aladhan** (`api.aladhan.com/v1/`) | Horaires calculés + date Hijri | JS direct (pas de CORS) |
 
-Mawaqit is called via Tauri's HTTP plugin (Rust-side) to bypass CORS. Aladhan is called directly from JS.
+Flux : Mawaqit prioritaire → Aladhan fallback → normalisé en 6 horaires (HH:MM) → cache quotidien Tauri store.
 
-### Theming
+## Conventions de code
 
-Two themes toggled via `data-theme` attribute on `<html>`:
-- **Dark** (default): Deep twilight blue (`#0B1320`), glassmorphism cards, sand-colored text, SVG Sahara night background
-- **Light**: Desert sand palette, green sidebar, SVG daytime Sahara background
+- Vanilla JS avec ES modules (`import`/`export`)
+- Pas de point-virgule
+- Noms de variables et commentaires en français
+- Tout texte UI en français
+- CSS : custom properties pour le theming, sélecteurs `[data-theme="dark"|"light"]`
 
-CSS variables defined in `src/style.css` under `[data-theme="dark"]` and `[data-theme="light"]` selectors.
+## Scope des modifications
 
-### UI Structure (`index.html`)
+- Modifier uniquement ce qui est explicitement demandé
+- Ne pas ajouter de framework JS (React, Vue, etc.) — le projet reste en vanilla JS
+- Ne pas ajouter de dépendances npm sans confirmation
+- `src-tauri/` (Rust) : ne modifier que si explicitement demandé
+- Toujours tester avec `npm run tauri:dev` après modification
 
-Single-page app with sidebar navigation (4 pages: Dashboard, Horaires, Coran & Invocations, Qibla). Dashboard grid contains:
-- **Fasting card** — Suhoor/Iftar times + progress bar
-- **Countdown card** — Next prayer timer + reminder button
-- **Schedule card** — Full-width daily prayer list with color-coded states
-- **Quote card** — Daily Quranic verse or Hadith
+## À savoir (pièges)
 
-Settings modal has 4 tabs: Mosque search, Map, Notifications, Calculation method.
-
-## Key Patterns
-
-**Geolocation fallback chain:** Browser GPS → Saved coordinates in store → Paris (48.85, 2.35)
-
-**Prayer time caching:** Each API response is cached with a date key. Cache invalidated daily or when mosque/calculation method changes.
-
-**Calculation methods:** 15 supported methods via Aladhan (UOIF = method 12 is default for France). Method selection only affects fallback mode (without mosque).
-
-**Daily content rotation:** `dayOfYear % entries.length` indexes into `src/data/daily-content.json` (400+ entries with Arabic text, French translation, and reference).
-
-**Onboarding:** Only runs once (`tourCompleted` flag). 4-step tour highlighting Dashboard, Fasting card, Schedule, and Theme toggle.
-
-## Code Style
-
-- Vanilla JS with ES modules (`import`/`export`)
-- No semicolons convention in most modules
-- French variable names and comments throughout
-- CSS uses custom properties extensively for theming
-- All user-facing text in French
+- **CSP stricte** : toute nouvelle URL externe → l'ajouter dans `tauri.conf.json` → `app.security.csp`, sinon bloquée silencieusement
+- **Mawaqit = Tauri HTTP only** : l'API bloque les appels navigateur, toujours passer par le plugin HTTP côté Rust
+- **Date Hijri** : toujours depuis Aladhan (Mawaqit ne la fournit pas)
+- **Géolocalisation** : fallback chain GPS → coordonnées sauvegardées → Paris (48.85, 2.35)
+- **Méthode de calcul** : UOIF (method 12) par défaut, n'affecte que le mode sans mosquée
+- **Cache prières** : invalidé quotidiennement ou quand mosquée/méthode change
+- **Rotation contenu** : `dayOfYear % entries.length` dans `daily-content.json`
+- **Pas de .env** : aucune variable d'environnement, tout dans le Tauri store ou hardcodé
+- **Fenêtre** : min 900×600, default 1200×800 (`tauri.conf.json`)
+- **System tray** : fermer la fenêtre = minimize to tray, pas quit
