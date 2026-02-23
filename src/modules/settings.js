@@ -646,6 +646,12 @@ export function initSettings(onSave) {
       }
     }
 
+    // Reset Tour button
+    const btnResetTour = document.getElementById('btn-reset-tour')
+    if (btnResetTour && typeof window.resetTour === 'function') {
+      btnResetTour.onclick = () => window.resetTour()
+    }
+
     // Test sound button (only bind once)
     if (!notifSettingsInitialized) {
       const testBtn = document.getElementById('notif-test')

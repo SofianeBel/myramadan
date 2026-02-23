@@ -277,6 +277,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 8. Onboarding tour (first visit only)
   setTimeout(() => initOnboarding(), 500)
 
+  // Dev util: Expose resetTour explicitly for testing
+  window.resetTour = async () => {
+    await storage.set('tourCompleted', false)
+    await storage.flush()
+    window.location.reload()
+  }
+
   // 9. Settings modal (re-fetches data on mosque change, preserves date offset)
   initSettings(async (newMosqueSlug) => {
     await loadPrayerData(newMosqueSlug, getOffset())
