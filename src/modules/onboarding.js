@@ -24,9 +24,27 @@ const tourSteps = [
     position: 'top',
   },
   {
+    title: 'Notifications',
+    text: 'Vous pouvez maintenant cliquer sur les cloches de prière du jour pour activer ou désactiver les notifications individuellement.',
+    target: '.prayer-list',
+    position: 'top',
+  },
+  {
+    title: 'Calendrier Mensuel',
+    text: 'Nouveau ! Accédez à tout moment aux horaires complets du mois via ce nouvel onglet, avec une vue claire des jours à venir.',
+    target: '#nav-horaires',
+    position: 'right',
+  },
+  {
     title: 'Thèmes Sahara',
     text: "Passez du jour à la nuit ! Basculez entre le mode clair et sombre ici pour changer l'ambiance du désert en arrière-plan.",
     target: '#theme-toggle',
+    position: 'right',
+  },
+  {
+    title: 'Paramètres Avancés',
+    text: 'Découvrez nos nouveaux paramètres : recherche de mosquée sur carte, méthodes de calcul avancées et choix complet des Adhans.',
+    target: '#settings-btn',
     position: 'right',
   },
 ]
