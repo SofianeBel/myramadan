@@ -3,12 +3,11 @@
  */
 
 import { fetch as tauriFetch } from '@tauri-apps/plugin-http'
-import storage from './storage.js'
 
+const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN
 const GITHUB_REPO = 'SofianeBel/myramadan'
-const STORAGE_KEY = 'githubToken'
 
-async function createGitHubIssue(token, title, description, includeLogs) {
+async function createGitHubIssue(title, description, includeLogs) {
     const systemInfo = [
         `- **App**: GuideME Ramadan v1.0.0`,
         `- **OS**: ${navigator.userAgent}`,
@@ -27,7 +26,7 @@ async function createGitHubIssue(token, title, description, includeLogs) {
     const response = await tauriFetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
         method: 'POST',
         headers: {
-            'Authorization': `token ${token}`,
+            'Authorization': `token ${GITHUB_TOKEN}`,
             'Content-Type': 'application/json',
             'User-Agent': 'GuideME-Ramadan',
         },
@@ -58,34 +57,8 @@ export function initBugReport() {
     const errorDetail = document.getElementById('bug-error-detail')
     const retryBtn = document.getElementById('bug-retry')
     const closeErrorBtn = document.getElementById('bug-close-error')
-    const tokenSection = document.getElementById('bug-token-section')
-    const tokenInput = document.getElementById('bug-github-token')
-    const tokenStatus = document.getElementById('bug-token-status')
 
     if (!bugBtn || !modal) return
-
-    const updateTokenUI = () => {
-        const saved = storage.get(STORAGE_KEY)
-        if (saved) {
-            tokenInput.value = ''
-            tokenInput.placeholder = 'Token enregistre (' + saved.slice(-8) + ')'
-            tokenStatus.textContent = 'Token configure'
-            tokenStatus.style.color = '#4CAF50'
-        } else {
-            tokenInput.placeholder = 'ghp_xxxx ou github_pat_xxxx'
-            tokenStatus.textContent = 'Aucun token configure'
-            tokenStatus.style.color = 'var(--text-muted)'
-        }
-    }
-
-    // Save token on input blur
-    tokenInput.addEventListener('change', () => {
-        const val = tokenInput.value.trim()
-        if (val) {
-            storage.set(STORAGE_KEY, val)
-            updateTokenUI()
-        }
-    })
 
     // Open modal
     bugBtn.addEventListener('click', (e) => {
@@ -97,7 +70,6 @@ export function initBugReport() {
         successMsg.classList.add('hidden')
         errorMsg.classList.add('hidden')
         form.reset()
-        updateTokenUI()
     })
 
     // Close modal
@@ -116,15 +88,11 @@ export function initBugReport() {
 
     // Submit handler
     const handleSubmit = async () => {
-        // Save token if user typed one
-        const newToken = tokenInput.value.trim()
-        if (newToken) storage.set(STORAGE_KEY, newToken)
-
-        const token = storage.get(STORAGE_KEY)
-        if (!token) {
-            tokenStatus.textContent = 'Token requis pour envoyer'
-            tokenStatus.style.color = '#F44336'
-            tokenInput.focus()
+        if (!GITHUB_TOKEN) {
+            console.error('[BugReport] VITE_GITHUB_TOKEN non configure')
+            form.style.display = 'none'
+            errorDetail.textContent = 'Le service de rapport de bug n\'est pas configure.'
+            errorMsg.classList.remove('hidden')
             return
         }
 
@@ -138,7 +106,7 @@ export function initBugReport() {
         errorMsg.classList.add('hidden')
 
         try {
-            await createGitHubIssue(token, title, description, includeLogs)
+            await createGitHubIssue(title, description, includeLogs)
             form.style.display = 'none'
             successMsg.classList.remove('hidden')
         } catch (err) {
