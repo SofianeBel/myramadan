@@ -75,6 +75,7 @@ export function loadPrefs() {
 export function savePrefs(prefs) {
   try {
     storage.set(STORAGE_KEY, prefs)
+    window.dispatchEvent(new CustomEvent('notificationPrefsChanged'))
   } catch { /* ignore */ }
 }
 
