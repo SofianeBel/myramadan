@@ -24,6 +24,7 @@ import { initCalendar, refreshCalendar } from './modules/calendar.js'
 import { initWindowControls } from './modules/window.js'
 import { initSidebar } from './modules/sidebar.js'
 import { initBugReport } from './modules/bug-report.js'
+import { initSupport } from './modules/support.js'
 
 // Intervals
 let fastingInterval = null
@@ -262,6 +263,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 3.8 Initialize Sakura Titlebar Effects
   initSakura()
 
+  // 3.9 Initialize Support / Ads Feature
+  await initSupport()
+
   // 4. Load prayer data (Mawaqit or Aladhan)
   const mosqueSlug = getMosqueSlug()
   await loadPrayerData(mosqueSlug)
@@ -312,6 +316,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     reminderBtn.addEventListener('click', () => {
       const prefs = loadPrefs()
       prefs.enabled = !prefs.enabled
+      if (prefs.enabled) {
+        prefs.perPrayer = {
+          Fajr: true,
+          Dhuhr: true,
+          Asr: true,
+          Maghrib: true,
+          Isha: true,
+        }
+      }
       savePrefs(prefs)
       updateReminderBtn()
     })
