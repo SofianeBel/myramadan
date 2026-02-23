@@ -1,5 +1,5 @@
-import { fetchMonthCalendar } from './prayer-times.js';
-import { getCity, getCountry, getCalculationMethod, getMethodAngles, getUserCoords } from './settings.js';
+import { fetchMonthCalendar, fetchMawaqitCalendar } from './prayer-times.js';
+import { getMosqueSlug, getCity, getCountry, getCalculationMethod, getMethodAngles, getUserCoords } from './settings.js';
 
 let currentViewDate = new Date();
 let calendarInitialized = false;
@@ -57,6 +57,7 @@ async function renderCalendar(year, month) {
     const method = getCalculationMethod();
     const angles = getMethodAngles();
     const coords = getUserCoords();
+    const mosqueSlug = getMosqueSlug();
     const locationParams = {
         lat: coords?.lat,
         lon: coords?.lon,
@@ -66,7 +67,44 @@ async function renderCalendar(year, month) {
         angles,
     };
 
-    const calendarData = await fetchMonthCalendar(year, month, locationParams);
+    let calendarData = null;
+
+    if (mosqueSlug) {
+        const mawaqitCalendar = await fetchMawaqitCalendar(mosqueSlug);
+        if (mawaqitCalendar && Array.isArray(mawaqitCalendar) && mawaqitCalendar.length === 12) {
+            const monthData = mawaqitCalendar[month - 1];
+            const daysInMonth = new Date(year, month, 0).getDate();
+
+            // monthData is an OBJECT {"1":[...], "2":[...]}, not an array
+            if (monthData && typeof monthData === 'object' && Object.keys(monthData).length >= daysInMonth) {
+                calendarData = [];
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const times = monthData[String(day)]; // String key "1", "2", ...
+                    if (times && times.length >= 6) {
+                        calendarData.push({
+                            date: { gregorian: { day: String(day), date: `${String(day).padStart(2, '0')}-${String(month).padStart(2, '0')}-${year}` } },
+                            timings: {
+                                Fajr: times[0],
+                                Sunrise: times[1],
+                                Dhuhr: times[2],
+                                Asr: times[3],
+                                Maghrib: times[4],
+                                Isha: times[5]
+                            }
+                        });
+                    }
+                }
+                if (calendarData.length !== daysInMonth) {
+                    calendarData = null; // Fallback if parsing incomplete
+                }
+            }
+        }
+    }
+
+    if (!calendarData) {
+        // Fallback to Aladhan
+        calendarData = await fetchMonthCalendar(year, month, locationParams);
+    }
 
     loading.classList.add('hidden');
 
