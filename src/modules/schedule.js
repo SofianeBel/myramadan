@@ -9,32 +9,34 @@ import { findNextPrayer } from './countdown.js'
  * Render the prayer schedule into the prayer-list container.
  * @param {Object} timings - Raw timings from API
  */
-export function renderPrayerSchedule(timings) {
+export function renderPrayerSchedule(timings, isToday = true) {
   const container = document.getElementById('prayer-list')
   if (!container) return
 
   const prayers = getPrayerList(timings)
-  const nowMin = getCurrentMinutes()
-  const nextPrayer = findNextPrayer(timings)
+  const nowMin = isToday ? getCurrentMinutes() : -1
+  const nextPrayer = isToday ? findNextPrayer(timings) : null
 
   container.innerHTML = ''
 
   prayers.forEach((prayer, index) => {
     const prayerMin = timeToMinutes(prayer.time)
-    const isPassed = prayerMin <= nowMin
+    const isPassed = isToday && prayerMin <= nowMin
     const isFajr = prayer.name === 'Fajr'
     const isMaghrib = prayer.name === 'Maghrib'
-    const isNext = nextPrayer && nextPrayer.name === prayer.name
+    const isNext = isToday && nextPrayer && nextPrayer.name === prayer.name
 
     // Determine if this is the "active" (currently in-progress) prayer
     // Active = the period between this prayer and the next one
     let isActive = false
-    if (index < prayers.length - 1) {
-      const nextPrayerMin = timeToMinutes(prayers[index + 1].time)
-      isActive = nowMin >= prayerMin && nowMin < nextPrayerMin
-    } else {
-      // Last prayer (Isha) — active from Isha until midnight
-      isActive = nowMin >= prayerMin
+    if (isToday) {
+      if (index < prayers.length - 1) {
+        const nextPrayerMin = timeToMinutes(prayers[index + 1].time)
+        isActive = nowMin >= prayerMin && nowMin < nextPrayerMin
+      } else {
+        // Last prayer (Isha) — active from Isha until midnight
+        isActive = nowMin >= prayerMin
+      }
     }
 
     // Build CSS classes
