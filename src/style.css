@@ -27,6 +27,14 @@
     --radius-full: 9999px;
 
     --font-main: 'Outfit', sans-serif;
+
+    /* Light mode glassmorphism */
+    --bg-modal: rgba(255, 255, 255, 0.70);
+    /* More transparent to let the blur show through */
+    --glass-blur: blur(24px);
+    /* Stronger blur for light mode */
+    --glass-border: 1px solid rgba(255, 255, 255, 0.7);
+    /* Stronger bright reflection on edges */
 }
 
 [data-theme="dark"] {
@@ -51,7 +59,13 @@
     /* Translucent dark blue for badges/secondary cards */
     --clr-sand-dark: rgba(45, 68, 105, 0.8);
 
+    /* Modified transparent variables for dark mode */
+    --clr-sand: rgba(30, 48, 77, 0.6);
+    --clr-sand-dark: rgba(45, 68, 105, 0.8);
+
     /* Used for glassmorphism */
+    --bg-modal: var(--bg-card);
+    /* Fallback to existing dark card glass */
     --glass-blur: blur(12px);
     --glass-border: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -510,6 +524,11 @@ body {
     color: var(--clr-gold);
 }
 
+.menu-item.menu-item-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    cursor: default;
+}
 
 /* Main Content */
 .main-content {
@@ -1525,16 +1544,16 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(11, 43, 27, 0.85);
-    /* Dark green tint by default */
+    background: rgba(11, 43, 27, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 9999;
     display: flex;
     transition: opacity 0.4s ease, visibility 0.4s ease, background 0.4s ease;
 }
 
 [data-theme="dark"] .onboarding-overlay {
-    background: rgba(0, 0, 0, 0.85);
-    /* Darker tint for night mode */
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .onboarding-overlay.hidden {
@@ -1546,7 +1565,11 @@ body {
 /* Tooltip Card */
 .onboarding-tooltip {
     position: absolute;
-    background: var(--bg-card);
+    background: var(--bg-modal);
+    /* Changed from bg-card to specifically isolated modal bg */
+    backdrop-filter: var(--glass-blur, blur(12px));
+    -webkit-backdrop-filter: var(--glass-blur, blur(12px));
+    border: var(--glass-border, 1px solid rgba(0, 0, 0, 0.05));
     border-radius: var(--radius-lg);
     padding: 24px;
     width: 320px;
@@ -1589,21 +1612,66 @@ body {
 }
 
 .btn-text {
-    background: none;
-    border: none;
-    color: var(--text-muted);
+    background: rgba(122, 139, 128, 0.1);
+    border: 1px solid rgba(122, 139, 128, 0.4);
+    color: var(--text-main);
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     font-family: var(--font-main);
-    transition: color 0.2s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
+
+[data-theme="dark"] .btn-text {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--text-main);
+}
+
+/* Support Donation Boxes */
+.support-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(122, 139, 128, 0.1);
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(122, 139, 128, 0.2);
+    text-decoration: none;
+    color: var(--text-main);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.support-box:hover {
+    background: rgba(122, 139, 128, 0.15);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="dark"] .support-box {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .support-box:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
 
 .btn-text:hover {
     color: var(--clr-dark-green);
+    background: rgba(122, 139, 128, 0.15);
+    border-color: rgba(122, 139, 128, 0.3);
 }
 
 [data-theme="dark"] .btn-text:hover {
     color: #FFF;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .onboarding-dots {
@@ -2086,4 +2154,94 @@ body {
 .calendar-table .today-row td:last-child {
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Coming Soon — Badge & Panel
+   ═══════════════════════════════════════════════════════════════════ */
+
+.badge-coming-soon {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--clr-gold);
+    color: #000;
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.coming-soon-panel {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed rgba(128, 128, 128, 0.4);
+}
+
+.coming-soon-stripes {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(-45deg,
+            transparent,
+            transparent 10px,
+            rgba(128, 128, 128, 0.08) 10px,
+            rgba(128, 128, 128, 0.08) 20px);
+    pointer-events: none;
+}
+
+.coming-soon-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 24px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Settings Modal — Responsive (< 600px)
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 600px) {
+    .settings-tooltip {
+        min-width: unset !important;
+        width: 95vw;
+        max-width: 95vw;
+        padding: 16px;
+        max-height: 85vh;
+    }
+
+    .settings-tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+    }
+
+    .settings-tab {
+        padding: 7px 8px;
+        font-size: 0.78rem;
+        gap: 4px;
+    }
+
+    .notif-select {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+        max-width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .notif-prayer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .notif-setting-row {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
 }
