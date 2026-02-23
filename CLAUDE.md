@@ -56,6 +56,7 @@ main.js (orchestrateur)
 | `countdown.js` | Timer prochaine prière (tick 1s, wraparound minuit→Fajr) | `prayer-times.js` |
 | `fasting.js` | Progression Suhoor→Iftar (live + mode référence non-today) | `prayer-times.js` |
 | `schedule.js` | Rendu liste prières avec états (active, passed, selected) | `prayer-times.js`, `countdown.js` |
+| `window.js` | Contrôles fenêtre custom (min, max, close) via `getCurrentWindow()` | Tauri window API |
 
 ### Stratégie API duale
 
@@ -108,6 +109,9 @@ main.js (orchestrateur)
 - **Images reçues** : toujours vérifier le vrai format avec `file <path>` — les extensions peuvent mentir (JPEG renommé en .png)
 - **Pas de .env** : aucune variable d'environnement, tout dans le Tauri store ou hardcodé
 - **Fenêtre** : min 900×600, default 1200×800 (`tauri.conf.json`)
+- **Custom titlebar = permissions obligatoires** : `decorations: false` nécessite `core:window:allow-start-dragging`, `allow-minimize`, `allow-toggle-maximize`, `allow-close` dans `src-tauri/capabilities/default.json`
+- **Notifications dev mode** : `sendNotification()` fonctionne sans erreur mais Windows filtre les toast des apps non-installées — tester avec `npm run tauri:build` + install
+- **WebView2 mémoire** : ~300-500 MB normal pour Tauri, les animations CSS continues augmentent l'usage GPU
 
 ## Git flow
 
