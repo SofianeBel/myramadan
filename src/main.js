@@ -22,6 +22,7 @@ import { startNotifications, stopNotifications, isNotificationsEnabled, loadPref
 import { getOffset, getOffsetDateForAladhan, initDateNavigation } from './modules/date-navigation.js'
 import { initCalendar, refreshCalendar } from './modules/calendar.js'
 import { initWindowControls } from './modules/window.js'
+import { initSidebar } from './modules/sidebar.js'
 
 // Intervals
 let fastingInterval = null
@@ -250,6 +251,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 3.5. Setup navigation
   setupNavigation()
+
+  // 3.6 Setup sidebar
+  initSidebar()
 
   // 3.8 Initialize Sakura Titlebar Effects
   initSakura()

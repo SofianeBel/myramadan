@@ -369,6 +369,61 @@ body {
     padding: 2rem 1.5rem;
     position: relative;
     border-right: 1px solid rgba(212, 175, 55, 0.1);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+}
+
+/* Sidebar Minimized State */
+.sidebar.minimized {
+    width: 88px;
+    padding: 2rem 0.75rem;
+}
+
+.sidebar.minimized .logo span,
+.sidebar.minimized .menu-item span {
+    display: none;
+}
+
+.sidebar.minimized .logo {
+    justify-content: center;
+    padding: 0;
+}
+
+.sidebar.minimized .menu-item {
+    justify-content: center;
+    padding: 12px;
+}
+
+.sidebar-toggle-btn {
+    position: absolute;
+    right: -14px;
+    top: 36px;
+    width: 28px;
+    height: 28px;
+    background-color: var(--bg-sidebar);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: var(--clr-gold);
+    z-index: 101;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.sidebar-toggle-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar.minimized .sidebar-toggle-btn i {
+    transform: rotate(180deg);
+}
+
+.sidebar-toggle-btn i {
+    font-size: 0.8rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar .logo {
