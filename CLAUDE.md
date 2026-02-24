@@ -119,7 +119,7 @@ main.js (orchestrateur)
 - **`opacity: 0` initial** : `.app-container` masqué jusqu'à la fin du splash (révélé par JS)
 - **Images reçues** : toujours vérifier le vrai format avec `file <path>` — les extensions peuvent mentir (JPEG renommé en .png)
 - **Variables d'env Vite** : `.env.local` (gitignored) pour les secrets (`VITE_*`), `.env.example` pour la doc — accès via `import.meta.env.VITE_XXX`
-- **GitHub Push Protection** : jamais de token/secret hardcodé dans le source — utiliser `import.meta.env.VITE_*` depuis `.env.local`
+- **Bug report token** : `BUG_REPORT_TOKEN` est lu au **build time** par `option_env!()` (Rust), embarqué dans le binaire — pas une variable runtime. Doit être défini AVANT `cargo build` / `npm run tauri:build`
 - **Fenêtre** : min 900×600, default 1200×800 (`tauri.conf.json`)
 - **Custom titlebar = permissions obligatoires** : `decorations: false` nécessite `core:window:allow-start-dragging`, `allow-minimize`, `allow-toggle-maximize`, `allow-close` dans `src-tauri/capabilities/default.json`
 - **Notifications dev mode** : `sendNotification()` fonctionne sans erreur mais Windows filtre les toast des apps non-installées — tester avec `npm run tauri:build` + install
@@ -130,8 +130,11 @@ main.js (orchestrateur)
 ## Variables d'environnement
 
 ```bash
-# .env.local (gitignored) — requis pour bug report
-VITE_GITHUB_TOKEN=""   # GitHub PAT pour création issues (bug report)
+# GitHub PAT pour bug report — lu au BUILD TIME par option_env!() (Rust)
+# Doit être défini AVANT `cargo build` / `npm run tauri:build`
+# set BUG_REPORT_TOKEN=ghp_xxx (Windows) ou export BUG_REPORT_TOKEN=ghp_xxx (Unix)
+# Scope requis : Issues Read/Write sur SofianeBel/myramadan
+# En CI : secret GitHub `BUG_REPORT_TOKEN` dans release.yml
 ```
 
 ## Git flow

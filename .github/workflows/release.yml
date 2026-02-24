@@ -74,6 +74,7 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUG_REPORT_TOKEN: ${{ secrets.BUG_REPORT_TOKEN }}
         with:
           tagName: v__VERSION__
           releaseName: GuideME Ramadan v__VERSION__

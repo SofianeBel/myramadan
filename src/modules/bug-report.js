@@ -1,49 +1,8 @@
 /**
- * bug-report.js — Bug Report modal → GitHub Issues
+ * bug-report.js — Bug Report modal → GitHub Issues (via Rust command)
  */
 
-import { fetch as tauriFetch } from '@tauri-apps/plugin-http'
-
-const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN
-const GITHUB_REPO = 'SofianeBel/myramadan'
-
-async function createGitHubIssue(title, description, includeLogs) {
-    const systemInfo = [
-        `- **App**: GuideME Ramadan v1.0.0`,
-        `- **OS**: ${navigator.userAgent}`,
-        `- **Date**: ${new Date().toLocaleString('fr-FR')}`,
-    ].join('\n')
-
-    const body = [
-        `## Description`,
-        description,
-        ``,
-        `## Informations systeme`,
-        systemInfo,
-        includeLogs ? `\n> Logs de l'application joints par l'utilisateur` : '',
-    ].join('\n')
-
-    const response = await tauriFetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `token ${GITHUB_TOKEN}`,
-            'Content-Type': 'application/json',
-            'User-Agent': 'GuideME-Ramadan',
-        },
-        body: JSON.stringify({
-            title: `[Bug] ${title}`,
-            body,
-            labels: ['bug'],
-        }),
-    })
-
-    if (!response.ok) {
-        const errData = await response.json().catch(() => ({}))
-        throw new Error(errData.message || `Erreur HTTP ${response.status}`)
-    }
-
-    return await response.json()
-}
+import { invoke } from '@tauri-apps/api/core'
 
 export function initBugReport() {
     const bugBtn = document.getElementById('bug-report-btn')
@@ -88,14 +47,6 @@ export function initBugReport() {
 
     // Submit handler
     const handleSubmit = async () => {
-        if (!GITHUB_TOKEN) {
-            console.error('[BugReport] VITE_GITHUB_TOKEN non configure')
-            form.style.display = 'none'
-            errorDetail.textContent = 'Le service de rapport de bug n\'est pas configure.'
-            errorMsg.classList.remove('hidden')
-            return
-        }
-
         const title = document.getElementById('bug-title').value
         const description = document.getElementById('bug-description').value
         const includeLogs = document.getElementById('bug-include-logs').checked
@@ -106,13 +57,20 @@ export function initBugReport() {
         errorMsg.classList.add('hidden')
 
         try {
-            await createGitHubIssue(title, description, includeLogs)
+            await invoke('create_bug_report', {
+                input: {
+                    title,
+                    description,
+                    include_logs: includeLogs,
+                    date: new Date().toLocaleString('fr-FR'),
+                }
+            })
             form.style.display = 'none'
             successMsg.classList.remove('hidden')
         } catch (err) {
             console.error('[BugReport] Erreur:', err)
             form.style.display = 'none'
-            errorDetail.textContent = err.message || 'Impossible d\'envoyer le rapport. Verifiez votre connexion internet.'
+            errorDetail.textContent = err || 'Impossible d\'envoyer le rapport. Vérifiez votre connexion internet.'
             errorMsg.classList.remove('hidden')
         } finally {
             submitBtn.disabled = false
