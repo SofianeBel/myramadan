@@ -101,6 +101,8 @@ main.js (orchestrateur)
 - CSS : custom properties pour le theming, `[data-theme="dark"|"light"]` sur `<html>`
 - Palettes : dark = bleu nuit + glassmorphism, light = vert foncé + or + sable
 - Toujours `var(--xxx)` pour couleurs — jamais de valeurs hardcodées
+- Nommage CSS variables : `--clr-{component}-{purpose}` (ex: `--clr-changelog-border`, `--clr-glass-bg`)
+- Variables glass réutilisables : `--clr-glass-bg` / `--clr-glass-border` pour fonds semi-transparents
 - Coming soon : `.menu-item-disabled` (sidebar) + `.badge-coming-soon` + `.coming-soon-panel` avec rayures pour features en construction
 
 ## Scope des modifications
@@ -135,6 +137,7 @@ main.js (orchestrateur)
 - **DOM ↔ JS sync** : si on supprime/remplace des éléments HTML (ex: coming soon), vérifier que le JS associé (`getElementById`, `querySelector`) ne crash pas sur `null`
 - **Version sync** : la version est dans `package.json`, `src-tauri/tauri.conf.json` ET `src-tauri/Cargo.toml` — les 3 doivent rester synchronisés. Le workflow CI release sync automatiquement avant le build
 - **Changelog in-app** : `APP_VERSION` dans `changelog.js` doit matcher la version des 3 fichiers ci-dessus. Clé storage `lastSeenVersion` contrôle le badge "NEW"
+- **Review CI auto** : le bot Claude vérifie strictement les couleurs hardcodées et les commentaires en anglais — toujours utiliser `var(--xxx)` et écrire les commentaires en français
 
 ## Variables d'environnement
 
@@ -155,6 +158,8 @@ main ← production stable (PR only)
 ```
 
 Commits : Conventional Commits (`feat:`, `fix:`, `refactor:`). Toujours créer les branches depuis `dev`.
+
+**Résolution de conflits dev↔main** : toujours garder la version `dev` (`--ours`) pour les fichiers source, puis intégrer les changements uniques de `main` (ex: fix CI). `dev` est toujours la branche la plus avancée.
 
 ## Versioning
 
