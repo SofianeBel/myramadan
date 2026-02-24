@@ -7,6 +7,7 @@
 
 import { fetch as tauriFetch } from '@tauri-apps/plugin-http'
 import storage from './storage.js'
+import { isValidSlug } from './sanitize.js'
 
 const ALADHAN_BY_CITY = 'https://api.aladhan.com/v1/timingsByCity'
 const ALADHAN_BY_COORDS = 'https://api.aladhan.com/v1/timings'
@@ -118,6 +119,7 @@ export async function searchMosquesByLocation(lat, lon) {
  */
 export async function fetchMawaqitTimes(mosqueSlug) {
   if (!mosqueSlug) return null
+  if (!isValidSlug(mosqueSlug)) return null
 
   // Check cache
   const cached = loadCache(MAWAQIT_CACHE_KEY)
@@ -191,6 +193,7 @@ export async function fetchMawaqitTimes(mosqueSlug) {
  */
 export async function fetchMawaqitCalendar(mosqueSlug) {
   if (!mosqueSlug) return null
+  if (!isValidSlug(mosqueSlug)) return null
 
   try {
     const url = `https://mawaqit.net/fr/${mosqueSlug}`

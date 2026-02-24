@@ -13,8 +13,7 @@
       "identifier": "http:default",
       "allow": [
         { "url": "https://mawaqit.net/**" },
-        { "url": "https://api.aladhan.com/**" },
-        { "url": "https://api.github.com/**" }
+        { "url": "https://api.aladhan.com/**" }
       ]
     },
     "store:default",
