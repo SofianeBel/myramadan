@@ -5,6 +5,34 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.1.4] - 2026-02-24
+
+### Corrigé
+
+- **Popups carte** — couleurs hardcodées remplacées par des classes CSS + variables (theming OK)
+- **Validation bug report** — le formulaire reste visible en cas d'erreur, message inline
+- **Comptage caractères** — `String::len()` → `chars().count()` pour les caractères accentués (Rust)
+- **Commentaires** — traduction des derniers commentaires anglais en français
+
+## [1.1.3] - 2026-02-24
+
+### Corrigé
+
+- **Failles XSS** — sanitisation des entrées dans la recherche mosquée et la carte (textContent + escapeHtml)
+- **CI injection** — sécurisation du pipeline release (variables via `env:` au lieu d'inline `${{ }}`)
+- **TLS** — activation du chiffrement TLS pour les requêtes réseau Rust (`rustls-tls`)
+- **CSP renforcée** — `script-src 'self'`, suppression de `api.github.com` du frontend
+- **Validation bug report** — limites titre/description + rate limiting côté client et Rust
+
+### Ajouté
+
+- **Dependabot** — mises à jour automatiques de sécurité (GitHub Actions + npm + Cargo)
+- **SRI** — intégrité Subresource Integrity pour les ressources CDN (Font Awesome)
+
+### Supprimé
+
+- **CLAUDE.md / GEMINI.md** — retirés du repo (fichiers de contexte AI, gitignored)
+
 ## [1.1.2] - 2026-02-24
 
 ### Corrigé
