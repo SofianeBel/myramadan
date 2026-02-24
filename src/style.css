@@ -2320,3 +2320,84 @@ body {
 .icon-bmc-fill {
     fill: var(--clr-brand-bmc);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Changelog / Quoi de neuf
+   ═══════════════════════════════════════════════════════════════════ */
+
+.changelog-list {
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.changelog-version-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0 6px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid rgba(122, 139, 128, 0.2);
+}
+
+.changelog-version-badge {
+    background: var(--clr-gold);
+    color: var(--clr-dark-green);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+}
+
+.changelog-version-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.changelog-entry {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.changelog-entry:hover {
+    background: rgba(122, 139, 128, 0.08);
+}
+
+[data-theme="dark"] .changelog-entry:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.changelog-entry span {
+    font-size: 0.88rem;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.changelog-type-icon {
+    flex-shrink: 0;
+    width: 18px;
+    text-align: center;
+    margin-top: 2px;
+    font-size: 0.75rem;
+}
+
+.changelog-type-feature .changelog-type-icon {
+    color: var(--clr-status-success);
+}
+
+.changelog-type-improvement .changelog-type-icon {
+    color: #2196F3;
+}
+
+.changelog-type-fix .changelog-type-icon {
+    color: #FF9800;
+}

@@ -25,6 +25,7 @@ import { initWindowControls } from './modules/window.js'
 import { initSidebar } from './modules/sidebar.js'
 import { initBugReport } from './modules/bug-report.js'
 import { initSupport } from './modules/support.js'
+import { initChangelog } from './modules/changelog.js'
 
 // Intervals
 let fastingInterval = null
@@ -265,6 +266,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 3.9 Initialize Support / Ads Feature
   await initSupport()
+
+  // 3.10 Initialize Changelog / Quoi de neuf
+  await initChangelog()
 
   // 4. Load prayer data (Mawaqit or Aladhan)
   const mosqueSlug = getMosqueSlug()
