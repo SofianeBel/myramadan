@@ -20,9 +20,61 @@ import { initOnboarding } from './modules/onboarding.js'
 import { getMosqueSlug, getCity, getCountry, getCalculationMethod, getMethodAngles, getUserCoords, requestGeolocation, updateLocationDisplay, initSettings } from './modules/settings.js'
 import { startNotifications, stopNotifications, isNotificationsEnabled, loadPrefs, savePrefs } from './modules/notifications.js'
 import { getOffset, getOffsetDateForAladhan, initDateNavigation } from './modules/date-navigation.js'
+import { initCalendar, refreshCalendar } from './modules/calendar.js'
+import { initWindowControls } from './modules/window.js'
+import { initSidebar } from './modules/sidebar.js'
+import { initBugReport } from './modules/bug-report.js'
+import { initSupport } from './modules/support.js'
 
 // Intervals
 let fastingInterval = null
+
+/**
+ * Initialize Sakura petal animations in the titlebar
+ */
+function initSakura() {
+  const container = document.getElementById('sakura-container');
+  if (!container) return;
+
+  container.innerHTML = ''; // Clear any existing petals
+
+  // Create 15 petals on the branches
+  const numPetals = 15;
+
+  for (let i = 0; i < numPetals; i++) {
+    const petal = document.createElement('div');
+    petal.classList.add('sakura-petal');
+
+    // Size between 5px and 12px
+    const size = Math.random() * 7 + 5;
+    petal.style.width = `${size}px`;
+    petal.style.height = `${size}px`;
+
+    // Position on branches (left 0-35% or right 65-100%)
+    const isLeft = Math.random() > 0.5;
+    const leftPos = isLeft ? Math.random() * 35 : 65 + Math.random() * 35;
+    const topPos = Math.random() * 30 + 5; // 5px to 35px from top
+
+    petal.style.left = `${leftPos}%`;
+    petal.style.top = `${topPos}px`;
+
+    // Base rotation to look natural and target rotation for the subtle animation
+    const baseRotation = Math.random() * 360;
+    const targetRotation = baseRotation + (Math.random() > 0.5 ? 15 : -15);
+
+    petal.style.setProperty('--base-rot', `${baseRotation}deg`);
+    petal.style.setProperty('--target-rot', `${targetRotation}deg`);
+
+    // Subtle breathing animation durations
+    const breatheDuration = Math.random() * 2 + 3; // 3-5s
+    const delay = Math.random() * 3;
+
+    petal.style.animation = `breathe-sakura ${breatheDuration}s ease-in-out ${delay}s infinite alternate`;
+
+    container.appendChild(petal);
+  }
+}
+
 
 /**
  * Load prayer data and refresh all dependent UI.
@@ -145,11 +197,47 @@ function setupInteractiveEffects() {
 }
 
 /**
+ * Setup navigation between Dashboard and Horaires
+ */
+function setupNavigation() {
+  const navTabs = {
+    dashboard: { btn: document.getElementById('nav-dashboard'), view: document.getElementById('view-dashboard') },
+    horaires: { btn: document.getElementById('nav-horaires'), view: document.getElementById('view-horaires') }
+  };
+
+  Object.values(navTabs).forEach(tab => {
+    if (tab.btn) {
+      tab.btn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // Remove active class from all
+        Object.values(navTabs).forEach(t => {
+          if (t.btn) t.btn.classList.remove('active');
+          if (t.view) t.view.classList.remove('active-view');
+        });
+
+        // Add to current
+        tab.btn.classList.add('active');
+        if (tab.view) tab.view.classList.add('active-view');
+
+        // Initialize calendar on first visit
+        if (tab.btn === navTabs.horaires.btn) {
+          initCalendar();
+        }
+      });
+    }
+  });
+}
+
+/**
  * Main initialization sequence.
  */
 document.addEventListener('DOMContentLoaded', async () => {
   // 0. Initialize persistent storage (loads from disk into memory cache)
   await storage.init()
+
+  // Window controls
+  initWindowControls()
 
   // 1. Theme (restore before anything visual)
   initTheme()
@@ -162,6 +250,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 3. Display location in header
   updateLocationDisplay()
+
+  // 3.5. Setup navigation
+  setupNavigation()
+
+  // 3.6 Setup sidebar
+  initSidebar()
+
+  // 3.7 Setup bug report modal
+  initBugReport()
+
+  // 3.8 Initialize Sakura Titlebar Effects
+  initSakura()
+
+  // 3.9 Initialize Support / Ads Feature
+  await initSupport()
 
   // 4. Load prayer data (Mawaqit or Aladhan)
   const mosqueSlug = getMosqueSlug()
@@ -182,9 +285,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 8. Onboarding tour (first visit only)
   setTimeout(() => initOnboarding(), 500)
 
+  // Dev util: Expose resetTour explicitly for testing
+  window.resetTour = async () => {
+    await storage.set('tourCompleted', false)
+    await storage.flush()
+    window.location.reload()
+  }
+
   // 9. Settings modal (re-fetches data on mosque change, preserves date offset)
   initSettings(async (newMosqueSlug) => {
     await loadPrayerData(newMosqueSlug, getOffset())
+    await refreshCalendar()
   })
 
   // 10. Quick-toggle reminder button
@@ -205,6 +316,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     reminderBtn.addEventListener('click', () => {
       const prefs = loadPrefs()
       prefs.enabled = !prefs.enabled
+      if (prefs.enabled) {
+        prefs.perPrayer = {
+          Fajr: true,
+          Dhuhr: true,
+          Asr: true,
+          Maghrib: true,
+          Isha: true,
+        }
+      }
       savePrefs(prefs)
       updateReminderBtn()
     })

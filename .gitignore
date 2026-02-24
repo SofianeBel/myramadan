@@ -7,6 +7,10 @@ dist/
 # Tauri build output
 src-tauri/target/
 
+# Tauri generated icons (mobile platforms, not needed)
+src-tauri/icons/android/
+src-tauri/icons/ios/
+
 # Environment
 .env
 .env.*
@@ -37,3 +41,6 @@ coverage/
 # Misc
 *.tsbuildinfo
 .omc/
+
+# Local assets (source files, backups)
+.assets/

@@ -181,6 +181,52 @@ export async function fetchMawaqitTimes(mosqueSlug) {
   }
 }
 
+/**
+ * Fetch the yearly calendar by scraping the mosque's public Mawaqit page.
+ * Extracts the `confData` JS variable which contains `calendar`: an array of
+ * 12 months, each month being an object {"1":[times], "2":[times], ...}.
+ * Uses Tauri HTTP plugin to bypass CORS and Cloudflare restrictions.
+ * @param {string} mosqueSlug
+ * @returns {Promise<Array<Object> | null>} 12-month calendar or null
+ */
+export async function fetchMawaqitCalendar(mosqueSlug) {
+  if (!mosqueSlug) return null
+
+  try {
+    const url = `https://mawaqit.net/fr/${mosqueSlug}`
+    const response = await tauriFetch(url, { method: 'GET' })
+    if (!response.ok) return null
+
+    const text = await response.text()
+
+    // Find the start of confData assignment
+    const marker = text.indexOf('confData')
+    if (marker === -1) return null
+
+    const braceStart = text.indexOf('{', marker)
+    if (braceStart === -1) return null
+
+    // Count braces to find the matching closing brace
+    let depth = 0
+    let braceEnd = -1
+    for (let i = braceStart; i < text.length; i++) {
+      if (text[i] === '{') depth++
+      else if (text[i] === '}') depth--
+      if (depth === 0) { braceEnd = i; break }
+    }
+    if (braceEnd === -1) return null
+
+    const confData = JSON.parse(text.slice(braceStart, braceEnd + 1))
+    if (confData.calendar && Array.isArray(confData.calendar) && confData.calendar.length === 12) {
+      console.log(`[prayer-times] Mawaqit calendar scraped for ${mosqueSlug}`)
+      return confData.calendar
+    }
+  } catch (err) {
+    console.error('[prayer-times] Mawaqit calendar scraping error:', err)
+  }
+  return null
+}
+
 // ─── Aladhan API (fallback + Hijri date) ─────────────────────────
 
 /**
@@ -310,6 +356,43 @@ export async function fetchPrayerTimes(params = {}, dateStr = null) {
     }
 
     return null
+  }
+}
+
+/**
+ * Fetch calendar for a specific month and year from Aladhan API.
+ * @param {number} year 
+ * @param {number} month (1-12)
+ * @param {{ lat?, lon?, city?, country?, method?, angles? }} params 
+ */
+export async function fetchMonthCalendar(year, month, params = {}) {
+  const { lat, lon, city = 'Paris', country = 'France', method = 12, angles = null } = params;
+
+  let base;
+  if (lat != null && lon != null) {
+    base = `https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${lat}&longitude=${lon}`;
+  } else {
+    base = `https://api.aladhan.com/v1/calendarByCity/${year}/${month}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}`;
+  }
+
+  let url;
+  if (angles && typeof angles.fajr === 'number' && typeof angles.isha === 'number') {
+    url = `${base}&method=99&methodSettings=${angles.fajr},null,${angles.isha}`;
+  } else {
+    url = `${base}&method=${method}`;
+  }
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const json = await response.json();
+    if (json.code !== 200 || !json.data) throw new Error('Invalid API response');
+
+    // Returns array of days
+    return json.data;
+  } catch (err) {
+    console.error('[prayer-times] Aladhan calendar fetch error:', err);
+    return null;
   }
 }
 

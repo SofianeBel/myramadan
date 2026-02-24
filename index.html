@@ -12,17 +12,37 @@
 
 <body>
 
-    <!-- Splash Screen -->
+    <!-- Custom Titlebar -->
+    <div data-tauri-drag-region class="custom-titlebar">
+        <div class="titlebar-pattern" data-tauri-drag-region></div>
+        <!-- Sakura Petals Container -->
+        <div id="sakura-container" class="sakura-container" data-tauri-drag-region></div>
+
+        <div class="titlebar-center" data-tauri-drag-region>
+            <img src="/logo.png" alt="GuideME" class="titlebar-logo" data-tauri-drag-region />
+            <span class="titlebar-title" data-tauri-drag-region>GuideME</span>
+        </div>
+        <div class="titlebar-controls">
+            <div class="titlebar-button" id="titlebar-minimize">
+                <svg width="10" height="1" viewBox="0 0 10 1">
+                    <path d="M0,0.5 h10" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+            </div>
+            <div class="titlebar-button" id="titlebar-maximize">
+                <svg width="10" height="10" viewBox="0 0 10 10">
+                    <path d="M0.5,0.5 h9 v9 h-9 Z" fill="none" stroke="currentColor" stroke-width="1.2" />
+                </svg>
+            </div>
+            <div class="titlebar-button titlebar-close" id="titlebar-close">
+                <svg width="10" height="10" viewBox="0 0 10 10">
+                    <path d="M0.5,0.5 l9,9 M9.5,0.5 l-9,9" stroke="currentColor" stroke-width="1.2" />
+                </svg>
+            </div>
+        </div>
+    </div>
     <div id="splash-screen" class="splash-screen">
         <div class="splash-content">
-            <svg class="splash-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <!-- Animated Moon Path -->
-                <path class="moon-path" d="M50 15 A35 35 0 1 0 85 50 A25 25 0 1 1 50 15 Z" />
-                <!-- Animated Stars -->
-                <circle class="star star-1" cx="75" cy="25" r="2" />
-                <circle class="star star-2" cx="87" cy="42" r="1.5" />
-                <circle class="star star-3" cx="60" cy="12" r="1" />
-            </svg>
+            <img class="splash-logo" src="/logo.png" alt="GuideME Logo" />
             <h1 class="splash-title">GuideME</h1>
             <p class="splash-subtitle">Ramadan Edition</p>
         </div>
@@ -31,38 +51,52 @@
     <div class="app-container" style="opacity: 0;"> <!-- Hidden initially via CSS until JS reveals it -->
         <!-- Sidebar -->
         <aside class="sidebar">
+            <button id="sidebar-toggle" class="sidebar-toggle-btn">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
             <div class="logo">
-                <svg class="sidebar-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="28"
-                    height="28">
-                    <path fill="currentColor" d="M50 15 A35 35 0 1 0 85 50 A25 25 0 1 1 50 15 Z" />
-                </svg>
+                <img class="sidebar-logo-img" src="/logo.png" alt="GuideME" width="32" height="32" />
                 <span>GuideME</span>
             </div>
 
             <nav class="menu">
-                <a href="#" class="menu-item active">
+                <a href="#" class="menu-item active" id="nav-dashboard">
                     <i class="fa-solid fa-house"></i>
                     <span>Tableau de bord</span>
                     <div class="menu-item-bg"></div>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="#" class="menu-item" id="nav-horaires">
                     <i class="fa-solid fa-clock"></i>
                     <span>Horaires</span>
                     <div class="menu-item-bg"></div>
                 </a>
-                <a href="#" class="menu-item">
+                <div class="menu-item menu-item-disabled" id="nav-quran">
                     <i class="fa-solid fa-book-quran"></i>
                     <span>Coran & Invocations</span>
+                    <span class="badge-coming-soon">Bientôt</span>
                     <div class="menu-item-bg"></div>
-                </a>
-                <a href="#" class="menu-item">
+                </div>
+                <div class="menu-item menu-item-disabled" id="nav-qibla">
                     <i class="fa-solid fa-compass"></i>
                     <span>Qibla</span>
+                    <span class="badge-coming-soon">Bientôt</span>
                     <div class="menu-item-bg"></div>
-                </a>
+                </div>
             </nav>
 
             <div class="bottom-menu">
+                <a href="#" class="menu-item" id="support-btn" style="position: relative;">
+                    <i class="fa-solid fa-hand-holding-heart anim-bounce-hover" style="color: var(--clr-gold);"></i>
+                    <span>Soutenir GuideME</span>
+                    <div class="menu-item-bg"></div>
+                    <span
+                        style="position: absolute; top: 6px; right: 12px; background: #FF3B30; color: white; font-size: 0.55rem; padding: 2px 6px; border-radius: 10px; font-weight: bold; animation: pulse 2s infinite;">NEW</span>
+                </a>
+                <a href="#" class="menu-item" id="bug-report-btn">
+                    <i class="fa-solid fa-bug anim-bounce-hover"></i>
+                    <span>Signaler un bug</span>
+                    <div class="menu-item-bg"></div>
+                </a>
                 <a href="#" class="menu-item" id="theme-toggle">
                     <i class="fa-solid fa-moon anim-spin-hover"></i>
                     <span>Mode Sombre</span>
@@ -230,7 +264,7 @@
             </header>
 
             <!-- Dashboard Grid -->
-            <div class="dashboard-grid">
+            <div id="view-dashboard" class="dashboard-grid view-section active-view">
 
                 <!-- Fasting Card (Suhoor/Iftar) -->
                 <div class="card premium-card fasting-card animate-entry" style="--anim-delay: 0.2s;">
@@ -287,7 +321,8 @@
                             <span class="unit">Sec</span>
                         </div>
                     </div>
-                    <button id="reminder-btn" class="btn-primary ripple-btn"><i class="fa-solid fa-bell bell-icon"></i> Activer le
+                    <button id="reminder-btn" class="btn-primary ripple-btn"><i class="fa-solid fa-bell bell-icon"></i>
+                        Activer le
                         rappel</button>
                 </div>
 
@@ -341,6 +376,58 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Horaires View -->
+            <div id="view-horaires" class="horaires-view view-section hidden">
+                <div class="card premium-card full-width animate-entry"
+                    style="--anim-delay: 0.2s; min-height: calc(100vh - 140px);">
+                    <div class="card-header"
+                        style="justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <div>
+                            <h2 style="font-size: 1.5rem; margin-bottom: 4px;">Calendrier Mensuel</h2>
+                            <p id="horaires-month-name" style="color: rgba(244, 235, 208, 0.7); font-size: 0.95rem;">
+                                Chargement...</p>
+                        </div>
+                        <div class="month-selector interactive-element"
+                            style="display: flex; align-items: center; gap: 16px; background: rgba(255, 255, 255, 0.1); padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.15);">
+                            <i id="hnav-prev" class="fa-solid fa-chevron-left"
+                                style="cursor: pointer; color: var(--clr-gold); padding: 4px;"></i>
+                            <span id="hnav-current"
+                                style="font-weight: 500; min-width: 120px; text-align: center; color: #F4EBD0;">Mois en
+                                cours</span>
+                            <i id="hnav-next" class="fa-solid fa-chevron-right"
+                                style="cursor: pointer; color: var(--clr-gold); padding: 4px;"></i>
+                        </div>
+                    </div>
+
+                    <div class="calendar-container" style="overflow-x: auto;">
+                        <table class="calendar-table"
+                            style="width: 100%; border-collapse: separate; border-spacing: 0;">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Fajr</th>
+                                    <th>Shurûq</th>
+                                    <th>Dhuhr</th>
+                                    <th>Asr</th>
+                                    <th>Maghrib</th>
+                                    <th>Isha</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendar-body">
+                                <!-- Generated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="calendar-loading" class="calendar-loading hidden"
+                        style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 0;">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--clr-gold);"></i>
+                        <p style="margin-top: 12px; color: var(--text-muted);">Calcul des horaires en cours...</p>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -369,8 +456,11 @@
             <!-- Tab: List (text search) -->
             <div class="settings-tab-content" id="tab-list">
                 <div style="margin-bottom: 12px;">
-                    <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Rechercher une mosquée</label>
-                    <input type="text" id="settings-mosque-search" placeholder="Nom ou ville..." style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none;">
+                    <label
+                        style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Rechercher
+                        une mosquée</label>
+                    <input type="text" id="settings-mosque-search" placeholder="Nom ou ville..."
+                        style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none;">
                 </div>
                 <div id="mosque-results" style="max-height: 200px; overflow-y: auto; scrollbar-width: thin;"></div>
             </div>
@@ -467,6 +557,16 @@
                     </label>
                 </div>
 
+                <div class="notif-setting-row">
+                    <label class="notif-label">
+                        <i class="fa-solid fa-circle-question"></i> Tutoriel de bienvenue
+                    </label>
+                    <button id="btn-reset-tour" class="btn-primary btn-small"
+                        style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px;">
+                        Réinitialiser
+                    </button>
+                </div>
+
                 <!-- Per-prayer toggles -->
                 <div class="notif-divider"></div>
                 <p class="notif-section-title">Prieres individuelles</p>
@@ -485,7 +585,8 @@
             <div class="settings-tab-content hidden" id="tab-calc">
                 <div id="calc-mosque-hint" class="calc-hint" style="display: none;">
                     <i class="fa-solid fa-circle-info"></i>
-                    <span>Une mosquee est selectionnee. Les horaires proviennent de la mosquee. La methode ci-dessous s'applique en mode calcule (sans mosquee).</span>
+                    <span>Une mosquee est selectionnee. Les horaires proviennent de la mosquee. La methode ci-dessous
+                        s'applique en mode calcule (sans mosquee).</span>
                 </div>
 
                 <div class="notif-setting-row" style="flex-direction: column; align-items: stretch; gap: 8px;">
@@ -499,12 +600,16 @@
 
                 <div class="notif-divider"></div>
                 <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
-                    La methode determine les angles utilises pour calculer Fajr et Isha. En France, la methode UOIF est recommandee.
+                    La methode determine les angles utilises pour calculer Fajr et Isha. En France, la methode UOIF est
+                    recommandee.
                 </p>
             </div>
 
-            <p id="selected-mosque-name" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); opacity: 0.5; margin: 12px 0 0 0;">Aucune mosquée sélectionnée</p>
-            <button id="clear-mosque-btn" class="btn-text" style="font-size: 0.78rem; display: none; margin-top: 4px; color: var(--text-muted);">
+            <p id="selected-mosque-name"
+                style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); opacity: 0.5; margin: 12px 0 0 0;">
+                Aucune mosquée sélectionnée</p>
+            <button id="clear-mosque-btn" class="btn-text"
+                style="font-size: 0.78rem; display: none; margin-top: 4px; color: var(--text-muted);">
                 <i class="fa-solid fa-xmark"></i> Dissocier la mosquee
             </button>
             <div class="onboarding-controls">
@@ -526,6 +631,146 @@
             <div class="onboarding-dots">
                 <!-- Dots generated by JS -->
             </div>
+        </div>
+    </div>
+
+    <!-- Bug Report Modal -->
+    <div id="bug-report-modal" class="onboarding-overlay hidden">
+        <div class="onboarding-tooltip settings-tooltip"
+            style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 500px;">
+            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><i class="fa-solid fa-bug"
+                    style="color: var(--clr-gold);"></i> Signaler un bug</h3>
+            <p style="margin-bottom: 24px; color: var(--text-muted); font-size: 0.95rem;">Un problème ? Expliquez-nous
+                ce qu'il s'est passé.</p>
+
+            <form id="bug-report-form" style="display: flex; flex-direction: column; gap: 16px;">
+                <div>
+                    <label
+                        style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Titre
+                        du problème</label>
+                    <input type="text" id="bug-title" placeholder="Ex: Bouton invisible, texte incorrect..." required
+                        style="width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none;">
+                </div>
+                <div>
+                    <label
+                        style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Description
+                        détaillée</label>
+                    <textarea id="bug-description" placeholder="Que s'est-il passé exactement ?" required rows="4"
+                        style="width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none; resize: vertical;"></textarea>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px; padding-left: 4px;">
+                    <input type="checkbox" id="bug-include-logs"
+                        style="width: 16px; height: 16px; accent-color: var(--clr-gold); cursor: pointer;" checked>
+                    <label for="bug-include-logs"
+                        style="font-size: 0.9rem; color: var(--text-muted); cursor: pointer;">Joindre les logs de
+                        l'application</label>
+                </div>
+
+
+                <div class="onboarding-controls"
+                    style="margin-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;">
+                    <button type="button" id="bug-cancel" class="btn-text">Annuler</button>
+                    <button type="submit" id="bug-submit" class="btn-primary btn-small">Envoyer le rapport</button>
+                </div>
+            </form>
+
+            <div id="bug-error-msg" class="hidden" style="text-align: center; padding: 20px 0 10px;">
+                <i class="fa-solid fa-circle-xmark"
+                    style="font-size: 3.5rem; color: #F44336; margin-bottom: 20px; display: block;"></i>
+                <p style="font-size: 1.2rem; font-weight: 600; color: var(--text-main); margin-bottom: 10px;">Erreur
+                    d'envoi</p>
+                <p id="bug-error-detail" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.5;">
+                    Impossible d'envoyer le rapport. Vérifiez votre connexion internet.</p>
+                <div style="margin-top: 30px; display: flex; gap: 12px; justify-content: center;">
+                    <button id="bug-retry" class="btn-primary btn-small">Réessayer</button>
+                    <button id="bug-close-error" class="btn-text">Fermer</button>
+                </div>
+            </div>
+
+            <div id="bug-success-msg" class="hidden" style="text-align: center; padding: 20px 0 10px;">
+                <i class="fa-solid fa-circle-check"
+                    style="font-size: 3.5rem; color: #4CAF50; margin-bottom: 20px; display: block;"></i>
+                <p style="font-size: 1.2rem; font-weight: 600; color: var(--text-main); margin-bottom: 10px;">Merci pour
+                    votre signalement !</p>
+                <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.5;">Nous allons examiner cela
+                    rapidement pour corriger le problème.</p>
+                <div style="margin-top: 30px;">
+                    <button id="bug-close-success" class="btn-primary btn-small">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support / Ads Modal -->
+    <div id="support-modal" class="onboarding-overlay hidden">
+        <div class="onboarding-tooltip settings-tooltip"
+            style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 500px;">
+            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                <i class="fa-solid fa-hand-holding-heart" style="color: var(--clr-gold);"></i> Soutenir GuideME
+            </h3>
+            <p style="margin-bottom: 16px; color: var(--text-muted); font-size: 0.95rem; line-height: 1.5;">
+                Soutenez le développement de GuideME gratuitement ou faire un don pour maintenir l'application sans
+                publicité.
+            </p>
+
+            <!-- Tab Switcher -->
+            <div class="settings-tabs" style="margin-bottom: 16px;">
+                <button class="settings-tab active" data-tab="donation">
+                    <i class="fa-solid fa-gift"></i> Don direct
+                </button>
+                <button class="settings-tab" data-tab="ads">
+                    <i class="fa-solid fa-ad"></i> Publicités
+                    <span class="badge-coming-soon">Bientôt</span>
+                </button>
+            </div>
+
+            <form id="support-form" style="display: flex; flex-direction: column; gap: 16px;">
+
+                <!-- Tab: Donation -->
+                <div class="settings-tab-content support-tab-content" id="support-tab-donation">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <a href="https://paypal.me/Siflyisback?locale.x=fr_FR&country.x=FR" data-platform="paypal" target="_blank" class="support-box">
+                            <i class="fa-brands fa-paypal"
+                                style="font-size: 2rem; color: #00457C; margin-bottom: 8px;"></i>
+                            <span style="font-weight: 600;">PayPal</span>
+                        </a>
+                        <a href="https://ko-fi.com/sifly" data-platform="kofi" target="_blank" class="support-box">
+                            <i class="fa-solid fa-mug-hot"
+                                style="font-size: 2rem; color: #FF5E5B; margin-bottom: 8px;"></i>
+                            <span style="font-weight: 600;">Ko-fi</span>
+                        </a>
+                        <a href="https://buymeacoffee.com/sifly" data-platform="buymeacoffee" target="_blank" class="support-box"
+                            style="grid-column: span 2;">
+                            <svg width="32" height="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" style="margin-bottom: 8px;">
+                                <path fill="#FFDD00" d="M6.898 0L5.682 2.799H3.877v2.523h.695L5.277 9.8H4.172l1.46 8.23.938-.01L7.512 24h8.918l.062-.4.88-5.58.888.01 1.46-8.231h-1.056l.705-4.477h.756V2.8h-1.918L16.99 0H6.898zm.528.805h9.043l.771 1.78H6.652l.774-1.78zm-2.75 2.797H19.32v.92H4.676v-.92zm.453 6.998h13.635l-1.176 6.62-5.649-.06-5.636.06-1.174-6.62z"/>
+                            </svg>
+                            <span style="font-weight: 600;">Buy Me a Coffee</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tab: Ads (Coming Soon) -->
+                <div class="settings-tab-content support-tab-content hidden" id="support-tab-ads">
+                    <div class="coming-soon-panel">
+                        <div class="coming-soon-stripes"></div>
+                        <div class="coming-soon-content">
+                            <i class="fa-solid fa-helmet-safety" style="font-size: 2.5rem; color: var(--clr-gold); margin-bottom: 12px;"></i>
+                            <p style="font-size: 1.1rem; font-weight: 700; color: var(--text-main); margin-bottom: 6px;">En construction</p>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">
+                                Le soutien par publicités arrive bientôt.<br>
+                                Restez connectés !
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="onboarding-controls"
+                    style="margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;">
+                    <button type="button" id="support-cancel" class="btn-text">Fermer</button>
+                    <button type="submit" id="support-save" class="btn-primary btn-small">Enregistrer les
+                        préférences</button>
+                </div>
+            </form>
         </div>
     </div>
 

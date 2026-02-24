@@ -27,6 +27,14 @@
     --radius-full: 9999px;
 
     --font-main: 'Outfit', sans-serif;
+
+    /* Light mode glassmorphism */
+    --bg-modal: rgba(255, 255, 255, 0.70);
+    /* More transparent to let the blur show through */
+    --glass-blur: blur(24px);
+    /* Stronger blur for light mode */
+    --glass-border: 1px solid rgba(255, 255, 255, 0.7);
+    /* Stronger bright reflection on edges */
 }
 
 [data-theme="dark"] {
@@ -51,7 +59,13 @@
     /* Translucent dark blue for badges/secondary cards */
     --clr-sand-dark: rgba(45, 68, 105, 0.8);
 
+    /* Modified transparent variables for dark mode */
+    --clr-sand: rgba(30, 48, 77, 0.6);
+    --clr-sand-dark: rgba(45, 68, 105, 0.8);
+
     /* Used for glassmorphism */
+    --bg-modal: var(--bg-card);
+    /* Fallback to existing dark card glass */
     --glass-blur: blur(12px);
     --glass-border: 1px solid rgba(255, 255, 255, 0.08);
 }
@@ -99,37 +113,31 @@ body {
 }
 
 .splash-logo {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     margin-bottom: 20px;
-    overflow: visible;
-}
-
-.moon-path {
-    fill: var(--clr-gold);
-    stroke: var(--clr-gold-light);
-    stroke-width: 0;
-    stroke-dasharray: 200;
-    stroke-dashoffset: 200;
-    animation: drawMoon 1.5s ease-out forwards, moonGlow 3s ease-in-out infinite alternate;
-}
-
-.star {
-    fill: #FFF;
+    border-radius: 50%;
+    object-fit: cover;
+    animation: logoReveal 1.2s ease-out forwards, logoGlow 3s ease-in-out 1.2s infinite alternate;
     opacity: 0;
-    transform-origin: center;
+    transform: scale(0.6);
 }
 
-.star-1 {
-    animation: twinkle 2s ease-in-out 0.8s infinite;
+@keyframes logoReveal {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
-.star-2 {
-    animation: twinkle 2.5s ease-in-out 1.2s infinite;
-}
+@keyframes logoGlow {
+    from {
+        filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.3));
+    }
 
-.star-3 {
-    animation: twinkle 1.8s ease-in-out 1.5s infinite;
+    to {
+        filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.8));
+    }
 }
 
 .splash-title {
@@ -150,37 +158,6 @@ body {
     animation: fadeInUp 0.8s ease-out 0.7s forwards;
 }
 
-@keyframes drawMoon {
-    to {
-        stroke-dashoffset: 0;
-        fill: var(--clr-gold);
-        stroke-width: 0;
-    }
-}
-
-@keyframes moonGlow {
-    from {
-        filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.4));
-    }
-
-    to {
-        filter: drop-shadow(0 0 15px rgba(212, 175, 55, 1));
-    }
-}
-
-@keyframes twinkle {
-
-    0%,
-    100% {
-        opacity: 0.2;
-        transform: scale(0.8);
-    }
-
-    50% {
-        opacity: 1;
-        transform: scale(1.2);
-    }
-}
 
 @keyframes zoomInSplash {
     to {
@@ -208,11 +185,164 @@ body {
 }
 
 /* ---------------------------------
+   0. CUSTOM TITLEBAR
+   --------------------------------- */
+.custom-titlebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 54px;
+    background-color: var(--bg-sidebar);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20000;
+    user-select: none;
+    border-bottom: 2px solid var(--clr-dark-green);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    overflow: hidden;
+    /* Important to keep petals inside */
+}
+
+/* Base Sakura Container for Petals */
+.sakura-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.titlebar-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    opacity: 1;
+    /* Organic Tree branches curving from the sides */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='54' preserveAspectRatio='none' viewBox='0 0 800 54'%3E%3C!-- Left Branch --%3E%3Cpath d='M-10,10 Q50,-5 120,20 T350,15' fill='none' stroke='%233E2723' stroke-width='4' stroke-linecap='round' opacity='0.8'/%3E%3Cpath d='M-5,25 Q40,35 150,15 T300,30' fill='none' stroke='%234E342E' stroke-width='3' stroke-linecap='round' opacity='0.7'/%3E%3Cpath d='M80,18 Q120,-5 180,10' fill='none' stroke='%233E2723' stroke-width='2' stroke-linecap='round' opacity='0.6'/%3E%3C!-- Right Branch --%3E%3Cpath d='M810,5 Q750,25 680,10 T450,25' fill='none' stroke='%233E2723' stroke-width='4' stroke-linecap='round' opacity='0.8'/%3E%3Cpath d='M805,30 Q760,15 650,35 T500,20' fill='none' stroke='%234E342E' stroke-width='3' stroke-linecap='round' opacity='0.7'/%3E%3Cpath d='M720,12 Q680,45 620,15' fill='none' stroke='%233E2723' stroke-width='2' stroke-linecap='round' opacity='0.6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    z-index: 0;
+}
+
+/* --- Sakura Petal Styles --- */
+.sakura-petal {
+    position: absolute;
+    background-color: #FFB7C5;
+    /* Default pink */
+    border-radius: 150% 0 150% 0;
+    /* Basic leaf shape */
+    transform-origin: center;
+    opacity: 0.8;
+    z-index: 1;
+    pointer-events: none;
+    box-shadow: 0 0 3px rgba(255, 183, 197, 0.4);
+}
+
+.sakura-petal::after {
+    content: "";
+    position: absolute;
+    top: -5%;
+    left: -5%;
+    width: 110%;
+    height: 110%;
+    border-radius: 150% 0 150% 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, transparent 60%);
+}
+
+/* Subtle breathing animation for petals on the branches */
+@keyframes breathe-sakura {
+
+    0%,
+    100% {
+        transform: rotate(var(--base-rot)) scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: rotate(var(--target-rot)) scale(1.15);
+        opacity: 1;
+        box-shadow: 0 0 6px rgba(255, 183, 197, 0.6);
+    }
+}
+
+.titlebar-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    z-index: 2;
+    /* Ensure on top of petals */
+    pointer-events: none;
+}
+
+.titlebar-logo {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    object-fit: contain;
+}
+
+.titlebar-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--clr-gold);
+    letter-spacing: 2px;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8), 0 0 1px rgba(0, 0, 0, 1);
+    /* Stronger shadow to pop against petals */
+    text-transform: uppercase;
+}
+
+.titlebar-controls {
+    display: flex;
+    height: 100%;
+    margin-left: auto;
+    z-index: 2;
+    /* Ensure on top of petals */
+}
+
+.titlebar-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 46px;
+    height: 100%;
+    color: var(--text-muted);
+    cursor: default;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.titlebar-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+}
+
+.titlebar-close:hover {
+    background-color: #E81123 !important;
+    color: #fff !important;
+}
+
+/* ---------------------------------
    2. MAIN APP ENTRY ANIMATIONS
    --------------------------------- */
 .app-container {
     width: 100%;
     height: 100%;
+    padding-top: 54px;
+    box-sizing: border-box;
     display: flex;
     background: transparent;
     transition: opacity 0.5s ease-in;
@@ -253,6 +383,61 @@ body {
     padding: 2rem 1.5rem;
     position: relative;
     border-right: 1px solid rgba(212, 175, 55, 0.1);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+}
+
+/* Sidebar Minimized State */
+.sidebar.minimized {
+    width: 88px;
+    padding: 2rem 0.75rem;
+}
+
+.sidebar.minimized .logo span,
+.sidebar.minimized .menu-item span {
+    display: none;
+}
+
+.sidebar.minimized .logo {
+    justify-content: center;
+    padding: 0;
+}
+
+.sidebar.minimized .menu-item {
+    justify-content: center;
+    padding: 12px;
+}
+
+.sidebar-toggle-btn {
+    position: absolute;
+    right: -14px;
+    top: 36px;
+    width: 28px;
+    height: 28px;
+    background-color: var(--bg-sidebar);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: var(--clr-gold);
+    z-index: 101;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.sidebar-toggle-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar.minimized .sidebar-toggle-btn i {
+    transform: rotate(180deg);
+}
+
+.sidebar-toggle-btn i {
+    font-size: 0.8rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar .logo {
@@ -266,8 +451,9 @@ body {
     padding: 0 10px;
 }
 
-.sidebar-logo-svg {
-    color: var(--clr-gold);
+.sidebar-logo-img {
+    border-radius: 8px;
+    object-fit: cover;
 }
 
 .menu {
@@ -338,6 +524,11 @@ body {
     color: var(--clr-gold);
 }
 
+.menu-item.menu-item-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    cursor: default;
+}
 
 /* Main Content */
 .main-content {
@@ -822,14 +1013,21 @@ body {
 .prayer-list {
     display: flex;
     justify-content: space-between;
-    gap: 12px;
+    gap: 8px;
+    /* Slightly reduced gap */
     margin-top: 10px;
+    flex-wrap: wrap;
+    /* Allow wrapping if needed */
 }
 
 .prayer-item {
-    flex: 1;
+    flex: 1 1 12%;
+    /* Allow shrinking, base width */
+    min-width: 90px;
+    /* Prevent completely breaking */
     background: var(--clr-sand);
-    padding: 16px;
+    padding: 12px;
+    /* Slightly reduced padding */
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -863,6 +1061,13 @@ body {
     font-size: 1.4rem;
     font-weight: 700;
     color: var(--clr-dark-green);
+}
+
+.prayer-time-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
 .prayer-item i {
@@ -959,6 +1164,29 @@ body {
     8% {
         transform: rotate(-10deg);
     }
+}
+
+/* Notification bell toggle on prayer items */
+.notif-bell {
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: transform 0.2s ease, opacity 0.2s ease, color 0.2s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.notif-bell:hover {
+    transform: scale(1.3);
+}
+
+.notif-bell.notif-disabled {
+    opacity: 0.4;
+    color: var(--text-muted) !important;
+}
+
+.icon-gold {
+    color: var(--clr-gold);
 }
 
 /* Schedule Legend */
@@ -1298,10 +1526,12 @@ body {
 
     .prayer-list {
         flex-wrap: wrap;
+        gap: 8px;
     }
 
     .prayer-item {
-        min-width: calc(33.33% - 12px);
+        min-width: calc(33.33% - 8px);
+        padding: 12px;
     }
 }
 
@@ -1314,16 +1544,16 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(11, 43, 27, 0.85);
-    /* Dark green tint by default */
+    background: rgba(11, 43, 27, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     z-index: 9999;
     display: flex;
     transition: opacity 0.4s ease, visibility 0.4s ease, background 0.4s ease;
 }
 
 [data-theme="dark"] .onboarding-overlay {
-    background: rgba(0, 0, 0, 0.85);
-    /* Darker tint for night mode */
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .onboarding-overlay.hidden {
@@ -1335,13 +1565,19 @@ body {
 /* Tooltip Card */
 .onboarding-tooltip {
     position: absolute;
-    background: var(--bg-card);
+    background: var(--bg-modal);
+    /* Changed from bg-card to specifically isolated modal bg */
+    backdrop-filter: var(--glass-blur, blur(12px));
+    -webkit-backdrop-filter: var(--glass-blur, blur(12px));
+    border: var(--glass-border, 1px solid rgba(0, 0, 0, 0.05));
     border-radius: var(--radius-lg);
     padding: 24px;
     width: 320px;
+    max-width: calc(100vw - 40px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     z-index: 10000;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-sizing: border-box;
 }
 
 .onboarding-tooltip h3 {
@@ -1376,21 +1612,66 @@ body {
 }
 
 .btn-text {
-    background: none;
-    border: none;
-    color: var(--text-muted);
+    background: rgba(122, 139, 128, 0.1);
+    border: 1px solid rgba(122, 139, 128, 0.4);
+    color: var(--text-main);
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     font-family: var(--font-main);
-    transition: color 0.2s ease;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
+
+[data-theme="dark"] .btn-text {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--text-main);
+}
+
+/* Support Donation Boxes */
+.support-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(122, 139, 128, 0.1);
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(122, 139, 128, 0.2);
+    text-decoration: none;
+    color: var(--text-main);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.support-box:hover {
+    background: rgba(122, 139, 128, 0.15);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-sm);
+}
+
+[data-theme="dark"] .support-box {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .support-box:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
 
 .btn-text:hover {
     color: var(--clr-dark-green);
+    background: rgba(122, 139, 128, 0.15);
+    border-color: rgba(122, 139, 128, 0.3);
 }
 
 [data-theme="dark"] .btn-text:hover {
     color: #FFF;
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .onboarding-dots {
@@ -1441,6 +1722,10 @@ body {
     opacity: 1 !important;
 }
 
+.tour-lift {
+    z-index: 10001 !important;
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    Settings Modal — Map Tab & Tabs
    ═══════════════════════════════════════════════════════════════════ */
@@ -1449,6 +1734,8 @@ body {
     min-width: 460px !important;
     max-width: 540px;
     width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 /* Tab Switcher */
@@ -1571,9 +1858,17 @@ body {
 }
 
 @keyframes locationPulse {
-    0% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4); }
-    70% { box-shadow: 0 0 0 14px rgba(66, 133, 244, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(66, 133, 244, 0); }
+    0% {
+        box-shadow: 0 0 0 0 rgba(66, 133, 244, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 14px rgba(66, 133, 244, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(66, 133, 244, 0);
+    }
 }
 
 /* Mosque marker icon */
@@ -1768,8 +2063,185 @@ body {
 }
 
 @keyframes bell-ring {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(15deg); }
-    50% { transform: rotate(-15deg); }
-    75% { transform: rotate(10deg); }
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(15deg);
+    }
+
+    50% {
+        transform: rotate(-15deg);
+    }
+
+    75% {
+        transform: rotate(10deg);
+    }
+}
+
+/* ---------------------------------
+   12. HORAIRES VIEW (CALENDAR)
+   --------------------------------- */
+.view-section {
+    display: none !important;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.dashboard-grid.view-section.active-view {
+    display: grid !important;
+    opacity: 1;
+}
+
+.horaires-view.view-section.active-view {
+    display: block !important;
+    opacity: 1;
+    animation: entrySlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Ensure hidden overrides */
+.hidden {
+    display: none !important;
+}
+
+.calendar-container {
+    margin-top: 10px;
+}
+
+.calendar-table th,
+.calendar-table td {
+    padding: 14px 16px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 0.95rem;
+}
+
+.calendar-table th {
+    font-weight: 600;
+    color: rgba(244, 235, 208, 0.6);
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.calendar-table td {
+    color: #F4EBD0;
+    font-weight: 500;
+}
+
+.calendar-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.calendar-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.calendar-table .today-row td {
+    color: var(--clr-gold);
+    font-weight: 700;
+    background-color: var(--clr-gold-dim);
+}
+
+.calendar-table .today-row td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.calendar-table .today-row td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Coming Soon — Badge & Panel
+   ═══════════════════════════════════════════════════════════════════ */
+
+.badge-coming-soon {
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--clr-gold);
+    color: #000;
+    padding: 2px 6px;
+    border-radius: 4px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.coming-soon-panel {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed rgba(128, 128, 128, 0.4);
+}
+
+.coming-soon-stripes {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(-45deg,
+            transparent,
+            transparent 10px,
+            rgba(128, 128, 128, 0.08) 10px,
+            rgba(128, 128, 128, 0.08) 20px);
+    pointer-events: none;
+}
+
+.coming-soon-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 24px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Settings Modal — Responsive (< 600px)
+   ═══════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 600px) {
+    .settings-tooltip {
+        min-width: unset !important;
+        width: 95vw;
+        max-width: 95vw;
+        padding: 16px;
+        max-height: 85vh;
+    }
+
+    .settings-tabs {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+    }
+
+    .settings-tab {
+        padding: 7px 8px;
+        font-size: 0.78rem;
+        gap: 4px;
+    }
+
+    .notif-select {
+        font-size: 0.8rem;
+        padding: 8px 10px;
+        max-width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .notif-prayer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .notif-setting-row {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
 }
