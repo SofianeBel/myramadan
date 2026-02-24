@@ -5,9 +5,18 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.1.3'
+const APP_VERSION = '1.1.4'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.1.4',
+    date: '24 février 2026',
+    changes: [
+      { type: 'fix', text: 'Couleurs des popups carte passées en CSS variables (plus de hardcodé)' },
+      { type: 'fix', text: 'Validation du rapport de bug : le formulaire reste visible en cas d\'erreur' },
+      { type: 'fix', text: 'Comptage correct des caractères accentués (titre/description bug report)' },
+    ],
+  },
   {
     version: '1.1.3',
     date: '24 février 2026',

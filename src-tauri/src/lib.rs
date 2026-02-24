@@ -24,10 +24,10 @@ async fn create_bug_report(input: BugReportInput) -> Result<String, String> {
     if title.is_empty() || description.is_empty() {
         return Err("Le titre et la description sont requis.".to_string());
     }
-    if title.len() > 200 {
+    if title.chars().count() > 200 {
         return Err("Le titre ne doit pas depasser 200 caracteres.".to_string());
     }
-    if description.len() > 5000 {
+    if description.chars().count() > 5000 {
         return Err("La description ne doit pas depasser 5000 caracteres.".to_string());
     }
 

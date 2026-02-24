@@ -1858,22 +1858,40 @@ body {
     background: var(--bg-card) !important;
 }
 
+.map-select-btn {
+    background: var(--clr-green);
+    color: white;
+}
+
+/* Classes popup mosquée — couleurs via variables CSS */
+.popup-mosque-name {
+    color: var(--clr-green);
+}
+
+.popup-mosque-location {
+    color: var(--text-muted);
+}
+
+.popup-mosque-distance {
+    color: var(--clr-gold);
+}
+
 [data-theme="dark"] .leaflet-popup-content .map-select-btn,
 [data-theme="midnight"] .leaflet-popup-content .map-select-btn,
 [data-theme="amoled"] .leaflet-popup-content .map-select-btn {
     background: var(--clr-green) !important;
 }
 
-[data-theme="dark"] .leaflet-popup-content div[style*="color: #666"],
-[data-theme="midnight"] .leaflet-popup-content div[style*="color: #666"],
-[data-theme="amoled"] .leaflet-popup-content div[style*="color: #666"] {
-    color: var(--text-muted) !important;
+[data-theme="dark"] .popup-mosque-name,
+[data-theme="midnight"] .popup-mosque-name,
+[data-theme="amoled"] .popup-mosque-name {
+    color: var(--clr-gold);
 }
 
-[data-theme="dark"] .leaflet-popup-content div[style*="color: #1A4D2E"],
-[data-theme="midnight"] .leaflet-popup-content div[style*="color: #1A4D2E"],
-[data-theme="amoled"] .leaflet-popup-content div[style*="color: #1A4D2E"] {
-    color: var(--clr-gold) !important;
+[data-theme="dark"] .popup-mosque-location,
+[data-theme="midnight"] .popup-mosque-location,
+[data-theme="amoled"] .popup-mosque-location {
+    color: var(--text-muted);
 }
 
 /* User location marker — blue pulsing dot */

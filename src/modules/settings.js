@@ -506,18 +506,21 @@ export function initSettings(onSave) {
       popupEl.style.cssText = "font-family: 'Outfit', sans-serif; min-width: 200px;"
 
       const popupName = document.createElement('div')
-      popupName.style.cssText = 'font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: #1A4D2E;'
+      popupName.className = 'popup-mosque-name'
+      popupName.style.cssText = 'font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;'
       popupName.textContent = mosque.name
       popupEl.appendChild(popupName)
 
       const popupLoc = document.createElement('div')
-      popupLoc.style.cssText = 'font-size: 0.78rem; color: #666; margin-bottom: 6px;'
+      popupLoc.className = 'popup-mosque-location'
+      popupLoc.style.cssText = 'font-size: 0.78rem; margin-bottom: 6px;'
       popupLoc.textContent = mosque.localisation || ''
       popupEl.appendChild(popupLoc)
 
       if (mosque.proximity) {
         const distEl = document.createElement('div')
-        distEl.style.cssText = 'font-size: 0.75rem; color: #D4AF37; font-weight: 600; margin-bottom: 8px;'
+        distEl.className = 'popup-mosque-distance'
+        distEl.style.cssText = 'font-size: 0.75rem; font-weight: 600; margin-bottom: 8px;'
         const routeIcon = document.createElement('i')
         routeIcon.className = 'fa-solid fa-route'
         routeIcon.style.marginRight = '4px'
@@ -530,7 +533,7 @@ export function initSettings(onSave) {
       selectBtn.className = 'map-select-btn'
       selectBtn.dataset.slug = mosque.slug
       selectBtn.dataset.name = mosque.name
-      selectBtn.style.cssText = 'padding: 8px 14px; background: #1A4D2E; color: white; border: none; border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 0.85rem; cursor: pointer; width: 100%; transition: background 0.2s;'
+      selectBtn.style.cssText = 'padding: 8px 14px; border: none; border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 0.85rem; cursor: pointer; width: 100%; transition: background 0.2s;'
       const checkIcon = document.createElement('i')
       checkIcon.className = 'fa-solid fa-check'
       checkIcon.style.marginRight = '4px'
