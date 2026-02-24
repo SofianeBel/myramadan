@@ -2,6 +2,9 @@
 CLAUDE.md
 GEMINI.md
 
+# Logs temporaires
+build_log.txt
+
 # Dependencies
 node_modules/
 
