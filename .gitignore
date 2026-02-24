@@ -44,3 +44,12 @@ coverage/
 
 # Local assets (source files, backups)
 .assets/
+
+# Secrets / certificates
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Reports
+.reports/

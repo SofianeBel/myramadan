@@ -17,17 +17,20 @@ export function initBugReport() {
     const retryBtn = document.getElementById('bug-retry')
     const closeErrorBtn = document.getElementById('bug-close-error')
 
+    const validationError = document.getElementById('bug-validation-error')
+
     if (!bugBtn || !modal) return
 
-    // Open modal
+    // Ouverture de la modale
     bugBtn.addEventListener('click', (e) => {
         e.preventDefault()
         modal.classList.remove('hidden')
 
-        // Reset state
+        // Réinitialisation
         form.style.display = 'flex'
         successMsg.classList.add('hidden')
         errorMsg.classList.add('hidden')
+        if (validationError) validationError.classList.add('hidden')
         form.reset()
     })
 
@@ -45,11 +48,42 @@ export function initBugReport() {
         if (e.target === modal) closeModal()
     })
 
+    // Limitation du débit (anti-spam)
+    let lastSubmitTime = 0
+    const SUBMIT_COOLDOWN_MS = 60_000
+
     // Submit handler
     const handleSubmit = async () => {
-        const title = document.getElementById('bug-title').value
-        const description = document.getElementById('bug-description').value
+        const title = document.getElementById('bug-title').value.trim()
+        const description = document.getElementById('bug-description').value.trim()
         const includeLogs = document.getElementById('bug-include-logs').checked
+
+        // Validation longueur (affichage inline, formulaire reste visible)
+        if (title.length < 5 || title.length > 200) {
+            if (validationError) {
+                validationError.textContent = 'Le titre doit contenir entre 5 et 200 caractères.'
+                validationError.classList.remove('hidden')
+            }
+            return
+        }
+        if (description.length < 10 || description.length > 5000) {
+            if (validationError) {
+                validationError.textContent = 'La description doit contenir entre 10 et 5000 caractères.'
+                validationError.classList.remove('hidden')
+            }
+            return
+        }
+        if (validationError) validationError.classList.add('hidden')
+
+        // Limitation du débit (anti-spam)
+        const now = Date.now()
+        if (now - lastSubmitTime < SUBMIT_COOLDOWN_MS) {
+            const remaining = Math.ceil((SUBMIT_COOLDOWN_MS - (now - lastSubmitTime)) / 1000)
+            errorDetail.textContent = `Veuillez patienter ${remaining} secondes avant de renvoyer un rapport.`
+            form.style.display = 'none'
+            errorMsg.classList.remove('hidden')
+            return
+        }
 
         // Loading state
         submitBtn.disabled = true
@@ -65,6 +99,7 @@ export function initBugReport() {
                     date: new Date().toLocaleString('fr-FR'),
                 }
             })
+            lastSubmitTime = Date.now()
             form.style.display = 'none'
             successMsg.classList.remove('hidden')
         } catch (err) {

@@ -313,10 +313,16 @@ export function initSettings(onSave) {
             border-bottom: 1px solid var(--clr-sand-dark, rgba(255,255,255,0.1));
           `
 
-          item.innerHTML = `
-            <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-main);">${mosque.name}</div>
-            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">${mosque.localisation || ''}</div>
-          `
+          const nameDiv = document.createElement('div')
+          nameDiv.style.cssText = 'font-weight: 600; font-size: 0.9rem; color: var(--text-main);'
+          nameDiv.textContent = mosque.name
+
+          const locDiv = document.createElement('div')
+          locDiv.style.cssText = 'font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;'
+          locDiv.textContent = mosque.localisation || ''
+
+          item.appendChild(nameDiv)
+          item.appendChild(locDiv)
 
           item.addEventListener('mouseenter', () => {
             item.style.background = 'var(--clr-sand-dark, rgba(255,255,255,0.1))'
@@ -495,25 +501,47 @@ export function initSettings(onSave) {
       const marker = L.marker([mosque.latitude, mosque.longitude], { icon: mosqueIcon })
         .addTo(markersLayer)
 
-      const distanceText = mosque.proximity
-        ? `<div style="font-size: 0.75rem; color: #D4AF37; font-weight: 600; margin-bottom: 8px;">
-            <i class="fa-solid fa-route" style="margin-right: 4px;"></i>${(mosque.proximity / 1000).toFixed(1)} km
-           </div>`
-        : ''
+      // Construction DOM du popup (pas de HTML brut avec donnees API)
+      const popupEl = document.createElement('div')
+      popupEl.style.cssText = "font-family: 'Outfit', sans-serif; min-width: 200px;"
 
-      marker.bindPopup(`
-        <div style="font-family: 'Outfit', sans-serif; min-width: 200px;">
-          <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; color: #1A4D2E;">${mosque.name}</div>
-          <div style="font-size: 0.78rem; color: #666; margin-bottom: 6px;">${mosque.localisation || ''}</div>
-          ${distanceText}
-          <button class="map-select-btn" data-slug="${mosque.slug}" data-name="${mosque.name}"
-            style="padding: 8px 14px; background: #1A4D2E; color: white; border: none;
-                   border-radius: 8px; font-family: inherit; font-weight: 600;
-                   font-size: 0.85rem; cursor: pointer; width: 100%; transition: background 0.2s;">
-            <i class="fa-solid fa-check" style="margin-right: 4px;"></i>Sélectionner
-          </button>
-        </div>
-      `, { maxWidth: 250 })
+      const popupName = document.createElement('div')
+      popupName.className = 'popup-mosque-name'
+      popupName.style.cssText = 'font-weight: 700; font-size: 0.95rem; margin-bottom: 4px;'
+      popupName.textContent = mosque.name
+      popupEl.appendChild(popupName)
+
+      const popupLoc = document.createElement('div')
+      popupLoc.className = 'popup-mosque-location'
+      popupLoc.style.cssText = 'font-size: 0.78rem; margin-bottom: 6px;'
+      popupLoc.textContent = mosque.localisation || ''
+      popupEl.appendChild(popupLoc)
+
+      if (mosque.proximity) {
+        const distEl = document.createElement('div')
+        distEl.className = 'popup-mosque-distance'
+        distEl.style.cssText = 'font-size: 0.75rem; font-weight: 600; margin-bottom: 8px;'
+        const routeIcon = document.createElement('i')
+        routeIcon.className = 'fa-solid fa-route'
+        routeIcon.style.marginRight = '4px'
+        distEl.appendChild(routeIcon)
+        distEl.appendChild(document.createTextNode(`${(mosque.proximity / 1000).toFixed(1)} km`))
+        popupEl.appendChild(distEl)
+      }
+
+      const selectBtn = document.createElement('button')
+      selectBtn.className = 'map-select-btn'
+      selectBtn.dataset.slug = mosque.slug
+      selectBtn.dataset.name = mosque.name
+      selectBtn.style.cssText = 'padding: 8px 14px; border: none; border-radius: 8px; font-family: inherit; font-weight: 600; font-size: 0.85rem; cursor: pointer; width: 100%; transition: background 0.2s;'
+      const checkIcon = document.createElement('i')
+      checkIcon.className = 'fa-solid fa-check'
+      checkIcon.style.marginRight = '4px'
+      selectBtn.appendChild(checkIcon)
+      selectBtn.appendChild(document.createTextNode('Sélectionner'))
+      popupEl.appendChild(selectBtn)
+
+      marker.bindPopup(popupEl, { maxWidth: 250 })
 
       // Handle "Sélectionner" click inside popup
       marker.on('popupopen', () => {
@@ -554,8 +582,13 @@ export function initSettings(onSave) {
     if (advanceEl) {
       advanceEl.value = String(prefs.advanceMinutes)
       advanceEl.onchange = () => {
-        prefs.advanceMinutes = parseInt(advanceEl.value, 10)
-        savePrefs(prefs)
+        const val = parseInt(advanceEl.value, 10)
+        if ([5, 10, 15, 30].includes(val)) {
+          prefs.advanceMinutes = val
+          savePrefs(prefs)
+        } else {
+          advanceEl.value = String(prefs.advanceMinutes)
+        }
       }
     }
 
@@ -608,14 +641,27 @@ export function initSettings(onSave) {
       for (const [key, label] of Object.entries(prayerNames)) {
         const item = document.createElement('div')
         item.className = 'notif-prayer-item'
-        item.innerHTML = `
-          <span>${label}</span>
-          <label class="notif-toggle">
-            <input type="checkbox" ${prefs.perPrayer[key] ? 'checked' : ''} data-prayer="${key}">
-            <span class="notif-toggle-slider"></span>
-          </label>
-        `
-        item.querySelector('input').onchange = (e) => {
+
+        const labelSpan = document.createElement('span')
+        labelSpan.textContent = label
+        item.appendChild(labelSpan)
+
+        const toggleLabel = document.createElement('label')
+        toggleLabel.className = 'notif-toggle'
+
+        const checkbox = document.createElement('input')
+        checkbox.type = 'checkbox'
+        checkbox.checked = !!prefs.perPrayer[key]
+        checkbox.dataset.prayer = key
+        toggleLabel.appendChild(checkbox)
+
+        const slider = document.createElement('span')
+        slider.className = 'notif-toggle-slider'
+        toggleLabel.appendChild(slider)
+
+        item.appendChild(toggleLabel)
+
+        checkbox.onchange = (e) => {
           prefs.perPrayer[key] = e.target.checked
           savePrefs(prefs)
         }
