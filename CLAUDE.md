@@ -66,6 +66,7 @@ main.js (orchestrateur)
 | `calendar.js` | Vue calendrier mensuel des horaires | `prayer-times.js` |
 | `daily-content.js` | Contenu quotidien (hadith, doua, etc.) | `storage.js` |
 | `hijri-date.js` | Affichage date Hijri depuis Aladhan | `prayer-times.js` |
+| `changelog.js` | Modale "Quoi de neuf" avec badge NEW, versioning in-app | `storage.js` |
 
 ### Stratégie API duale
 
@@ -83,7 +84,7 @@ main.js (orchestrateur)
 
 ### Clés de stockage persistantes
 
-`mosqueSlug`, `mosqueName`, `userCity`, `userCountry`, `userLat`, `userLon`, `calculationMethod`, `theme`, `tourCompleted`, `notificationPrefs`, `mawaqitCache`, `prayerTimesCache`
+`mosqueSlug`, `mosqueName`, `userCity`, `userCountry`, `userLat`, `userLon`, `calculationMethod`, `theme`, `tourCompleted`, `notificationPrefs`, `mawaqitCache`, `prayerTimesCache`, `support_interacted`, `lastSeenVersion`
 
 ## Conventions de code
 
@@ -126,6 +127,7 @@ main.js (orchestrateur)
 - **WebView2 mémoire** : ~300-500 MB normal pour Tauri, les animations CSS continues augmentent l'usage GPU
 - **DOM ↔ JS sync** : si on supprime/remplace des éléments HTML (ex: coming soon), vérifier que le JS associé (`getElementById`, `querySelector`) ne crash pas sur `null`
 - **Version sync** : la version est dans `package.json`, `src-tauri/tauri.conf.json` ET `src-tauri/Cargo.toml` — les 3 doivent rester synchronisés. Le workflow CI release sync automatiquement avant le build
+- **Changelog in-app** : `APP_VERSION` dans `changelog.js` doit matcher la version des 3 fichiers ci-dessus. Clé storage `lastSeenVersion` contrôle le badge "NEW"
 
 ## Variables d'environnement
 
