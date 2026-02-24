@@ -91,7 +91,7 @@ main.js (orchestrateur)
 
 ### Clés de stockage persistantes
 
-`mosqueSlug`, `mosqueName`, `userCity`, `userCountry`, `userLat`, `userLon`, `calculationMethod`, `theme`, `tourCompleted`, `notificationPrefs`, `mawaqitCache`, `prayerTimesCache`, `support_interacted`, `lastSeenVersion`
+`mosqueSlug`, `mosqueName`, `userCity`, `userCountry`, `userLat`, `userLon`, `calculationMethod`, `theme`, `tourCompleted`, `notificationPrefs`, `mawaqitCache`, `prayerTimesCache`, `support_interacted`, `lastSeenVersion`, `sidebar_minimized`
 
 ## Conventions de code
 

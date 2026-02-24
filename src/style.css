@@ -42,6 +42,12 @@
     --clr-badge-coming-soon-text: #000000;
     --clr-status-error: #F44336;
     --clr-status-success: #4CAF50;
+    --clr-changelog-improvement: #2196F3;
+    --clr-changelog-fix: #FF9800;
+    --clr-changelog-border: rgba(122, 139, 128, 0.2);
+    --clr-changelog-hover: rgba(122, 139, 128, 0.08);
+    --clr-glass-bg: rgba(255, 255, 255, 0.1);
+    --clr-glass-border: rgba(255, 255, 255, 0.15);
     --clr-brand-paypal: #00457C;
     --clr-brand-kofi: #FF5E5B;
     --clr-brand-bmc: #FFDD00;
@@ -2340,7 +2346,7 @@ body {
     gap: 10px;
     padding: 8px 0 6px;
     margin-bottom: 4px;
-    border-bottom: 1px solid rgba(122, 139, 128, 0.2);
+    border-bottom: 1px solid var(--clr-changelog-border);
 }
 
 .changelog-version-badge {
@@ -2369,11 +2375,11 @@ body {
 }
 
 .changelog-entry:hover {
-    background: rgba(122, 139, 128, 0.08);
+    background: var(--clr-changelog-hover);
 }
 
 [data-theme="dark"] .changelog-entry:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--nav-hover);
 }
 
 .changelog-entry span {
@@ -2395,9 +2401,9 @@ body {
 }
 
 .changelog-type-improvement .changelog-type-icon {
-    color: #2196F3;
+    color: var(--clr-changelog-improvement);
 }
 
 .changelog-type-fix .changelog-type-icon {
-    color: #FF9800;
+    color: var(--clr-changelog-fix);
 }

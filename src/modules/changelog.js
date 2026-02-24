@@ -42,7 +42,7 @@ const TYPE_CONFIG = {
 
 function buildChangelogList(container) {
   CHANGELOG_ENTRIES.forEach(entry => {
-    // Version header
+    // En-tête de version
     const header = document.createElement('div')
     header.className = 'changelog-version-header'
 
@@ -58,7 +58,7 @@ function buildChangelogList(container) {
 
     container.appendChild(header)
 
-    // Change entries
+    // Entrées de changement
     entry.changes.forEach(change => {
       const cfg = TYPE_CONFIG[change.type]
       const row = document.createElement('div')
