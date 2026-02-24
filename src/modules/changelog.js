@@ -5,9 +5,18 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.1.0'
+const APP_VERSION = '1.1.1'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.1.1',
+    date: '24 février 2026',
+    changes: [
+      { type: 'fix', text: 'Correction du pipeline de release automatique' },
+      { type: 'fix', text: 'Couleurs CSS harmonisées (variables custom)' },
+      { type: 'fix', text: 'Commentaires traduits en français' },
+    ],
+  },
   {
     version: '1.1.0',
     date: '24 février 2026',

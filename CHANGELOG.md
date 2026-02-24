@@ -5,6 +5,14 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.1.1] - 2026-02-24
+
+### Corrigé
+
+- **Release CI** — pin `tauri-action@v0.6.1` (fix espaces dans productName)
+- **CSS variables** — remplacement des couleurs hardcodées par des custom properties
+- **Commentaires** — traduction des commentaires anglais en français
+
 ## [1.1.0] - 2026-02-24
 
 ### Ajouté
