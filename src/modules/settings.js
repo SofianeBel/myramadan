@@ -5,6 +5,7 @@
 import { searchMosques, searchMosquesByLocation } from './prayer-times.js'
 import { loadPrefs, savePrefs, stopAdhan, previewAdhan } from './notifications.js'
 import { enable as enableAutostart, disable as disableAutostart, isEnabled as isAutostartEnabled } from '@tauri-apps/plugin-autostart'
+import { open } from '@tauri-apps/plugin-shell'
 import storage from './storage.js'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -696,6 +697,23 @@ export function initSettings(onSave) {
     const btnResetTour = document.getElementById('btn-reset-tour')
     if (btnResetTour && typeof window.resetTour === 'function') {
       btnResetTour.onclick = () => window.resetTour()
+    }
+
+    // Legal Documents
+    const btnPrivacy = document.getElementById('btn-open-privacy')
+    if (btnPrivacy) {
+      btnPrivacy.onclick = (e) => {
+        e.preventDefault()
+        open('PRIVACY.md').catch(err => console.error('Failed to open PRIVACY.md:', err))
+      }
+    }
+
+    const btnCgu = document.getElementById('btn-open-cgu')
+    if (btnCgu) {
+      btnCgu.onclick = (e) => {
+        e.preventDefault()
+        open('CGU.md').catch(err => console.error('Failed to open CGU.md:', err))
+      }
     }
 
     // Test sound button (only bind once)
