@@ -5,9 +5,22 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.1.2'
+const APP_VERSION = '1.1.3'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.1.3',
+    date: '24 février 2026',
+    changes: [
+      { type: 'fix', text: 'Correction de failles XSS dans la recherche mosquée et la carte' },
+      { type: 'fix', text: 'Sécurisation du pipeline CI (injection de commande, permissions)' },
+      { type: 'fix', text: 'Activation du chiffrement TLS pour les requêtes réseau' },
+      { type: 'fix', text: 'Renforcement de la CSP (script-src, suppression GitHub du frontend)' },
+      { type: 'fix', text: 'Validation des entrées du rapport de bug (titre, description, rate limit)' },
+      { type: 'improvement', text: 'Ajout de Dependabot pour les mises à jour de sécurité' },
+      { type: 'improvement', text: 'Intégrité SRI pour les ressources CDN externes' },
+    ],
+  },
   {
     version: '1.1.2',
     date: '24 février 2026',

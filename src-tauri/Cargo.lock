@@ -2199,7 +2199,7 @@ dependencies = [
 
 [[package]]
 name = "myramadan"
-version = "1.1.0"
+version = "1.1.3"
 dependencies = [
  "reqwest 0.12.28",
  "serde",

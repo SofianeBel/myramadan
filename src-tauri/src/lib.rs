@@ -17,6 +17,20 @@ struct BugReportInput {
 
 #[tauri::command]
 async fn create_bug_report(input: BugReportInput) -> Result<String, String> {
+    // Validation des entrees
+    let title = input.title.trim().to_string();
+    let description = input.description.trim().to_string();
+
+    if title.is_empty() || description.is_empty() {
+        return Err("Le titre et la description sont requis.".to_string());
+    }
+    if title.len() > 200 {
+        return Err("Le titre ne doit pas depasser 200 caracteres.".to_string());
+    }
+    if description.len() > 5000 {
+        return Err("La description ne doit pas depasser 5000 caracteres.".to_string());
+    }
+
     let token = option_env!("BUG_REPORT_TOKEN")
         .ok_or("Service de bug report non disponible dans cette version.")?;
 
@@ -28,7 +42,7 @@ async fn create_bug_report(input: BugReportInput) -> Result<String, String> {
 
     let mut body_parts = vec![
         "## Description".to_string(),
-        input.description,
+        description,
         String::new(),
         "## Informations système".to_string(),
         system_info,
@@ -44,7 +58,7 @@ async fn create_bug_report(input: BugReportInput) -> Result<String, String> {
         .header("Authorization", format!("token {}", token))
         .header("User-Agent", "GuideME-Ramadan")
         .json(&serde_json::json!({
-            "title": format!("[Bug] {}", input.title),
+            "title": format!("[Bug] {}", title),
             "body": body,
             "labels": ["bug"]
         }))
@@ -56,7 +70,8 @@ async fn create_bug_report(input: BugReportInput) -> Result<String, String> {
         let status = resp.status();
         let err_body: serde_json::Value = resp.json().await.unwrap_or_default();
         let msg = err_body["message"].as_str().unwrap_or("Erreur inconnue");
-        return Err(format!("Erreur HTTP {} : {}", status, msg));
+        eprintln!("[bug-report] Erreur GitHub API: HTTP {} — {}", status, msg);
+        return Err("Impossible de creer le rapport. Reessayez plus tard.".to_string());
     }
 
     Ok("Issue créée avec succès.".to_string())
