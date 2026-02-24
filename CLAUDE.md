@@ -66,6 +66,14 @@ main.js (orchestrateur)
 | `calendar.js` | Vue calendrier mensuel des horaires | `prayer-times.js` |
 | `daily-content.js` | Contenu quotidien (hadith, doua, etc.) | `storage.js` |
 | `hijri-date.js` | Affichage date Hijri depuis Aladhan | `prayer-times.js` |
+| `changelog.js` | Modale "Quoi de neuf" avec badge NEW, versioning in-app | `storage.js` |
+
+### Côté Rust (`src-tauri/src/lib.rs`)
+
+- `create_bug_report` — Commande Tauri : crée une issue GitHub via `reqwest` (token build-time)
+- System tray : menu "Ouvrir GuideME" / "Quitter", clic gauche = show window
+- Close-to-tray : `CloseRequested` → `window.hide()` (pas de quit)
+- Autostart : plugin `tauri_plugin_autostart` (desktop only)
 
 ### Stratégie API duale
 
@@ -83,7 +91,7 @@ main.js (orchestrateur)
 
 ### Clés de stockage persistantes
 
-`mosqueSlug`, `mosqueName`, `userCity`, `userCountry`, `userLat`, `userLon`, `calculationMethod`, `theme`, `tourCompleted`, `notificationPrefs`, `mawaqitCache`, `prayerTimesCache`
+`mosqueSlug`, `mosqueName`, `userCity`, `userCountry`, `userLat`, `userLon`, `calculationMethod`, `theme`, `tourCompleted`, `notificationPrefs`, `mawaqitCache`, `prayerTimesCache`, `support_interacted`, `lastSeenVersion`, `sidebar_minimized`
 
 ## Conventions de code
 
@@ -93,6 +101,9 @@ main.js (orchestrateur)
 - CSS : custom properties pour le theming, `[data-theme="dark"|"light"]` sur `<html>`
 - Palettes : dark = bleu nuit + glassmorphism, light = vert foncé + or + sable
 - Toujours `var(--xxx)` pour couleurs — jamais de valeurs hardcodées
+- Nommage CSS variables : `--clr-{component}-{purpose}` (ex: `--clr-changelog-border`, `--clr-glass-bg`)
+- Variables glass réutilisables : `--clr-glass-bg` / `--clr-glass-border` pour fonds semi-transparents
+- Coming soon : `.menu-item-disabled` (sidebar) + `.badge-coming-soon` + `.coming-soon-panel` avec rayures pour features en construction
 
 ## Scope des modifications
 
@@ -107,7 +118,7 @@ main.js (orchestrateur)
 - **CSP stricte** : toute nouvelle URL externe → l'ajouter dans `tauri.conf.json` → `app.security.csp`, sinon bloquée **silencieusement**
 - **Mawaqit = Tauri HTTP only** : `tauriFetch` obligatoire, jamais `fetch()` browser
 - **Aladhan dans CSP** : déjà dans `connect-src`, ajouter toute nouvelle API ici
-- **GitHub API** (`api.github.com`) : création issues via bug report — **Tauri HTTP obligatoire** (même pattern que Mawaqit)
+- **GitHub API** (`api.github.com`) : création issues via bug report — utilise `reqwest` côté Rust (pas le plugin Tauri HTTP), le token est embarqué au build time via `option_env!()`
 - **Date Hijri** : toujours depuis Aladhan (Mawaqit ne la fournit pas)
 - **Géolocalisation** : fallback chain GPS → coords sauvegardées → Paris (48.8566, 2.3522)
 - **Méthode de calcul** : UOIF (method 12) par défaut, utilise `method=99` + angles custom quand `getMethodAngles()` retourne non-null
@@ -117,18 +128,25 @@ main.js (orchestrateur)
 - **System tray** : fermer la fenêtre = minimize to tray, pas quit
 - **`opacity: 0` initial** : `.app-container` masqué jusqu'à la fin du splash (révélé par JS)
 - **Images reçues** : toujours vérifier le vrai format avec `file <path>` — les extensions peuvent mentir (JPEG renommé en .png)
-- **Variables d'env Vite** : `.env.local` (gitignored) pour les secrets (`VITE_*`), `.env.example` pour la doc — accès via `import.meta.env.VITE_XXX`
-- **GitHub Push Protection** : jamais de token/secret hardcodé dans le source — utiliser `import.meta.env.VITE_*` depuis `.env.local`
+- **Variables d'env** : `.env.example` documente les variables requises. Pas de `VITE_*` côté frontend — le seul secret (`BUG_REPORT_TOKEN`) est lu au build time par Rust
+- **Bug report token** : `BUG_REPORT_TOKEN` est lu au **build time** par `option_env!()` (Rust), embarqué dans le binaire — pas une variable runtime. Doit être défini AVANT `cargo build` / `npm run tauri:build`
 - **Fenêtre** : min 900×600, default 1200×800 (`tauri.conf.json`)
 - **Custom titlebar = permissions obligatoires** : `decorations: false` nécessite `core:window:allow-start-dragging`, `allow-minimize`, `allow-toggle-maximize`, `allow-close` dans `src-tauri/capabilities/default.json`
 - **Notifications dev mode** : `sendNotification()` fonctionne sans erreur mais Windows filtre les toast des apps non-installées — tester avec `npm run tauri:build` + install
 - **WebView2 mémoire** : ~300-500 MB normal pour Tauri, les animations CSS continues augmentent l'usage GPU
+- **DOM ↔ JS sync** : si on supprime/remplace des éléments HTML (ex: coming soon), vérifier que le JS associé (`getElementById`, `querySelector`) ne crash pas sur `null`
+- **Version sync** : la version est dans `package.json`, `src-tauri/tauri.conf.json` ET `src-tauri/Cargo.toml` — les 3 doivent rester synchronisés. Le workflow CI release sync automatiquement avant le build
+- **Changelog in-app** : `APP_VERSION` dans `changelog.js` doit matcher la version des 3 fichiers ci-dessus. Clé storage `lastSeenVersion` contrôle le badge "NEW"
+- **Review CI auto** : le bot Claude vérifie strictement les couleurs hardcodées et les commentaires en anglais — toujours utiliser `var(--xxx)` et écrire les commentaires en français
 
 ## Variables d'environnement
 
 ```bash
-# .env.local (gitignored) — requis pour bug report
-VITE_GITHUB_TOKEN=""   # GitHub PAT pour création issues (bug report)
+# GitHub PAT pour bug report — lu au BUILD TIME par option_env!() (Rust)
+# Doit être défini AVANT `cargo build` / `npm run tauri:build`
+# set BUG_REPORT_TOKEN=ghp_xxx (Windows) ou export BUG_REPORT_TOKEN=ghp_xxx (Unix)
+# Scope requis : Issues Read/Write sur SofianeBel/myramadan
+# En CI : secret GitHub `BUG_REPORT_TOKEN` dans release.yml
 ```
 
 ## Git flow
@@ -140,6 +158,24 @@ main ← production stable (PR only)
 ```
 
 Commits : Conventional Commits (`feat:`, `fix:`, `refactor:`). Toujours créer les branches depuis `dev`.
+
+**Résolution de conflits dev↔main** : toujours garder la version `dev` (`--ours`) pour les fichiers source, puis intégrer les changements uniques de `main` (ex: fix CI). `dev` est toujours la branche la plus avancée.
+
+## Versioning
+
+Version synchronisée dans 4 fichiers :
+1. `package.json` → `version`
+2. `src-tauri/tauri.conf.json` → `version`
+3. `src-tauri/Cargo.toml` → `version`
+4. `src/modules/changelog.js` → `APP_VERSION`
+
+Bump : `feat:` → MINOR, `fix:` → PATCH. Ajouter entrée dans `CHANGELOG.md` + `CHANGELOG_ENTRIES` dans `changelog.js`.
+
+## CI/CD
+
+- **Code review** : `claude-code-review.yml` — review automatique sur PR (nécessite `CLAUDE_CODE_OAUTH_TOKEN` + `id-token: write`)
+- **Release** : `release.yml` — build Windows (MSI/NSIS) + GitHub Release quand la version change dans `package.json` sur `main`
+- **Déclencher une release** : bump `version` dans `package.json` → merge `dev` → `main` → build auto
 
 ## Assets & Icons
 

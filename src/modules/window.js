@@ -1,25 +1,25 @@
-import { getCurrentWindow } from '@tauri-apps/api/window';
+import { getCurrentWindow } from '@tauri-apps/api/window'
 
 export function initWindowControls() {
-    let appWindow;
+    let appWindow
     try {
-        appWindow = getCurrentWindow();
+        appWindow = getCurrentWindow()
     } catch (e) {
-        console.warn('Tauri window API not available (browser context?)');
-        return;
+        console.warn('Tauri window API not available (browser context?)')
+        return
     }
 
-    const minBtn = document.getElementById('titlebar-minimize');
-    const maxBtn = document.getElementById('titlebar-maximize');
-    const closeBtn = document.getElementById('titlebar-close');
+    const minBtn = document.getElementById('titlebar-minimize')
+    const maxBtn = document.getElementById('titlebar-maximize')
+    const closeBtn = document.getElementById('titlebar-close')
 
     if (minBtn) {
-        minBtn.addEventListener('click', () => appWindow.minimize());
+        minBtn.addEventListener('click', () => appWindow.minimize())
     }
     if (maxBtn) {
-        maxBtn.addEventListener('click', () => appWindow.toggleMaximize());
+        maxBtn.addEventListener('click', () => appWindow.toggleMaximize())
     }
     if (closeBtn) {
-        closeBtn.addEventListener('click', () => appWindow.close());
+        closeBtn.addEventListener('click', () => appWindow.close())
     }
 }

@@ -28,6 +28,30 @@
 
     --font-main: 'Outfit', sans-serif;
 
+    /* Semantic / Component Colors */
+    --clr-sakura: #FFB7C5;
+    --clr-sakura-shadow: rgba(255, 183, 197, 0.4);
+    --clr-sakura-glow: rgba(255, 183, 197, 0.6);
+    --clr-titlebar-close-hover: #E81123;
+    --clr-active-time-bg: #E8F5E9;
+    --clr-suhoor: #5D8AA8;
+    --clr-suhoor-bg-top: #F0F4F8;
+    --clr-suhoor-bg-bottom: #FFFFFF;
+    --clr-badge-new-bg: #FF3B30;
+    --clr-badge-new-text: #FFFFFF;
+    --clr-badge-coming-soon-text: #000000;
+    --clr-status-error: #F44336;
+    --clr-status-success: #4CAF50;
+    --clr-changelog-improvement: #2196F3;
+    --clr-changelog-fix: #FF9800;
+    --clr-changelog-border: rgba(122, 139, 128, 0.2);
+    --clr-changelog-hover: rgba(122, 139, 128, 0.08);
+    --clr-glass-bg: rgba(255, 255, 255, 0.1);
+    --clr-glass-border: rgba(255, 255, 255, 0.15);
+    --clr-brand-paypal: #00457C;
+    --clr-brand-kofi: #FF5E5B;
+    --clr-brand-bmc: #FFDD00;
+
     /* Light mode glassmorphism */
     --bg-modal: rgba(255, 255, 255, 0.70);
     /* More transparent to let the blur show through */
@@ -68,6 +92,12 @@
     /* Fallback to existing dark card glass */
     --glass-blur: blur(12px);
     --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+
+    /* Component color overrides */
+    --clr-active-time-bg: rgba(46, 125, 50, 0.25);
+    --clr-suhoor-bg-top: rgba(45, 85, 115, 0.3);
+    --clr-suhoor-bg-bottom: rgba(30, 55, 80, 0.1);
+    --clr-badge-coming-soon-text: var(--clr-dark-green);
 }
 
 * {
@@ -237,7 +267,7 @@ body {
 /* --- Sakura Petal Styles --- */
 .sakura-petal {
     position: absolute;
-    background-color: #FFB7C5;
+    background-color: var(--clr-sakura);
     /* Default pink */
     border-radius: 150% 0 150% 0;
     /* Basic leaf shape */
@@ -245,7 +275,7 @@ body {
     opacity: 0.8;
     z-index: 1;
     pointer-events: none;
-    box-shadow: 0 0 3px rgba(255, 183, 197, 0.4);
+    box-shadow: 0 0 3px var(--clr-sakura-shadow);
 }
 
 .sakura-petal::after {
@@ -271,7 +301,7 @@ body {
     50% {
         transform: rotate(var(--target-rot)) scale(1.15);
         opacity: 1;
-        box-shadow: 0 0 6px rgba(255, 183, 197, 0.6);
+        box-shadow: 0 0 6px var(--clr-sakura-glow);
     }
 }
 
@@ -331,8 +361,8 @@ body {
 }
 
 .titlebar-close:hover {
-    background-color: #E81123 !important;
-    color: #fff !important;
+    background-color: var(--clr-titlebar-close-hover) !important;
+    color: var(--clr-badge-new-text) !important;
 }
 
 /* ---------------------------------
@@ -1090,7 +1120,7 @@ body {
 /* 2. Current/Next Active Prayer */
 .prayer-item.active-time {
     border-color: var(--clr-green);
-    background: #E8F5E9;
+    background: var(--clr-active-time-bg);
     /* Very light green tint */
     box-shadow: var(--shadow-sm);
     transform: scale(1.05);
@@ -1132,13 +1162,13 @@ body {
 
 /* Highlighted Fasting Start (Suhoor/Fajr) */
 .prayer-item.highlight-suhoor:not(.selected) {
-    border-color: #5D8AA8;
+    border-color: var(--clr-suhoor);
     /* Air Force Blue/Dawn color */
-    background: linear-gradient(to bottom, #F0F4F8, #FFFFFF);
+    background: linear-gradient(to bottom, var(--clr-suhoor-bg-top), var(--clr-suhoor-bg-bottom));
 }
 
 .prayer-item.highlight-suhoor:not(.selected) .prayer-name span {
-    color: #5D8AA8;
+    color: var(--clr-suhoor);
     font-weight: 700;
 }
 
@@ -1223,13 +1253,13 @@ body {
 }
 
 .color-active {
-    background-color: #E8F5E9;
+    background-color: var(--clr-active-time-bg);
     border: 2px solid var(--clr-green);
 }
 
 .color-suhoor {
-    background-color: #F0F4F8;
-    border: 2px solid #5D8AA8;
+    background-color: var(--clr-suhoor-bg-top);
+    border: 2px solid var(--clr-suhoor);
 }
 
 .color-selected {
@@ -2166,7 +2196,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     background: var(--clr-gold);
-    color: #000;
+    color: var(--clr-badge-coming-soon-text);
     padding: 2px 6px;
     border-radius: 4px;
     line-height: 1;
@@ -2244,4 +2274,136 @@ body {
         flex-wrap: wrap;
         gap: 8px;
     }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Extracted Inline Styles → Utility Classes
+   ═══════════════════════════════════════════════════════════════════ */
+
+.badge-new {
+    position: absolute;
+    top: 6px;
+    right: 12px;
+    background: var(--clr-badge-new-bg);
+    color: var(--clr-badge-new-text);
+    font-size: 0.55rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+}
+
+.icon-status-error {
+    font-size: 3.5rem;
+    color: var(--clr-status-error);
+    margin-bottom: 20px;
+    display: block;
+}
+
+.icon-status-success {
+    font-size: 3.5rem;
+    color: var(--clr-status-success);
+    margin-bottom: 20px;
+    display: block;
+}
+
+.icon-paypal {
+    font-size: 2rem;
+    color: var(--clr-brand-paypal);
+    margin-bottom: 8px;
+}
+
+.icon-kofi {
+    font-size: 2rem;
+    color: var(--clr-brand-kofi);
+    margin-bottom: 8px;
+}
+
+.icon-bmc {
+    margin-bottom: 8px;
+}
+
+.icon-bmc-fill {
+    fill: var(--clr-brand-bmc);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Changelog / Quoi de neuf
+   ═══════════════════════════════════════════════════════════════════ */
+
+.changelog-list {
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.changelog-version-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0 6px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--clr-changelog-border);
+}
+
+.changelog-version-badge {
+    background: var(--clr-gold);
+    color: var(--clr-dark-green);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+}
+
+.changelog-version-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.changelog-entry {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.changelog-entry:hover {
+    background: var(--clr-changelog-hover);
+}
+
+[data-theme="dark"] .changelog-entry:hover {
+    background: var(--nav-hover);
+}
+
+.changelog-entry span {
+    font-size: 0.88rem;
+    color: var(--text-main);
+    line-height: 1.4;
+}
+
+.changelog-type-icon {
+    flex-shrink: 0;
+    width: 18px;
+    text-align: center;
+    margin-top: 2px;
+    font-size: 0.75rem;
+}
+
+.changelog-type-feature .changelog-type-icon {
+    color: var(--clr-status-success);
+}
+
+.changelog-type-improvement .changelog-type-icon {
+    color: var(--clr-changelog-improvement);
+}
+
+.changelog-type-fix .changelog-type-icon {
+    color: var(--clr-changelog-fix);
 }

@@ -1,11 +1,70 @@
+use serde::Deserialize;
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
     Manager,
 };
 
+// ── Bug Report → GitHub Issues (server-side, token never reaches the frontend) ──
+
+#[derive(Deserialize)]
+struct BugReportInput {
+    title: String,
+    description: String,
+    include_logs: bool,
+    date: String,
+}
+
+#[tauri::command]
+async fn create_bug_report(input: BugReportInput) -> Result<String, String> {
+    let token = option_env!("BUG_REPORT_TOKEN")
+        .ok_or("Service de bug report non disponible dans cette version.")?;
+
+    let system_info = format!(
+        "- **App**: GuideME Ramadan v{}\n- **Date**: {}",
+        env!("CARGO_PKG_VERSION"),
+        input.date
+    );
+
+    let mut body_parts = vec![
+        "## Description".to_string(),
+        input.description,
+        String::new(),
+        "## Informations système".to_string(),
+        system_info,
+    ];
+    if input.include_logs {
+        body_parts.push("\n> Logs de l'application joints par l'utilisateur".to_string());
+    }
+    let body = body_parts.join("\n");
+
+    let client = reqwest::Client::new();
+    let resp = client
+        .post("https://api.github.com/repos/SofianeBel/myramadan/issues")
+        .header("Authorization", format!("token {}", token))
+        .header("User-Agent", "GuideME-Ramadan")
+        .json(&serde_json::json!({
+            "title": format!("[Bug] {}", input.title),
+            "body": body,
+            "labels": ["bug"]
+        }))
+        .send()
+        .await
+        .map_err(|e| format!("Erreur réseau : {}", e))?;
+
+    if !resp.status().is_success() {
+        let status = resp.status();
+        let err_body: serde_json::Value = resp.json().await.unwrap_or_default();
+        let msg = err_body["message"].as_str().unwrap_or("Erreur inconnue");
+        return Err(format!("Erreur HTTP {} : {}", status, msg));
+    }
+
+    Ok("Issue créée avec succès.".to_string())
+}
+
 pub fn run() {
     tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![create_bug_report])
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_notification::init())
