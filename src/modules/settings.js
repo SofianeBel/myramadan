@@ -704,7 +704,7 @@ export function initSettings(onSave) {
     if (btnPrivacy) {
       btnPrivacy.onclick = (e) => {
         e.preventDefault()
-        open('PRIVACY.md').catch(err => console.error('Failed to open PRIVACY.md:', err))
+        open('https://github.com/SofianeBel/myramadan/blob/main/PRIVACY.md').catch(err => console.error('Failed to open PRIVACY.md:', err))
       }
     }
 
@@ -712,7 +712,7 @@ export function initSettings(onSave) {
     if (btnCgu) {
       btnCgu.onclick = (e) => {
         e.preventDefault()
-        open('CGU.md').catch(err => console.error('Failed to open CGU.md:', err))
+        open('https://github.com/SofianeBel/myramadan/blob/main/CGU.md').catch(err => console.error('Failed to open CGU.md:', err))
       }
     }
 
