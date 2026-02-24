@@ -1,6 +1,6 @@
 [package]
 name = "myramadan"
-version = "1.1.1"
+version = "1.1.2"
 description = "GuideME - Ramadan Edition"
 authors = ["GuideME"]
 edition = "2021"
