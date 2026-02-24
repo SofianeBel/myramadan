@@ -93,6 +93,7 @@ main.js (orchestrateur)
 - CSS : custom properties pour le theming, `[data-theme="dark"|"light"]` sur `<html>`
 - Palettes : dark = bleu nuit + glassmorphism, light = vert foncé + or + sable
 - Toujours `var(--xxx)` pour couleurs — jamais de valeurs hardcodées
+- Coming soon : `.menu-item-disabled` (sidebar) + `.badge-coming-soon` + `.coming-soon-panel` avec rayures pour features en construction
 
 ## Scope des modifications
 
@@ -123,6 +124,8 @@ main.js (orchestrateur)
 - **Custom titlebar = permissions obligatoires** : `decorations: false` nécessite `core:window:allow-start-dragging`, `allow-minimize`, `allow-toggle-maximize`, `allow-close` dans `src-tauri/capabilities/default.json`
 - **Notifications dev mode** : `sendNotification()` fonctionne sans erreur mais Windows filtre les toast des apps non-installées — tester avec `npm run tauri:build` + install
 - **WebView2 mémoire** : ~300-500 MB normal pour Tauri, les animations CSS continues augmentent l'usage GPU
+- **DOM ↔ JS sync** : si on supprime/remplace des éléments HTML (ex: coming soon), vérifier que le JS associé (`getElementById`, `querySelector`) ne crash pas sur `null`
+- **Version sync** : la version est dans `package.json`, `src-tauri/tauri.conf.json` ET `src-tauri/Cargo.toml` — les 3 doivent rester synchronisés. Le workflow CI release sync automatiquement avant le build
 
 ## Variables d'environnement
 
@@ -140,6 +143,12 @@ main ← production stable (PR only)
 ```
 
 Commits : Conventional Commits (`feat:`, `fix:`, `refactor:`). Toujours créer les branches depuis `dev`.
+
+## CI/CD
+
+- **Code review** : `claude-code-review.yml` — review automatique sur PR (nécessite `CLAUDE_CODE_OAUTH_TOKEN` + `id-token: write`)
+- **Release** : `release.yml` — build Windows (MSI/NSIS) + GitHub Release quand la version change dans `package.json` sur `main`
+- **Déclencher une release** : bump `version` dans `package.json` → merge `dev` → `main` → build auto
 
 ## Assets & Icons
 
