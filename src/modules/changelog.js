@@ -5,9 +5,17 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.1.4'
+const APP_VERSION = '1.2.0'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.2.0',
+    date: '24 février 2026',
+    changes: [
+      { type: 'feature', text: 'Conditions Générales d\'Utilisation et Mentions Légales' },
+      { type: 'feature', text: 'Boutons Confidentialité et CGU dans les paramètres' },
+    ],
+  },
   {
     version: '1.1.4',
     date: '24 février 2026',
