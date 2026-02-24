@@ -94,7 +94,8 @@ GuideME est concue dans le respect total de votre vie privee :
 
 Aucune de ces APIs ne recoit de donnees personnelles identifiantes.
 
-Pour plus de details, consultez notre [Politique de confidentialite](PRIVACY.md).
+Pour plus de details, consultez notre [Politique de confidentialite](PRIVACY.md). 
+Pour les mentions légales, référez-vous aux [Conditions Générales d'Utilisation](CGU.md).
 
 ---
 

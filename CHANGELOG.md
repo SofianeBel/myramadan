@@ -5,6 +5,21 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.2.1] - 2026-02-24
+
+### Corrigé
+
+- **Permission shell** — ajout de `shell:allow-open` dans les capabilities Tauri
+- **Liens légaux** — ouverture via URLs GitHub au lieu de chemins locaux (restriction plugin shell)
+
+## [1.2.0] - 2026-02-24
+
+### Ajouté
+
+- **CGU & Mentions Légales** — Conditions Générales d'Utilisation conformes LCEN, RGPD et droit français
+- **Boutons Mentions Légales** — accès Confidentialité et CGU depuis les paramètres (plugin shell)
+- **Plugin shell** — `@tauri-apps/plugin-shell` pour ouvrir les documents légaux dans le navigateur
+
 ## [1.1.4] - 2026-02-24
 
 ### Corrigé

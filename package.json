@@ -1,7 +1,7 @@
 {
   "name": "myramadan",
   "private": true,
-  "version": "1.1.4",
+  "version": "1.2.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -20,6 +20,7 @@
     "@tauri-apps/plugin-autostart": "^2.5.1",
     "@tauri-apps/plugin-http": "^2.5.7",
     "@tauri-apps/plugin-notification": "^2.3.3",
+    "@tauri-apps/plugin-shell": "^2.3.5",
     "@tauri-apps/plugin-store": "^2.4.2",
     "leaflet": "^1.9.4"
   }

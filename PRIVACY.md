@@ -82,3 +82,5 @@ Toute modification sera documentee dans ce fichier avec la date de mise a jour. 
 ## Contact
 
 Pour toute question concernant la vie privee : ouvrir une [issue](https://github.com/SofianeBel/myramadan/issues) sur le depot GitHub.
+
+Consultez également nos [Conditions Générales d'Utilisation et Mentions Légales](CGU.md).
