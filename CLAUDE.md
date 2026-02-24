@@ -68,6 +68,13 @@ main.js (orchestrateur)
 | `hijri-date.js` | Affichage date Hijri depuis Aladhan | `prayer-times.js` |
 | `changelog.js` | Modale "Quoi de neuf" avec badge NEW, versioning in-app | `storage.js` |
 
+### Côté Rust (`src-tauri/src/lib.rs`)
+
+- `create_bug_report` — Commande Tauri : crée une issue GitHub via `reqwest` (token build-time)
+- System tray : menu "Ouvrir GuideME" / "Quitter", clic gauche = show window
+- Close-to-tray : `CloseRequested` → `window.hide()` (pas de quit)
+- Autostart : plugin `tauri_plugin_autostart` (desktop only)
+
 ### Stratégie API duale
 
 - **Mawaqit** (`mawaqit.net/api/2.0/`) : horaires mosquée spécifiques, précis — **Tauri HTTP obligatoire** (CORS bloqué côté browser)
@@ -109,7 +116,7 @@ main.js (orchestrateur)
 - **CSP stricte** : toute nouvelle URL externe → l'ajouter dans `tauri.conf.json` → `app.security.csp`, sinon bloquée **silencieusement**
 - **Mawaqit = Tauri HTTP only** : `tauriFetch` obligatoire, jamais `fetch()` browser
 - **Aladhan dans CSP** : déjà dans `connect-src`, ajouter toute nouvelle API ici
-- **GitHub API** (`api.github.com`) : création issues via bug report — **Tauri HTTP obligatoire** (même pattern que Mawaqit)
+- **GitHub API** (`api.github.com`) : création issues via bug report — utilise `reqwest` côté Rust (pas le plugin Tauri HTTP), le token est embarqué au build time via `option_env!()`
 - **Date Hijri** : toujours depuis Aladhan (Mawaqit ne la fournit pas)
 - **Géolocalisation** : fallback chain GPS → coords sauvegardées → Paris (48.8566, 2.3522)
 - **Méthode de calcul** : UOIF (method 12) par défaut, utilise `method=99` + angles custom quand `getMethodAngles()` retourne non-null
@@ -119,7 +126,7 @@ main.js (orchestrateur)
 - **System tray** : fermer la fenêtre = minimize to tray, pas quit
 - **`opacity: 0` initial** : `.app-container` masqué jusqu'à la fin du splash (révélé par JS)
 - **Images reçues** : toujours vérifier le vrai format avec `file <path>` — les extensions peuvent mentir (JPEG renommé en .png)
-- **Variables d'env Vite** : `.env.local` (gitignored) pour les secrets (`VITE_*`), `.env.example` pour la doc — accès via `import.meta.env.VITE_XXX`
+- **Variables d'env** : `.env.example` documente les variables requises. Pas de `VITE_*` côté frontend — le seul secret (`BUG_REPORT_TOKEN`) est lu au build time par Rust
 - **Bug report token** : `BUG_REPORT_TOKEN` est lu au **build time** par `option_env!()` (Rust), embarqué dans le binaire — pas une variable runtime. Doit être défini AVANT `cargo build` / `npm run tauri:build`
 - **Fenêtre** : min 900×600, default 1200×800 (`tauri.conf.json`)
 - **Custom titlebar = permissions obligatoires** : `decorations: false` nécessite `core:window:allow-start-dragging`, `allow-minimize`, `allow-toggle-maximize`, `allow-close` dans `src-tauri/capabilities/default.json`
@@ -148,6 +155,16 @@ main ← production stable (PR only)
 ```
 
 Commits : Conventional Commits (`feat:`, `fix:`, `refactor:`). Toujours créer les branches depuis `dev`.
+
+## Versioning
+
+Version synchronisée dans 4 fichiers :
+1. `package.json` → `version`
+2. `src-tauri/tauri.conf.json` → `version`
+3. `src-tauri/Cargo.toml` → `version`
+4. `src/modules/changelog.js` → `APP_VERSION`
+
+Bump : `feat:` → MINOR, `fix:` → PATCH. Ajouter entrée dans `CHANGELOG.md` + `CHANGELOG_ENTRIES` dans `changelog.js`.
 
 ## CI/CD
 
