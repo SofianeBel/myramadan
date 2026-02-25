@@ -103,8 +103,37 @@ jobs:
             | **macOS** | `.dmg` (Universal: Intel + Apple Silicon) |
             | **Linux** | `.deb` ou `.AppImage` |
 
-            > **macOS** : au premier lancement, clic droit → Ouvrir (app non signée).
-            > **Linux** : AppImage nécessite `chmod +x` avant exécution.
+            ---
+
+            ### 🍎 macOS — Premier lancement
+
+            L'app n'est pas signée avec un certificat Apple. macOS affichera un avertissement au premier lancement.
+
+            **Méthode 1 — Terminal (recommandé) :**
+            ```bash
+            xattr -cr /Applications/GuideME\ -\ Ramadan.app
+            ```
+            Puis ouvrir l'app normalement.
+
+            **Méthode 2 — Réglages Système :**
+            1. Ouvrir **Réglages Système** → **Confidentialité et sécurité**
+            2. Descendre jusqu'au message *"GuideME - Ramadan a été bloqué"*
+            3. Cliquer **Ouvrir quand même** → entrer le mot de passe
+
+            ---
+
+            ### 🐧 Linux — Installation
+
+            **AppImage :**
+            ```bash
+            chmod +x GuideME-Ramadan_*.AppImage
+            ./GuideME-Ramadan_*.AppImage
+            ```
+
+            **Debian/Ubuntu (.deb) :**
+            ```bash
+            sudo dpkg -i guideme-ramadan_*.deb
+            ```
           releaseDraft: false
           prerelease: false
 
