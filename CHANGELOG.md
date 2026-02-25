@@ -5,6 +5,16 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.6.1] - 2026-02-25
+
+### Corrigé
+
+- **Recherche mosquée CORS** — les suggestions de ville (Nominatim) fonctionnent maintenant dans Tauri (`tauriFetch` + permission HTTP)
+
+### Amélioré
+
+- **Recherche parallèle** — Mawaqit et Nominatim sont interrogés simultanément, les suggestions de ville apparaissent toujours en complément des mosquées
+
 ## [1.6.0] - 2026-02-25
 
 ### Ajouté

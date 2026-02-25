@@ -5,9 +5,17 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.6.0'
+const APP_VERSION = '1.6.1'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.6.1',
+    date: '25 février 2026',
+    changes: [
+      { type: 'fix', text: 'Recherche mosquée : les suggestions de ville apparaissent désormais correctement (fix CORS Nominatim)' },
+      { type: 'improvement', text: 'Recherche parallèle Mawaqit + villes — résultats plus rapides et plus complets' },
+    ],
+  },
   {
     version: '1.6.0',
     date: '25 février 2026',

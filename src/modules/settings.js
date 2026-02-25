@@ -5,6 +5,7 @@
 import { searchMosques, searchMosquesByLocation } from './prayer-times.js'
 import { loadPrefs, savePrefs, stopAdhan, previewAdhan } from './notifications.js'
 import { enable as enableAutostart, disable as disableAutostart, isEnabled as isAutostartEnabled } from '@tauri-apps/plugin-autostart'
+import { fetch as tauriFetch } from '@tauri-apps/plugin-http'
 import { open } from '@tauri-apps/plugin-shell'
 import storage from './storage.js'
 import 'leaflet/dist/leaflet.css'
@@ -56,6 +57,37 @@ const CALCULATION_METHODS = [
 ]
 
 let debounceTimer = null
+
+/**
+ * Search cities via Nominatim (OpenStreetMap) for autocomplete.
+ * @param {string} query
+ * @returns {Promise<Array<{ name: string, display: string, lat: number, lon: number }>>}
+ */
+async function searchCities(query) {
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&accept-language=fr&addressdetails=1`
+    const res = await tauriFetch(url, { method: 'GET' })
+    if (!res.ok) return []
+    const data = await res.json()
+    if (!data || data.length === 0) return []
+    return data.map((item) => {
+      const addr = item.address || {}
+      const city = addr.city || addr.town || addr.village || addr.municipality || ''
+      const state = addr.state || ''
+      const country = addr.country || ''
+      const parts = [city, state, country].filter(Boolean)
+      return {
+        name: city || item.display_name.split(',')[0],
+        display: parts.join(', ') || item.display_name,
+        lat: parseFloat(item.lat),
+        lon: parseFloat(item.lon),
+      }
+    })
+  } catch (err) {
+    console.warn('[settings] City search failed:', err.message)
+    return []
+  }
+}
 
 // ─── Map state (singleton) ──────────────────────────────────────
 let mapInstance = null
@@ -326,6 +358,128 @@ export function initSettings(onSave) {
     modal.classList.remove('hidden')
   })
 
+  // ── Render mosque results list (shared between text search and geo fallback) ──
+  function renderMosqueResults(mosques, container, { showDistance = false } = {}) {
+    mosques.slice(0, 8).forEach((mosque) => {
+      const item = document.createElement('div')
+      item.className = 'mosque-result-item'
+      item.style.cssText = `
+        padding: 10px 12px;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background 0.2s;
+        border-bottom: 1px solid var(--clr-sand-dark, rgba(255,255,255,0.1));
+      `
+
+      const nameDiv = document.createElement('div')
+      nameDiv.style.cssText = 'font-weight: 600; font-size: 0.9rem; color: var(--text-main);'
+      nameDiv.textContent = mosque.name
+
+      const locDiv = document.createElement('div')
+      locDiv.style.cssText = 'font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;'
+      const locText = mosque.localisation || ''
+      if (showDistance && mosque.proximity) {
+        const distKm = (mosque.proximity / 1000).toFixed(1)
+        locDiv.textContent = locText ? `${locText} — ${distKm} km` : `${distKm} km`
+      } else {
+        locDiv.textContent = locText
+      }
+
+      item.appendChild(nameDiv)
+      item.appendChild(locDiv)
+
+      item.addEventListener('mouseenter', () => {
+        item.style.background = 'var(--clr-sand-dark, rgba(255,255,255,0.1))'
+      })
+      item.addEventListener('mouseleave', () => {
+        item.style.background = 'transparent'
+      })
+
+      item.addEventListener('click', () => {
+        pendingSlug = mosque.slug
+        pendingName = mosque.name
+        updateSelectionLabel(mosque.name)
+        container.textContent = ''
+        if (searchInput) searchInput.value = ''
+      })
+
+      container.appendChild(item)
+    })
+  }
+
+  // ── Render city suggestions (Nominatim autocomplete fallback) ──
+  function renderCitySuggestions(cities, container) {
+    cities.forEach((city) => {
+      const item = document.createElement('div')
+      item.className = 'mosque-result-item'
+      item.style.cssText = `
+        padding: 10px 12px;
+        cursor: pointer;
+        border-radius: 6px;
+        transition: background 0.2s;
+        border-bottom: 1px solid var(--clr-sand-dark, rgba(255,255,255,0.1));
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      `
+
+      const icon = document.createElement('i')
+      icon.className = 'fa-solid fa-location-dot'
+      icon.style.cssText = 'color: var(--clr-emerald, #2ecc71); font-size: 1rem; flex-shrink: 0;'
+
+      const textWrap = document.createElement('div')
+
+      const nameDiv = document.createElement('div')
+      nameDiv.style.cssText = 'font-weight: 600; font-size: 0.9rem; color: var(--text-main);'
+      nameDiv.textContent = city.name
+
+      const displayDiv = document.createElement('div')
+      displayDiv.style.cssText = 'font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;'
+      displayDiv.textContent = city.display
+
+      textWrap.appendChild(nameDiv)
+      textWrap.appendChild(displayDiv)
+
+      item.appendChild(icon)
+      item.appendChild(textWrap)
+
+      item.addEventListener('mouseenter', () => {
+        item.style.background = 'var(--clr-sand-dark, rgba(255,255,255,0.1))'
+      })
+      item.addEventListener('mouseleave', () => {
+        item.style.background = 'transparent'
+      })
+
+      item.addEventListener('click', async () => {
+        // Chercher les mosquées proches de cette ville
+        container.textContent = ''
+        const loading = document.createElement('p')
+        loading.style.cssText = 'padding: 8px; opacity: 0.5; font-size: 0.85rem;'
+        loading.textContent = `Recherche près de ${city.name}...`
+        container.appendChild(loading)
+
+        const nearby = await searchMosquesByLocation(city.lat, city.lon)
+
+        container.textContent = ''
+
+        if (nearby.length > 0) {
+          const hint = document.createElement('p')
+          hint.style.cssText = 'padding: 8px 8px 4px; font-size: 0.82rem; color: var(--text-muted);'
+          hint.textContent = `Mosquées proches de ${city.name} :`
+          container.appendChild(hint)
+          renderMosqueResults(nearby, container, { showDistance: true })
+        } else {
+          const noResult = document.createElement('p')
+          noResult.style.cssText = 'padding: 8px; opacity: 0.5; font-size: 0.85rem;'
+          noResult.textContent = `Aucune mosquée trouvée près de ${city.name}`
+          container.appendChild(noResult)
+        }
+      })
+
+      container.appendChild(item)
+    })
+  }
+
   // ── Mosque search with debounce ──
   if (searchInput) {
     searchInput.addEventListener('input', () => {
@@ -340,58 +494,55 @@ export function initSettings(onSave) {
 
       debounceTimer = setTimeout(async () => {
         if (resultsContainer) {
-          resultsContainer.innerHTML = '<p style="padding: 8px; opacity: 0.5; font-size: 0.85rem;">Recherche...</p>'
+          resultsContainer.textContent = ''
+          const loadingMsg = document.createElement('p')
+          loadingMsg.style.cssText = 'padding: 8px; opacity: 0.5; font-size: 0.85rem;'
+          loadingMsg.textContent = 'Recherche...'
+          resultsContainer.appendChild(loadingMsg)
         }
 
-        const mosques = await searchMosques(query)
+        // Lancer Mawaqit + Nominatim en parallèle
+        const [mosques, cities] = await Promise.all([
+          searchMosques(query),
+          searchCities(query),
+        ])
 
         if (!resultsContainer) return
+        resultsContainer.textContent = ''
 
-        if (mosques.length === 0) {
-          resultsContainer.innerHTML = '<p style="padding: 8px; opacity: 0.5; font-size: 0.85rem;">Aucun résultat</p>'
-          return
+        // 1) Mosquées Mawaqit
+        if (mosques.length > 0) {
+          renderMosqueResults(mosques, resultsContainer, { showDistance: false })
         }
 
-        resultsContainer.innerHTML = ''
-        mosques.slice(0, 8).forEach((mosque) => {
-          const item = document.createElement('div')
-          item.className = 'mosque-result-item'
-          item.style.cssText = `
-            padding: 10px 12px;
-            cursor: pointer;
-            border-radius: 6px;
-            transition: background 0.2s;
-            border-bottom: 1px solid var(--clr-sand-dark, rgba(255,255,255,0.1));
-          `
+        // 2) Suggestions de villes (toujours affichées si trouvées)
+        if (cities.length > 0) {
+          if (mosques.length > 0) {
+            // Séparateur visuel
+            const divider = document.createElement('div')
+            divider.style.cssText = 'border-top: 1px solid var(--clr-sand-dark, rgba(255,255,255,0.1)); margin: 8px 0;'
+            resultsContainer.appendChild(divider)
 
-          const nameDiv = document.createElement('div')
-          nameDiv.style.cssText = 'font-weight: 600; font-size: 0.9rem; color: var(--text-main);'
-          nameDiv.textContent = mosque.name
+            const hint = document.createElement('p')
+            hint.style.cssText = 'padding: 4px 8px; font-size: 0.82rem; color: var(--text-muted);'
+            hint.textContent = 'Ou rechercher par ville :'
+            resultsContainer.appendChild(hint)
+          } else {
+            const hint = document.createElement('p')
+            hint.style.cssText = 'padding: 4px 8px; font-size: 0.82rem; color: var(--text-muted);'
+            hint.textContent = 'Rechercher par ville :'
+            resultsContainer.appendChild(hint)
+          }
+          renderCitySuggestions(cities, resultsContainer)
+        }
 
-          const locDiv = document.createElement('div')
-          locDiv.style.cssText = 'font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;'
-          locDiv.textContent = mosque.localisation || ''
-
-          item.appendChild(nameDiv)
-          item.appendChild(locDiv)
-
-          item.addEventListener('mouseenter', () => {
-            item.style.background = 'var(--clr-sand-dark, rgba(255,255,255,0.1))'
-          })
-          item.addEventListener('mouseleave', () => {
-            item.style.background = 'transparent'
-          })
-
-          item.addEventListener('click', () => {
-            pendingSlug = mosque.slug
-            pendingName = mosque.name
-            updateSelectionLabel(mosque.name)
-            resultsContainer.innerHTML = ''
-            searchInput.value = ''
-          })
-
-          resultsContainer.appendChild(item)
-        })
+        // 3) Aucun résultat des deux côtés
+        if (mosques.length === 0 && cities.length === 0) {
+          const noResult = document.createElement('p')
+          noResult.style.cssText = 'padding: 8px; opacity: 0.5; font-size: 0.85rem;'
+          noResult.textContent = 'Aucun résultat'
+          resultsContainer.appendChild(noResult)
+        }
       }, 400)
     })
   }
