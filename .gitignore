@@ -18,6 +18,9 @@ src-tauri/target/
 src-tauri/icons/android/
 src-tauri/icons/ios/
 
+# Tauri generated macOS metadata (regenerated at build time)
+src-tauri/Info.plist
+
 # Environment
 .env
 .env.*
