@@ -5,9 +5,18 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.3.0'
+const APP_VERSION = '1.4.0'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.4.0',
+    date: '25 février 2026',
+    changes: [
+      { type: 'feature', text: 'Builds macOS (.dmg) et Linux (.deb, .AppImage) — l\'app est désormais disponible sur les 3 plateformes' },
+      { type: 'feature', text: 'macOS : binaire universel Intel + Apple Silicon en un seul fichier' },
+      { type: 'feature', text: 'Auto-update multi-plateforme via latest.json unifié' },
+    ],
+  },
   {
     version: '1.3.0',
     date: '25 février 2026',

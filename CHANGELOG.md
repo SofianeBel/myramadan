@@ -5,6 +5,16 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.4.0] - 2026-02-25
+
+### Ajouté
+
+- **Builds macOS et Linux** — l'app est désormais disponible sur Windows, macOS et Linux
+- **macOS** — binaire universel (.dmg) Intel + Apple Silicon via `--target universal-apple-darwin`
+- **Linux** — packages .deb et .AppImage pour les distributions Debian/Ubuntu et autres
+- **CI/CD multi-plateforme** — jobs parallèles macOS et Linux dans le workflow de release GitHub Actions
+- **Auto-update multi-plateforme** — `latest.json` unifié couvre les 3 OS automatiquement
+
 ## [1.3.0] - 2026-02-25
 
 ### Ajouté
