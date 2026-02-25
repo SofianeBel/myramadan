@@ -17,7 +17,7 @@ import { updateDailyContent } from './modules/daily-content.js'
 import { initTheme } from './modules/theme.js'
 import { initSplash } from './modules/splash.js'
 import { initOnboarding } from './modules/onboarding.js'
-import { getMosqueSlug, getCity, getCountry, getCalculationMethod, getMethodAngles, getUserCoords, requestGeolocation, updateLocationDisplay, initSettings } from './modules/settings.js'
+import { getMosqueSlug, getCity, getCountry, getCalculationMethod, getMethodAngles, getUserCoords, requestGeolocation, updateLocationDisplay, initSettings, autoSelectNearestMosque } from './modules/settings.js'
 import { startNotifications, stopNotifications, isNotificationsEnabled, loadPrefs, savePrefs } from './modules/notifications.js'
 import { getOffset, getOffsetDateForAladhan, initDateNavigation } from './modules/date-navigation.js'
 import { initCalendar, refreshCalendar } from './modules/calendar.js'
@@ -247,8 +247,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 1.5. Request geolocation (must complete before loading prayer data)
   await requestGeolocation()
 
-  // 2. Splash screen (waits for animation to complete)
-  await initSplash()
+  // 2. Splash + auto-détection mosquée en parallèle (zéro délai perçu)
+  let autoDetectResult = null
+  await Promise.all([
+    initSplash(),
+    autoSelectNearestMosque().then(result => { autoDetectResult = result })
+  ])
 
   // 3. Display location in header
   updateLocationDisplay()
@@ -308,6 +312,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     await refreshCalendar()
   })
 
+  // 9.5. Toast auto-détection (après que l'app soit entièrement chargée)
+  if (autoDetectResult) {
+    showAutoSelectToast(autoDetectResult.name, autoDetectResult.distance)
+  }
+
   // 10. Quick-toggle reminder button
   const reminderBtn = document.getElementById('reminder-btn')
   if (reminderBtn) {
@@ -340,3 +349,69 @@ document.addEventListener('DOMContentLoaded', async () => {
     })
   }
 })
+
+/**
+ * Show a toast notification when a mosque was auto-detected.
+ */
+function showAutoSelectToast(mosqueName, distanceMeters) {
+  const toast = document.createElement('div')
+  toast.id = 'auto-select-toast'
+  toast.className = 'auto-select-toast'
+
+  // Icône mosquée
+  const icon = document.createElement('i')
+  icon.className = 'fa-solid fa-mosque'
+  toast.appendChild(icon)
+
+  // Texte
+  const textContainer = document.createElement('div')
+  textContainer.className = 'auto-select-toast-text'
+
+  const title = document.createElement('div')
+  title.className = 'auto-select-toast-title'
+  title.textContent = 'Mosquée détectée automatiquement'
+  textContainer.appendChild(title)
+
+  const subtitle = document.createElement('div')
+  subtitle.className = 'auto-select-toast-subtitle'
+  const distanceText = distanceMeters ? ` (${(distanceMeters / 1000).toFixed(1)} km)` : ''
+  subtitle.textContent = `${mosqueName}${distanceText}`
+  textContainer.appendChild(subtitle)
+
+  toast.appendChild(textContainer)
+
+  // Bouton "Modifier"
+  const changeBtn = document.createElement('button')
+  changeBtn.className = 'auto-select-toast-btn'
+  changeBtn.textContent = 'Modifier'
+  changeBtn.addEventListener('click', () => {
+    toast.remove()
+    document.getElementById('settings-btn')?.click()
+  })
+  toast.appendChild(changeBtn)
+
+  // Bouton fermer
+  const closeBtn = document.createElement('button')
+  closeBtn.className = 'auto-select-toast-close'
+  const closeIcon = document.createElement('i')
+  closeIcon.className = 'fa-solid fa-xmark'
+  closeBtn.appendChild(closeIcon)
+  closeBtn.addEventListener('click', () => {
+    toast.classList.add('toast-exit')
+    setTimeout(() => toast.remove(), 300)
+  })
+  toast.appendChild(closeBtn)
+
+  document.body.appendChild(toast)
+
+  // Animation d'entrée
+  requestAnimationFrame(() => toast.classList.add('toast-visible'))
+
+  // Auto-dismiss après 6s
+  setTimeout(() => {
+    if (toast.parentNode) {
+      toast.classList.add('toast-exit')
+      setTimeout(() => toast.remove(), 300)
+    }
+  }, 6000)
+}

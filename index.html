@@ -663,24 +663,39 @@
     <div id="bug-report-modal" class="onboarding-overlay hidden">
         <div class="onboarding-tooltip settings-tooltip"
             style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 500px;">
-            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><i class="fa-solid fa-bug"
-                    style="color: var(--clr-gold);"></i> Signaler un bug</h3>
-            <p style="margin-bottom: 24px; color: var(--text-muted); font-size: 0.95rem;">Un problème ? Expliquez-nous
-                ce qu'il s'est passé.</p>
+            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><i class="fa-solid fa-comment-dots"
+                    style="color: var(--clr-gold);"></i> Signaler ou suggérer</h3>
+            <p style="margin-bottom: 24px; color: var(--text-muted); font-size: 0.95rem;">Un problème ou une idée ?
+                Dites-nous tout.</p>
 
             <form id="bug-report-form" style="display: flex; flex-direction: column; gap: 16px;">
                 <div>
                     <label
-                        style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Titre
-                        du problème</label>
-                    <input type="text" id="bug-title" placeholder="Ex: Bouton invisible, texte incorrect..." required
+                        style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Type
+                        de demande</label>
+                    <div class="report-type-selector">
+                        <label class="report-type-option">
+                            <input type="radio" name="report_type" value="bug" checked>
+                            <i class="fa-solid fa-bug"></i> Problème / Bug
+                        </label>
+                        <label class="report-type-option">
+                            <input type="radio" name="report_type" value="feature">
+                            <i class="fa-solid fa-lightbulb"></i> Idée / Feature
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <label
+                        style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Titre</label>
+                    <input type="text" id="bug-title" placeholder="Ex: Bouton invisible, nouvelle idée..." required
                         style="width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none;">
                 </div>
                 <div>
                     <label
                         style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Description
                         détaillée</label>
-                    <textarea id="bug-description" placeholder="Que s'est-il passé exactement ?" required rows="4"
+                    <textarea id="bug-description" placeholder="Que s'est-il passé ou quelle est votre idée ?" required
+                        rows="4"
                         style="width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none; resize: vertical;"></textarea>
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px; padding-left: 4px;">
@@ -859,10 +874,9 @@
                     style="font-size: 1.3rem; font-weight: 700; color: var(--clr-gold); margin-bottom: 12px;"></p>
                 <div class="updater-changelog" id="updater-notes"></div>
                 <div style="display: flex; gap: 10px; margin-top: 16px;">
-                    <button type="button" id="updater-later-btn" class="btn-secondary btn-small"
-                        style="flex: 1;">Plus tard</button>
-                    <button type="button" id="updater-install-btn" class="btn-primary btn-small"
-                        style="flex: 1;">
+                    <button type="button" id="updater-later-btn" class="btn-secondary btn-small" style="flex: 1;">Plus
+                        tard</button>
+                    <button type="button" id="updater-install-btn" class="btn-primary btn-small" style="flex: 1;">
                         <i class="fa-solid fa-rotate-right"></i> Installer et redémarrer
                     </button>
                 </div>
@@ -881,8 +895,7 @@
                 <div style="display: flex; gap: 10px;">
                     <button type="button" id="updater-close-error" class="btn-secondary btn-small"
                         style="flex: 1;">Fermer</button>
-                    <button type="button" id="updater-retry-btn" class="btn-primary btn-small"
-                        style="flex: 1;">
+                    <button type="button" id="updater-retry-btn" class="btn-primary btn-small" style="flex: 1;">
                         <i class="fa-solid fa-arrows-rotate"></i> Réessayer
                     </button>
                 </div>

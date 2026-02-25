@@ -1813,6 +1813,10 @@ body {
     color: var(--clr-gold);
 }
 
+.settings-tab-content {
+    overflow: hidden;
+}
+
 .settings-tab-content.hidden {
     display: none;
 }
@@ -1929,6 +1933,7 @@ body {
     background: var(--clr-green, #1A4D2E);
     border-radius: 50%;
     border: 2px solid white;
+    box-sizing: border-box;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     color: white;
     font-size: 14px;
@@ -1936,6 +1941,7 @@ body {
 
 .mosque-marker i {
     line-height: 1;
+    transform: translateY(1px);
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -2029,6 +2035,10 @@ body {
     outline: none;
     cursor: pointer;
     transition: border-color 0.2s;
+    max-width: 100%;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .notif-select:focus {
@@ -2471,4 +2481,161 @@ body {
 
 .updater-changelog:empty {
     display: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   AUTO-SELECT TOAST
+   ═══════════════════════════════════════════════════════════════════ */
+
+.auto-select-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--clr-status-success);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: var(--glass-blur);
+    z-index: 9000;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    max-width: 420px;
+    font-family: var(--font-main);
+}
+
+.auto-select-toast .fa-mosque {
+    color: var(--clr-status-success);
+    font-size: 1.2rem;
+}
+
+.auto-select-toast.toast-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.auto-select-toast.toast-exit {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+}
+
+.auto-select-toast-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.auto-select-toast-title {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+
+.auto-select-toast-subtitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.auto-select-toast-btn {
+    padding: 6px 14px;
+    border: 1px solid var(--clr-gold);
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--clr-gold);
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.auto-select-toast-btn:hover {
+    background: var(--clr-gold);
+    color: var(--clr-dark-green);
+}
+
+.auto-select-toast-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+}
+
+.auto-select-toast-close:hover {
+    color: var(--text-main);
+}
+
+/* ---------------------------------
+   BUG REPORT FORM STYLES
+   --------------------------------- */
+.report-type-selector {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.report-type-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--clr-sand-dark);
+    background: var(--clr-sand);
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    flex: 1;
+    justify-content: center;
+}
+
+.report-type-option:hover {
+    border-color: var(--clr-gold);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.report-type-option input[type="radio"]:checked+i {
+    transform: scale(1.1);
+}
+
+.report-type-option input[type="radio"]:checked~span,
+.report-type-option input[type="radio"]:checked {
+    font-weight: 600;
+}
+
+/* Add a visual indicator for the selected state */
+.report-type-option:has(input[type="radio"]:checked) {
+    border-color: var(--clr-gold);
+    background: rgba(212, 175, 55, 0.1);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+.report-type-option i {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+}
+
+.report-type-option:has(input[value="bug"]):hover i,
+.report-type-option:has(input[value="bug"]:checked) i {
+    color: var(--clr-status-error);
+}
+
+.report-type-option:has(input[value="feature"]):hover i,
+.report-type-option:has(input[value="feature"]:checked) i {
+    color: var(--clr-gold);
 }

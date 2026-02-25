@@ -57,6 +57,9 @@ export function initBugReport() {
         const title = document.getElementById('bug-title').value.trim()
         const description = document.getElementById('bug-description').value.trim()
         const includeLogs = document.getElementById('bug-include-logs').checked
+        // fallback to 'bug' if not found
+        const reportTypeNode = document.querySelector('input[name="report_type"]:checked')
+        const reportType = reportTypeNode ? reportTypeNode.value : 'bug'
 
         // Validation longueur (affichage inline, formulaire reste visible)
         if (title.length < 5 || title.length > 200) {
@@ -97,6 +100,7 @@ export function initBugReport() {
                     description,
                     include_logs: includeLogs,
                     date: new Date().toLocaleString('fr-FR'),
+                    report_type: reportType
                 }
             })
             lastSubmitTime = Date.now()

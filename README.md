@@ -59,13 +59,51 @@ https://github.com/user-attachments/assets/67305de7-2c04-4491-b5e2-15dd823498c9
 
 <div align="center">
 
-  [![Telecharger pour Windows](https://img.shields.io/badge/Telecharger_pour_Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/SofianeBel/myramadan/releases/latest)
-
-  **Windows 10/11** — Installer `.exe` (NSIS) ou `.msi` disponibles.
+  [![Telecharger pour Windows](https://img.shields.io/badge/Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white)](https://github.com/SofianeBel/myramadan/releases/latest)
+  [![Telecharger pour macOS](https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=white)](https://github.com/SofianeBel/myramadan/releases/latest)
+  [![Telecharger pour Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://github.com/SofianeBel/myramadan/releases/latest)
 
 </div>
 
-> macOS et Linux ne sont pas encore supportes. Contributions bienvenues !
+| Plateforme | Formats | Notes |
+|-----------|---------|-------|
+| **Windows 10/11** | `.exe` (NSIS), `.msi` | Installation classique |
+| **macOS** | `.dmg` | Universal (Intel + Apple Silicon) |
+| **Linux** | `.deb`, `.AppImage` | Debian/Ubuntu ou portable |
+
+<details>
+<summary><strong>macOS — Premier lancement</strong></summary>
+
+L'app n'est pas signee avec un certificat Apple. macOS affichera un avertissement.
+
+**Methode 1 — Terminal (recommande) :**
+```bash
+xattr -cr /Applications/GuideME\ -\ Ramadan.app
+```
+Puis ouvrir l'app normalement.
+
+**Methode 2 — Reglages Systeme :**
+1. Ouvrir **Reglages Systeme** → **Confidentialite et securite**
+2. Descendre jusqu'au message *"GuideME - Ramadan a ete bloque"*
+3. Cliquer **Ouvrir quand meme** → entrer le mot de passe
+
+</details>
+
+<details>
+<summary><strong>Linux — Installation</strong></summary>
+
+**AppImage :**
+```bash
+chmod +x GuideME-Ramadan_*.AppImage
+./GuideME-Ramadan_*.AppImage
+```
+
+**Debian/Ubuntu (.deb) :**
+```bash
+sudo dpkg -i guideme-ramadan_*.deb
+```
+
+</details>
 
 ---
 
@@ -116,7 +154,10 @@ Pour les mentions légales, référez-vous aux [Conditions Générales d'Utilisa
 
 - [Node.js](https://nodejs.org/) 18+
 - [Rust](https://rustup.rs/) toolchain stable
-- [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) (WebView2 sur Windows)
+- Prerequis Tauri selon l'OS :
+  - **Windows** — [WebView2](https://v2.tauri.app/start/prerequisites/#windows) (inclus dans Windows 11)
+  - **macOS** — Xcode Command Line Tools (`xcode-select --install`)
+  - **Linux** — `libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf` (Debian/Ubuntu)
 
 ### Installation
 
@@ -130,7 +171,7 @@ npm install
 
 ```bash
 npm run tauri:dev     # App desktop avec hot reload
-npm run tauri:build   # Build installer (MSI + NSIS)
+npm run tauri:build   # Build installer pour l'OS courant
 npm run dev           # Vite dev server seul (port 1420)
 npm run build         # Build frontend seul
 ```
@@ -145,6 +186,12 @@ src-tauri/            # Backend Rust
   src/lib.rs          # System tray, bug report, autostart
 public/               # Assets statiques (logo, audio)
 ```
+
+---
+
+## Contribuer
+
+Les contributions sont les bienvenues ! Consultez le [guide de contribution](CONTRIBUTING.md) pour demarrer.
 
 ---
 

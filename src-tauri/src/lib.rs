@@ -13,6 +13,8 @@ struct BugReportInput {
     description: String,
     include_logs: bool,
     date: String,
+    #[serde(default)]
+    report_type: String,
 }
 
 #[tauri::command]
@@ -52,15 +54,18 @@ async fn create_bug_report(input: BugReportInput) -> Result<String, String> {
     }
     let body = body_parts.join("\n");
 
+    let label = if input.report_type == "feature" { "enhancement" } else { "bug" };
+    let prefix = if input.report_type == "feature" { "[Feature]" } else { "[Bug]" };
+
     let client = reqwest::Client::new();
     let resp = client
         .post("https://api.github.com/repos/SofianeBel/myramadan/issues")
         .header("Authorization", format!("token {}", token))
         .header("User-Agent", "GuideME-Ramadan")
         .json(&serde_json::json!({
-            "title": format!("[Bug] {}", title),
+            "title": format!("{} {}", prefix, title),
             "body": body,
-            "labels": ["bug"]
+            "labels": [label]
         }))
         .send()
         .await
