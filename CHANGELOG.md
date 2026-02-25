@@ -5,6 +5,13 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.6.0] - 2026-02-25
+
+### Ajouté
+
+- **Demande de feature** — le formulaire de signalement permet désormais de proposer une idée (radio Bug / Feature)
+- **Styles sélecteur** — boutons visuels avec hover/checked states, labels GitHub dynamiques (`bug` / `enhancement`)
+
 ## [1.5.0] - 2026-02-25
 
 ### Ajouté

@@ -5,9 +5,17 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.5.0'
+const APP_VERSION = '1.6.0'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.6.0',
+    date: '25 février 2026',
+    changes: [
+      { type: 'feature', text: 'Formulaire de signalement : possibilité de proposer une idée en plus de signaler un bug' },
+      { type: 'improvement', text: 'Sélecteur visuel Bug / Feature avec styles dédiés et labels GitHub dynamiques' },
+    ],
+  },
   {
     version: '1.5.0',
     date: '25 février 2026',
