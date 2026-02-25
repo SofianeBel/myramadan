@@ -5,9 +5,18 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.2.1'
+const APP_VERSION = '1.3.0'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.3.0',
+    date: '25 février 2026',
+    changes: [
+      { type: 'feature', text: 'Mises à jour automatiques — vérification au démarrage et téléchargement en arrière-plan' },
+      { type: 'feature', text: 'Bouton "Mises à jour" dans la sidebar avec badge de notification' },
+      { type: 'feature', text: 'Modale dédiée avec progression, notes de version et installation en un clic' },
+    ],
+  },
   {
     version: '1.2.1',
     date: '24 février 2026',
