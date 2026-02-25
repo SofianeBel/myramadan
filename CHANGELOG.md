@@ -5,6 +5,22 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.5.0] - 2026-02-25
+
+### Ajouté
+
+- **Auto-détection mosquée** — au premier lancement, la mosquée la plus proche est sélectionnée automatiquement via GPS + API Mawaqit (seuil 20 km)
+- **Fly-to carte** — l'onglet Carte se déplace en douceur vers la mosquée sélectionnée et ouvre son popup
+- **Toast de confirmation** — notification discrète avec nom, distance et bouton "Modifier" (auto-dismiss 6s)
+
+## [1.4.1] - 2026-02-25
+
+### Corrigé
+
+- **Carte mosquées** — les marqueurs ne disparaissent plus au dézoom (cache par slug au lieu de clearLayers)
+- **Seuil de rechargement** — proportionnel à la vue visible (30% de la largeur) au lieu d'un seuil fixe 3km
+- **Nettoyage mémoire** — les marqueurs très éloignés (hors ×3 la vue) sont automatiquement supprimés
+
 ## [1.4.0] - 2026-02-25
 
 ### Ajouté

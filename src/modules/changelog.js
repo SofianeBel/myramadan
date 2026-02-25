@@ -5,9 +5,26 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.4.0'
+const APP_VERSION = '1.5.0'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.5.0',
+    date: '25 février 2026',
+    changes: [
+      { type: 'feature', text: 'Détection automatique de la mosquée la plus proche au premier lancement (GPS + Mawaqit)' },
+      { type: 'feature', text: 'La carte se déplace automatiquement vers la mosquée sélectionnée à l\'ouverture' },
+      { type: 'improvement', text: 'Toast de notification avec nom et distance de la mosquée détectée' },
+    ],
+  },
+  {
+    version: '1.4.1',
+    date: '25 février 2026',
+    changes: [
+      { type: 'fix', text: 'Les mosquées ne disparaissent plus au dézoom sur la carte' },
+      { type: 'improvement', text: 'Cache des marqueurs : les mosquées déjà affichées restent visibles lors de la navigation' },
+    ],
+  },
   {
     version: '1.4.0',
     date: '25 février 2026',

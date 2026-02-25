@@ -191,6 +191,53 @@ export function updateLocationDisplay() {
   }
 }
 
+// ─── Auto-detection mosquée au premier lancement ────────────────
+
+const MOSQUE_AUTO_DETECTED_KEY = 'mosqueAutoDetected'
+const AUTO_SELECT_MAX_DISTANCE = 20_000 // 20 km en mètres
+
+/**
+ * Auto-detect and select the nearest mosque on first launch.
+ * Returns { slug, name, distance } if a mosque was selected, null otherwise.
+ */
+export async function autoSelectNearestMosque() {
+  // Déjà une mosquée configurée → skip
+  if (getMosqueSlug()) return null
+
+  // Auto-détection déjà tentée (même si rien trouvé) → skip
+  if (storage.get(MOSQUE_AUTO_DETECTED_KEY)) return null
+
+  // Marquer comme tenté immédiatement (empêche les re-runs)
+  storage.set(MOSQUE_AUTO_DETECTED_KEY, true)
+
+  const coords = getUserCoords()
+  if (!coords) return null
+
+  try {
+    // Timeout 4s pour ne pas bloquer le démarrage
+    const mosques = await Promise.race([
+      searchMosquesByLocation(coords.lat, coords.lon),
+      new Promise(resolve => setTimeout(() => resolve([]), 4000))
+    ])
+
+    if (!mosques || mosques.length === 0) return null
+
+    const nearest = mosques[0] // Déjà trié par proximité
+
+    if (nearest.proximity && nearest.proximity > AUTO_SELECT_MAX_DISTANCE) return null
+
+    saveMosque(nearest.slug, nearest.name)
+
+    return {
+      slug: nearest.slug,
+      name: nearest.name,
+      distance: nearest.proximity || null,
+    }
+  } catch {
+    return null
+  }
+}
+
 // ─── Settings Modal ──────────────────────────────────────────────
 
 /**
@@ -238,7 +285,10 @@ export function initSettings(onSave) {
       if (tabNotifs) tabNotifs.classList.toggle('hidden', tab !== 'notifs')
       if (tabCalc) tabCalc.classList.toggle('hidden', tab !== 'calc')
 
-      if (tab === 'map') initMap()
+      if (tab === 'map') {
+        shouldFlyToSelected = true
+        initMap()
+      }
       if (tab === 'notifs') populateNotifSettings()
       if (tab === 'calc') populateCalcSettings()
     })
@@ -396,6 +446,9 @@ export function initSettings(onSave) {
 
   // ─── Map Functions (inside initSettings closure for pendingSlug/pendingName access) ───
 
+  const mosquesCache = new Map() // slug → L.Marker
+  let shouldFlyToSelected = false
+
   function initMap() {
     const container = document.getElementById('mosque-map')
     if (!container) return
@@ -414,10 +467,21 @@ export function initSettings(onSave) {
 
       // Search-as-you-pan with debounce
       let mapSearchTimer = null
+      let lastSearchCenter = null
+
       mapInstance.on('moveend', () => {
         if (mapSearchTimer) clearTimeout(mapSearchTimer)
         mapSearchTimer = setTimeout(() => {
           const center = mapInstance.getCenter()
+
+          if (lastSearchCenter) {
+            // Seuil proportionnel : re-fetch si le centre a bougé de >30% de la largeur visible
+            const bounds = mapInstance.getBounds()
+            const viewWidth = bounds.getNorthEast().distanceTo(bounds.getNorthWest())
+            const dist = mapInstance.distance(lastSearchCenter, center)
+            if (dist < viewWidth * 0.3) return
+          }
+          lastSearchCenter = center
           loadNearbyMosques(center.lat, center.lng)
         }, 800)
       })
@@ -482,8 +546,6 @@ export function initSettings(onSave) {
   async function loadNearbyMosques(lat, lon) {
     if (!markersLayer) return
 
-    markersLayer.clearLayers()
-
     const mosques = await searchMosquesByLocation(lat, lon)
 
     if (mosques.length === 0) return
@@ -491,16 +553,23 @@ export function initSettings(onSave) {
     mosques.forEach((mosque) => {
       if (!mosque.latitude || !mosque.longitude) return
 
+      // Skip si déjà affiché
+      if (mosquesCache.has(mosque.slug)) return
+
       // Custom green mosque marker
       const mosqueIcon = L.divIcon({
         className: 'mosque-marker',
         html: '<i class="fa-solid fa-mosque"></i>',
         iconSize: [32, 32],
         iconAnchor: [16, 16],
+        popupAnchor: [0, -16],
       })
 
       const marker = L.marker([mosque.latitude, mosque.longitude], { icon: mosqueIcon })
         .addTo(markersLayer)
+
+      // Ajouter au cache
+      mosquesCache.set(mosque.slug, marker)
 
       // Construction DOM du popup (pas de HTML brut avec donnees API)
       const popupEl = document.createElement('div')
@@ -542,23 +611,35 @@ export function initSettings(onSave) {
       selectBtn.appendChild(document.createTextNode('Sélectionner'))
       popupEl.appendChild(selectBtn)
 
-      marker.bindPopup(popupEl, { maxWidth: 250 })
-
-      // Handle "Sélectionner" click inside popup
-      marker.on('popupopen', () => {
-        setTimeout(() => {
-          const selectBtn = document.querySelector('.map-select-btn')
-          if (selectBtn) {
-            selectBtn.addEventListener('click', () => {
-              pendingSlug = selectBtn.dataset.slug
-              pendingName = selectBtn.dataset.name
-              updateSelectionLabel(selectBtn.dataset.name)
-              marker.closePopup()
-            })
-          }
-        }, 10)
+      selectBtn.addEventListener('click', () => {
+        pendingSlug = mosque.slug
+        pendingName = mosque.name
+        updateSelectionLabel(mosque.name)
+        marker.closePopup()
       })
+
+      marker.bindPopup(popupEl, { maxWidth: 250 })
     })
+
+    // Nettoyer les marqueurs très éloignés (bounds élargi ×3)
+    if (mapInstance) {
+      const bounds = mapInstance.getBounds().pad(2)
+      for (const [slug, marker] of mosquesCache) {
+        if (!bounds.contains(marker.getLatLng())) {
+          markersLayer.removeLayer(marker)
+          mosquesCache.delete(slug)
+        }
+      }
+    }
+
+    // Auto-fly vers la mosquée sélectionnée à l'ouverture de la carte
+    if (shouldFlyToSelected && pendingSlug && mosquesCache.has(pendingSlug)) {
+      shouldFlyToSelected = false
+      const selectedMarker = mosquesCache.get(pendingSlug)
+      const targetLatLng = selectedMarker.getLatLng()
+      mapInstance.flyTo(targetLatLng, 16, { duration: 1.2 })
+      setTimeout(() => selectedMarker.openPopup(), 1400)
+    }
   }
 
   // ─── Notification Settings (inside initSettings closure) ─────
