@@ -2568,3 +2568,66 @@ body {
 .auto-select-toast-close:hover {
     color: var(--text-main);
 }
+
+/* ---------------------------------
+   BUG REPORT FORM STYLES
+   --------------------------------- */
+.report-type-selector {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.report-type-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--clr-sand-dark);
+    background: var(--clr-sand);
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    flex: 1;
+    justify-content: center;
+}
+
+.report-type-option:hover {
+    border-color: var(--clr-gold);
+    background: rgba(212, 175, 55, 0.05);
+}
+
+.report-type-option input[type="radio"]:checked+i {
+    transform: scale(1.1);
+}
+
+.report-type-option input[type="radio"]:checked~span,
+.report-type-option input[type="radio"]:checked {
+    font-weight: 600;
+}
+
+/* Add a visual indicator for the selected state */
+.report-type-option:has(input[type="radio"]:checked) {
+    border-color: var(--clr-gold);
+    background: rgba(212, 175, 55, 0.1);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.1);
+}
+
+.report-type-option i {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+}
+
+.report-type-option:has(input[value="bug"]):hover i,
+.report-type-option:has(input[value="bug"]:checked) i {
+    color: var(--clr-status-error);
+}
+
+.report-type-option:has(input[value="feature"]):hover i,
+.report-type-option:has(input[value="feature"]:checked) i {
+    color: var(--clr-gold);
+}
