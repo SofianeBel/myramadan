@@ -24,7 +24,15 @@
     "autostart:allow-enable",
     "autostart:allow-disable",
     "autostart:allow-is-enabled",
-    "shell:allow-open",
+    {
+      "identifier": "shell:allow-open",
+      "allow": [
+        { "url": "https://github.com/SofianeBel/**" },
+        { "url": "https://paypal.me/**" },
+        { "url": "https://ko-fi.com/**" },
+        { "url": "https://buymeacoffee.com/**" }
+      ]
+    },
     "updater:default",
     "process:allow-restart",
     "process:allow-exit"
