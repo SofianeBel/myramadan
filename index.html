@@ -99,6 +99,12 @@
                     <div class="menu-item-bg"></div>
                     <span class="badge-new" id="changelog-badge">NEW</span>
                 </a>
+                <a href="#" class="menu-item" id="updater-btn" style="position: relative;">
+                    <i class="fa-solid fa-download anim-bounce-hover" style="color: var(--clr-gold);"></i>
+                    <span>Mises à jour</span>
+                    <div class="menu-item-bg"></div>
+                    <span class="badge-new" id="updater-badge" style="display: none;">NEW</span>
+                </a>
                 <a href="#" class="menu-item" id="bug-report-btn">
                     <i class="fa-solid fa-bug anim-bounce-hover"></i>
                     <span>Signaler un bug</span>
@@ -820,6 +826,81 @@
                 <span id="changelog-version"
                     style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;"></span>
                 <button type="button" id="changelog-close" class="btn-primary btn-small">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Updater Modal -->
+    <div id="updater-modal" class="onboarding-overlay hidden">
+        <div class="onboarding-tooltip settings-tooltip"
+            style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 460px;">
+            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                <i class="fa-solid fa-download" style="color: var(--clr-gold);"></i> Mises à jour
+            </h3>
+
+            <!-- État : Vérification en cours -->
+            <div id="updater-state-checking">
+                <p style="margin-bottom: 16px; color: var(--text-muted); font-size: 0.95rem;">
+                    Recherche de mises à jour...
+                </p>
+                <div class="updater-progress-bar">
+                    <div class="updater-progress-fill" id="updater-progress-fill"></div>
+                </div>
+                <p id="updater-progress-text"
+                    style="text-align: center; margin-top: 8px; font-size: 0.85rem; color: var(--text-muted);">0%</p>
+            </div>
+
+            <!-- État : Mise à jour prête -->
+            <div id="updater-state-ready" class="hidden">
+                <p style="margin-bottom: 8px; color: var(--text-muted); font-size: 0.95rem;">
+                    Une nouvelle version est disponible !
+                </p>
+                <p id="updater-version"
+                    style="font-size: 1.3rem; font-weight: 700; color: var(--clr-gold); margin-bottom: 12px;"></p>
+                <div class="updater-changelog" id="updater-notes"></div>
+                <div style="display: flex; gap: 10px; margin-top: 16px;">
+                    <button type="button" id="updater-later-btn" class="btn-secondary btn-small"
+                        style="flex: 1;">Plus tard</button>
+                    <button type="button" id="updater-install-btn" class="btn-primary btn-small"
+                        style="flex: 1;">
+                        <i class="fa-solid fa-rotate-right"></i> Installer et redémarrer
+                    </button>
+                </div>
+            </div>
+
+            <!-- État : Erreur -->
+            <div id="updater-state-error" class="hidden">
+                <div style="text-align: center; margin-bottom: 12px;">
+                    <i class="fa-solid fa-circle-exclamation"
+                        style="font-size: 2rem; color: var(--clr-status-error);"></i>
+                </div>
+                <p id="updater-error-msg"
+                    style="text-align: center; color: var(--text-muted); font-size: 0.95rem; margin-bottom: 16px;">
+                    Une erreur est survenue lors de la vérification.
+                </p>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" id="updater-close-error" class="btn-secondary btn-small"
+                        style="flex: 1;">Fermer</button>
+                    <button type="button" id="updater-retry-btn" class="btn-primary btn-small"
+                        style="flex: 1;">
+                        <i class="fa-solid fa-arrows-rotate"></i> Réessayer
+                    </button>
+                </div>
+            </div>
+
+            <!-- État : À jour -->
+            <div id="updater-state-uptodate" class="hidden">
+                <div style="text-align: center; margin: 16px 0;">
+                    <i class="fa-solid fa-circle-check"
+                        style="font-size: 2.5rem; color: var(--clr-status-success);"></i>
+                    <p style="margin-top: 12px; font-size: 1rem; font-weight: 600;">
+                        Vous utilisez la dernière version
+                    </p>
+                </div>
+                <div class="onboarding-controls" style="margin-top: 16px;">
+                    <span></span>
+                    <button type="button" id="updater-close-uptodate" class="btn-primary btn-small">Fermer</button>
+                </div>
             </div>
         </div>
     </div>

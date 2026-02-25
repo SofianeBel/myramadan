@@ -5,6 +5,16 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.3.0] - 2026-02-25
+
+### Ajouté
+
+- **Mises à jour automatiques** — vérification au démarrage (délai 30s) puis toutes les 4h, téléchargement en arrière-plan
+- **Bouton "Mises à jour"** — accès rapide depuis la sidebar avec badge NEW quand une mise à jour est disponible
+- **Modale de mise à jour** — progression du téléchargement, notes de version, boutons "Installer et redémarrer" / "Plus tard"
+- **Signature des installers** — CI/CD signe les builds NSIS/MSI et génère `latest.json` pour l'auto-update
+- **Plugins Tauri** — `tauri-plugin-updater` et `tauri-plugin-process` pour le cycle de mise à jour
+
 ## [1.2.1] - 2026-02-24
 
 ### Corrigé

@@ -26,6 +26,7 @@ import { initSidebar } from './modules/sidebar.js'
 import { initBugReport } from './modules/bug-report.js'
 import { initSupport } from './modules/support.js'
 import { initChangelog } from './modules/changelog.js'
+import { initUpdater } from './modules/updater.js'
 
 // Intervals
 let fastingInterval = null
@@ -269,6 +270,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 3.10 Initialize Changelog / Quoi de neuf
   await initChangelog()
+
+  // 3.11 Initialize Auto-updater
+  await initUpdater()
 
   // 4. Load prayer data (Mawaqit or Aladhan)
   const mosqueSlug = getMosqueSlug()

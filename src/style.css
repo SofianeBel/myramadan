@@ -2425,3 +2425,50 @@ body {
 .changelog-type-fix .changelog-type-icon {
     color: var(--clr-changelog-fix);
 }
+
+/* ---------------------------------
+   UPDATER (Auto-update modal)
+   --------------------------------- */
+
+.updater-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--clr-glass-bg);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    border: 1px solid var(--clr-glass-border);
+}
+
+.updater-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--clr-gold), var(--clr-gold-light));
+    border-radius: var(--radius-full);
+    transition: width 0.3s ease;
+}
+
+.updater-changelog {
+    max-height: 160px;
+    overflow-y: auto;
+    padding: 12px;
+    background: var(--clr-glass-bg);
+    border: 1px solid var(--clr-glass-border);
+    border-radius: var(--radius-md);
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    white-space: pre-wrap;
+}
+
+.updater-changelog::-webkit-scrollbar {
+    width: 6px;
+}
+
+.updater-changelog::-webkit-scrollbar-thumb {
+    background: var(--clr-gold-dim);
+    border-radius: var(--radius-full);
+}
+
+.updater-changelog:empty {
+    display: none;
+}
