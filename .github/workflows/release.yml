@@ -38,6 +38,8 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: write
+    outputs:
+      releaseId: ${{ steps.tauri.outputs.releaseId }}
     steps:
       - uses: actions/checkout@v6
 
@@ -80,6 +82,7 @@ jobs:
         run: npm install
 
       - name: Build and release
+        id: tauri
         uses: tauri-apps/tauri-action@v0.6.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -92,6 +95,123 @@ jobs:
           releaseBody: |
             ## GuideME Ramadan v__VERSION__
 
-            Téléchargez l'installer Windows ci-dessous pour installer l'application.
+            ### Téléchargements
+
+            | Plateforme | Fichier |
+            |-----------|---------|
+            | **Windows** | `.msi` ou `.exe` (NSIS) |
+            | **macOS** | `.dmg` (Universal: Intel + Apple Silicon) |
+            | **Linux** | `.deb` ou `.AppImage` |
+
+            > **macOS** : au premier lancement, clic droit → Ouvrir (app non signée).
+            > **Linux** : AppImage nécessite `chmod +x` avant exécution.
           releaseDraft: false
           prerelease: false
+
+  build-macos:
+    needs: [check-version, build-windows]
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: Install Rust stable with targets
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Sync version to Tauri config
+        env:
+          VERSION: ${{ needs.check-version.outputs.version }}
+        run: |
+          # Update tauri.conf.json
+          node -e "
+            const fs = require('fs');
+            const version = process.env.VERSION;
+            const conf = JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json','utf8'));
+            conf.version = version;
+            fs.writeFileSync('src-tauri/tauri.conf.json', JSON.stringify(conf, null, 2) + '\n');
+          "
+          # Update Cargo.toml (BSD sed on macOS)
+          sed -i '' "s/^version = \".*\"/version = \"$VERSION\"/" src-tauri/Cargo.toml
+          echo "Synced version to $VERSION"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build and attach to release
+        uses: tauri-apps/tauri-action@v0.6.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUG_REPORT_TOKEN: ${{ secrets.BUG_REPORT_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          releaseId: ${{ needs.build-windows.outputs.releaseId }}
+          args: --target universal-apple-darwin
+
+  build-linux:
+    needs: [check-version, build-windows]
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+
+      - name: Sync version to Tauri config
+        env:
+          VERSION: ${{ needs.check-version.outputs.version }}
+        run: |
+          # Update tauri.conf.json
+          node -e "
+            const fs = require('fs');
+            const version = process.env.VERSION;
+            const conf = JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json','utf8'));
+            conf.version = version;
+            fs.writeFileSync('src-tauri/tauri.conf.json', JSON.stringify(conf, null, 2) + '\n');
+          "
+          # Update Cargo.toml
+          sed -i "s/^version = \".*\"/version = \"$VERSION\"/" src-tauri/Cargo.toml
+          echo "Synced version to $VERSION"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build and attach to release
+        uses: tauri-apps/tauri-action@v0.6.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUG_REPORT_TOKEN: ${{ secrets.BUG_REPORT_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          releaseId: ${{ needs.build-windows.outputs.releaseId }}
