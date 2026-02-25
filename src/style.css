@@ -1813,6 +1813,10 @@ body {
     color: var(--clr-gold);
 }
 
+.settings-tab-content {
+    overflow: hidden;
+}
+
 .settings-tab-content.hidden {
     display: none;
 }
@@ -2031,6 +2035,10 @@ body {
     outline: none;
     cursor: pointer;
     transition: border-color 0.2s;
+    max-width: 100%;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .notif-select:focus {
