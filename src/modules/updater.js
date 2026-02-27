@@ -7,6 +7,7 @@
 import { check } from '@tauri-apps/plugin-updater'
 import { relaunch } from '@tauri-apps/plugin-process'
 import storage from './storage.js'
+import { isMobile } from './platform.js'
 
 // Intervalle de vérification automatique (4 heures en ms)
 const AUTO_CHECK_INTERVAL = 4 * 60 * 60 * 1000
@@ -183,6 +184,8 @@ async function manualCheck() {
 // --- Initialisation ---
 
 export async function initUpdater() {
+  if (isMobile) return // Play Store handles updates on mobile
+
   const btn = document.getElementById('updater-btn')
   const modal = document.getElementById('updater-modal')
 
