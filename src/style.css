@@ -573,6 +573,7 @@ body {
 /* Header */
 .top-header {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: flex-end;
     margin-bottom: 2.5rem;
@@ -610,6 +611,40 @@ body {
 
 .location i {
     color: var(--clr-gold);
+}
+
+/* Location warning banner */
+.location-warning {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--clr-gold-dim);
+    border: 1px solid var(--clr-gold);
+    border-radius: var(--radius-md);
+    color: var(--clr-gold);
+    font-size: 0.85rem;
+    margin-top: 12px;
+    width: 100%;
+}
+
+.location-warning .btn-link {
+    background: none;
+    border: none;
+    color: var(--clr-gold-light);
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 0.85rem;
+    font-family: var(--font-main);
+    margin-left: auto;
+}
+
+.location-warning.hidden {
+    display: none;
+}
+
+[data-theme="dark"] .location-warning {
+    background: rgba(212, 175, 55, 0.1);
 }
 
 .avatar {

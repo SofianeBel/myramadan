@@ -155,8 +155,33 @@ export function saveUserCoords(lat, lon) {
 }
 
 /**
+ * Affiche un bandeau d'avertissement sur la localisation.
+ * @param {'approximate' | 'missing'} type
+ */
+function showLocationWarning(type) {
+  const warning = document.getElementById('location-warning')
+  const text = document.getElementById('location-warning-text')
+  const btn = document.getElementById('location-warning-btn')
+  if (!warning || !text) return
+
+  if (type === 'approximate') {
+    text.textContent = 'Position approximative (dernière localisation connue)'
+  } else if (type === 'missing') {
+    text.textContent = 'Position non détectée — sélectionnez une mosquée ou ville'
+  }
+
+  warning.classList.remove('hidden')
+
+  if (btn) {
+    btn.addEventListener('click', () => {
+      document.getElementById('settings-btn')?.click()
+    }, { once: true })
+  }
+}
+
+/**
  * Request geolocation from the browser.
- * Persists coordinates on success. Silent fallback on failure.
+ * Persists coordinates on success. Shows warning on failure.
  * Reuses cached coords if already available.
  * @returns {Promise<{ lat: number, lon: number } | null>}
  */
@@ -164,15 +189,17 @@ export function requestGeolocation() {
   // Reuse in-memory cache if available
   if (userCoords) return Promise.resolve(userCoords)
 
-  // Reuse persisted coords
+  // Reuse persisted coords (scenario 2 — position approximative)
   const saved = getUserCoords()
   if (saved) {
     userCoords = saved
+    showLocationWarning('approximate')
     return Promise.resolve(saved)
   }
 
   if (!navigator.geolocation) {
     console.warn('[settings] Geolocation not available')
+    if (!getMosqueSlug()) showLocationWarning('missing')
     return Promise.resolve(null)
   }
 
@@ -187,6 +214,8 @@ export function requestGeolocation() {
       },
       (error) => {
         console.warn('[settings] Geolocation denied:', error.message)
+        // Scenario 3 — pas de coords sauvegardées et pas de mosquée
+        if (!getMosqueSlug()) showLocationWarning('missing')
         resolve(null)
       },
       { enableHighAccuracy: true, timeout: 10000 }
@@ -605,10 +634,15 @@ export function initSettings(onSave) {
     if (!container) return
 
     if (!mapInstance) {
+      // Vue initiale : coords sauvegardées ou vue monde
+      const savedCoords = getUserCoords()
+      const initCenter = savedCoords ? [savedCoords.lat, savedCoords.lon] : [30, 10]
+      const initZoom = savedCoords ? 13 : 3
+
       mapInstance = L.map('mosque-map', {
         zoomControl: true,
         attributionControl: false,
-      }).setView([48.8566, 2.3522], 13)
+      }).setView(initCenter, initZoom)
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 18,
@@ -651,9 +685,16 @@ export function initSettings(onSave) {
       return
     }
 
+    // Essayer les coords sauvegardées
+    const saved = getUserCoords()
+    if (saved) {
+      centerMapOnUser(saved.lat, saved.lon)
+      return
+    }
+
     if (!navigator.geolocation) {
-      console.warn('[settings] Geolocation not available')
-      loadNearbyMosques(48.8566, 2.3522)
+      console.warn('[settings] Geolocation not available — carte en vue monde')
+      // Pas de fallback Paris : la carte reste en vue monde
       return
     }
 
@@ -666,7 +707,7 @@ export function initSettings(onSave) {
       },
       (error) => {
         console.warn('[settings] Geolocation error:', error.message)
-        loadNearbyMosques(48.8566, 2.3522)
+        // Pas de fallback Paris : la carte reste en vue monde
       },
       { enableHighAccuracy: true, timeout: 10000 }
     )
