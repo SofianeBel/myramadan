@@ -177,7 +177,10 @@ function renderStep() {
         }, 400)
 
         // Overlay becomes transparent — the spotlight's box-shadow provides dimming
+        // Also disable backdrop-filter to avoid blurring the content
         overlay.style.background = 'transparent'
+        overlay.style.backdropFilter = 'none'
+        overlay.style.webkitBackdropFilter = 'none'
         overlay.style.zIndex = '10002'
       } else {
         // ── Desktop: original approach ──
@@ -186,6 +189,8 @@ function renderStep() {
         positionTooltip(tooltip, el, step.position)
 
         overlay.style.background = isDark ? 'rgba(0, 0, 0, 0.85)' : 'rgba(11, 43, 27, 0.85)'
+        overlay.style.backdropFilter = ''
+        overlay.style.webkitBackdropFilter = ''
         overlay.style.zIndex = '9999'
       }
     }
@@ -196,6 +201,8 @@ function renderStep() {
     tooltip.style.transform = 'translate(-50%, -50%)'
 
     overlay.style.background = isDark ? 'rgba(0, 0, 0, 0.92)' : 'rgba(11, 43, 27, 0.92)'
+    overlay.style.backdropFilter = ''
+    overlay.style.webkitBackdropFilter = ''
     overlay.style.zIndex = '9999'
   }
 }
@@ -343,6 +350,8 @@ function endTour() {
   if (overlay) {
     overlay.classList.add('hidden')
     overlay.style.zIndex = '9999'
+    overlay.style.backdropFilter = ''
+    overlay.style.webkitBackdropFilter = ''
   }
 
   removeSpotlight()
