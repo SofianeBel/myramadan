@@ -155,31 +155,22 @@ function renderStep() {
   document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'))
   document.querySelectorAll('.tour-lift').forEach(el => el.classList.remove('tour-lift'))
 
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
+
   if (step.target) {
     const el = document.querySelector(step.target)
     if (el) {
-      el.classList.add('tour-highlight')
+      // Scroll the target into view first (elements can be off-screen on mobile)
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
 
-      // Lift ancestor stacking contexts above overlay
-      let parent = el.parentElement
-      while (parent && parent !== document.body) {
-        const cs = getComputedStyle(parent)
-        if (
-          cs.zIndex !== 'auto' ||
-          (cs.backdropFilter && cs.backdropFilter !== 'none') ||
-          (cs.transform && cs.transform !== 'none') ||
-          (cs.filter && cs.filter !== 'none') ||
-          (parseFloat(cs.opacity) < 1)
-        ) {
-          parent.classList.add('tour-lift')
-        }
-        parent = parent.parentElement
-      }
-
-      positionTooltip(tooltip, el, step.position)
+      // Wait for scroll to settle, then highlight and position tooltip
+      setTimeout(() => {
+        el.classList.add('tour-highlight')
+        liftAncestors(el)
+        positionTooltip(tooltip, el, step.position)
+      }, 400)
     }
 
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     overlay.style.background = isDark ? 'rgba(0, 0, 0, 0.85)' : 'rgba(11, 43, 27, 0.85)'
   } else {
     // Center tooltip
@@ -187,8 +178,33 @@ function renderStep() {
     tooltip.style.left = '50%'
     tooltip.style.transform = 'translate(-50%, -50%)'
 
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     overlay.style.background = isDark ? 'rgba(0, 0, 0, 0.92)' : 'rgba(11, 43, 27, 0.92)'
+  }
+}
+
+/**
+ * Lift ancestor stacking contexts above the onboarding overlay
+ * so the highlighted element is visible through the dark backdrop.
+ */
+function liftAncestors(el) {
+  let parent = el.parentElement
+  while (parent && parent !== document.body) {
+    const cs = getComputedStyle(parent)
+    // Lift parents that create stacking contexts or clip overflow
+    if (
+      cs.zIndex !== 'auto' ||
+      (cs.backdropFilter && cs.backdropFilter !== 'none') ||
+      (cs.transform && cs.transform !== 'none') ||
+      (cs.filter && cs.filter !== 'none') ||
+      (parseFloat(cs.opacity) < 1) ||
+      cs.overflow === 'auto' ||
+      cs.overflow === 'hidden' ||
+      cs.overflowY === 'auto' ||
+      cs.overflowY === 'hidden'
+    ) {
+      parent.classList.add('tour-lift')
+    }
+    parent = parent.parentElement
   }
 }
 
