@@ -34,6 +34,7 @@ import { initQibla } from './modules/qibla.js'
 import { initDuas } from './modules/duas.js'
 import { initJournal } from './modules/journal.js'
 import { initStatistics } from './modules/statistics.js'
+import { applyPlatformClass, isMobile } from './modules/platform.js'
 
 // Intervals
 let fastingInterval = null
@@ -290,8 +291,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 0. Initialize persistent storage (loads from disk into memory cache)
   await storage.init()
 
+  // 0.5. Platform detection (adds CSS class before any rendering)
+  applyPlatformClass()
+
   // Window controls
-  initWindowControls()
+  if (!isMobile) initWindowControls()
 
   // 1. Theme (restore before anything visual)
   initTheme()
@@ -319,7 +323,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initBugReport()
 
   // 3.8 Initialize Sakura Titlebar Effects
-  initSakura()
+  if (!isMobile) initSakura()
 
   // 3.9 Initialize Support / Ads Feature
   await initSupport()
@@ -328,7 +332,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await initChangelog()
 
   // 3.11 Initialize Auto-updater
-  await initUpdater()
+  if (!isMobile) await initUpdater()
 
   // 4. Load prayer data (Mawaqit or Aladhan)
   const mosqueSlug = getMosqueSlug()
