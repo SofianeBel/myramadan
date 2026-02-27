@@ -3233,7 +3233,9 @@ body.mode-normal .ramadan-progress {
 /* ---------------------------------
    14. DUAS ENCYCLOPEDIA
    --------------------------------- */
-#view-duas.view-section.active-view {
+#view-duas.view-section.active-view,
+#view-journal.view-section.active-view,
+#view-stats.view-section.active-view {
     display: block !important;
     opacity: 1;
     visibility: visible;

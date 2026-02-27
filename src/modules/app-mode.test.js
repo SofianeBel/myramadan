@@ -5,9 +5,17 @@ vi.mock('./storage.js')
 import { getRamadanDay, resolveMode, applyMode, setAppMode, isRamadanEve } from './app-mode.js'
 import storage from './storage.js'
 
+// Helper: format Aladhan hijri date (real API format)
+function hijri(month, day) {
+  return {
+    month: { number: month, en: 'Month', ar: 'شهر' },
+    day: String(day),
+    year: '1447',
+  }
+}
+
 beforeEach(() => {
   storage._reset()
-  // Minimal DOM mock for applyMode
   document.body.classList.remove('mode-ramadan', 'mode-normal')
 })
 
@@ -22,16 +30,21 @@ describe('getRamadanDay', () => {
     expect(getRamadanDay(undefined)).toBeNull()
   })
 
-  it('returns null when month is not Ramadan (month !== 9)', () => {
-    expect(getRamadanDay({ month: 8, day: 15 })).toBeNull()
-    expect(getRamadanDay({ month: 10, day: 1 })).toBeNull()
-    expect(getRamadanDay({ month: 1, day: 5 })).toBeNull()
+  it('returns null when month is not Ramadan', () => {
+    expect(getRamadanDay(hijri(8, 15))).toBeNull()
+    expect(getRamadanDay(hijri(10, 1))).toBeNull()
+    expect(getRamadanDay(hijri(1, 5))).toBeNull()
   })
 
-  it('returns the day when month is Ramadan (month === 9)', () => {
-    expect(getRamadanDay({ month: 9, day: 1 })).toBe(1)
-    expect(getRamadanDay({ month: 9, day: 15 })).toBe(15)
-    expect(getRamadanDay({ month: 9, day: 30 })).toBe(30)
+  it('returns the day when month is Ramadan (Aladhan format)', () => {
+    expect(getRamadanDay(hijri(9, 1))).toBe(1)
+    expect(getRamadanDay(hijri(9, 15))).toBe(15)
+    expect(getRamadanDay(hijri(9, 30))).toBe(30)
+  })
+
+  it('handles plain number month format (backward compat)', () => {
+    expect(getRamadanDay({ month: 9, day: 10 })).toBe(10)
+    expect(getRamadanDay({ month: 8, day: 10 })).toBeNull()
   })
 })
 
@@ -40,29 +53,28 @@ describe('getRamadanDay', () => {
 describe('resolveMode', () => {
   it('returns "ramadan" when setting is "ramadan" regardless of date', () => {
     storage.set('appMode', 'ramadan')
-    expect(resolveMode({ month: 1, day: 1 })).toBe('ramadan')
+    expect(resolveMode(hijri(1, 1))).toBe('ramadan')
     expect(resolveMode(null)).toBe('ramadan')
   })
 
   it('returns "normal" when setting is "normal" regardless of date', () => {
     storage.set('appMode', 'normal')
-    expect(resolveMode({ month: 9, day: 15 })).toBe('normal')
+    expect(resolveMode(hijri(9, 15))).toBe('normal')
   })
 
   it('auto-detects ramadan mode when setting is "auto" and month is 9', () => {
     storage.set('appMode', 'auto')
-    expect(resolveMode({ month: 9, day: 10 })).toBe('ramadan')
+    expect(resolveMode(hijri(9, 10))).toBe('ramadan')
   })
 
   it('auto-detects normal mode when setting is "auto" and month is not 9', () => {
     storage.set('appMode', 'auto')
-    expect(resolveMode({ month: 8, day: 29 })).toBe('normal')
+    expect(resolveMode(hijri(8, 29))).toBe('normal')
   })
 
   it('defaults to "auto" when no setting is stored', () => {
-    // No appMode set in storage
-    expect(resolveMode({ month: 9, day: 1 })).toBe('ramadan')
-    expect(resolveMode({ month: 3, day: 1 })).toBe('normal')
+    expect(resolveMode(hijri(9, 1))).toBe('ramadan')
+    expect(resolveMode(hijri(3, 1))).toBe('normal')
   })
 
   it('returns "normal" when hijriDate is null in auto mode', () => {
@@ -124,20 +136,20 @@ describe('isRamadanEve', () => {
   })
 
   it('returns false for month other than Shaaban (month 8)', () => {
-    expect(isRamadanEve({ month: 7, day: 29 })).toBe(false)
-    expect(isRamadanEve({ month: 9, day: 1 })).toBe(false)
+    expect(isRamadanEve(hijri(7, 29))).toBe(false)
+    expect(isRamadanEve(hijri(9, 1))).toBe(false)
   })
 
   it('returns false for early Shaaban days', () => {
-    expect(isRamadanEve({ month: 8, day: 1 })).toBe(false)
-    expect(isRamadanEve({ month: 8, day: 28 })).toBe(false)
+    expect(isRamadanEve(hijri(8, 1))).toBe(false)
+    expect(isRamadanEve(hijri(8, 28))).toBe(false)
   })
 
   it('returns true for Shaaban day 29', () => {
-    expect(isRamadanEve({ month: 8, day: 29 })).toBe(true)
+    expect(isRamadanEve(hijri(8, 29))).toBe(true)
   })
 
   it('returns true for Shaaban day 30', () => {
-    expect(isRamadanEve({ month: 8, day: 30 })).toBe(true)
+    expect(isRamadanEve(hijri(8, 30))).toBe(true)
   })
 })

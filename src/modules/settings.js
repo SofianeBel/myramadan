@@ -180,6 +180,12 @@ function showLocationWarning(type) {
   }
 }
 
+/** Cache le bandeau d'avertissement sur la localisation */
+function hideLocationWarning() {
+  const warning = document.getElementById('location-warning')
+  if (warning) warning.classList.add('hidden')
+}
+
 /**
  * Request geolocation from the browser.
  * Persists coordinates on success. Shows warning on failure.
@@ -194,7 +200,8 @@ export function requestGeolocation() {
   const saved = getUserCoords()
   if (saved) {
     userCoords = saved
-    showLocationWarning('approximate')
+    // N'afficher le warning que si aucune mosquée n'est configurée
+    if (!getMosqueSlug()) showLocationWarning('approximate')
     return Promise.resolve(saved)
   }
 
@@ -609,6 +616,7 @@ export function initSettings(onSave) {
         storage.remove(MOSQUE_NAME_KEY)
       }
 
+      hideLocationWarning()
       updateLocationDisplay()
       modal.classList.add('hidden')
 

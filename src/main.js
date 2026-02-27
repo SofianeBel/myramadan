@@ -254,7 +254,10 @@ function setupNavigation() {
 
         // Add to current
         tab.btn.classList.add('active');
-        if (tab.view) tab.view.classList.add('active-view');
+        if (tab.view) {
+          tab.view.classList.remove('hidden');
+          tab.view.classList.add('active-view');
+        }
 
         // Initialize calendar on first visit
         if (tab.btn === navTabs.horaires.btn) {

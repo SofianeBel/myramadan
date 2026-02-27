@@ -3,14 +3,27 @@ import storage from './storage.js'
 
 const APP_MODE_KEY = 'appMode'
 
+function getHijriMonth(hijriDate) {
+  if (!hijriDate) return null
+  // Aladhan renvoie month comme objet { number, en, ar } ou comme nombre
+  const m = hijriDate.month
+  return typeof m === 'object' ? m?.number : m
+}
+
+function getHijriDay(hijriDate) {
+  if (!hijriDate) return null
+  // Aladhan renvoie day comme string "10" ou nombre
+  return typeof hijriDate.day === 'string' ? parseInt(hijriDate.day, 10) : hijriDate.day
+}
+
 function isRamadanPeriod(hijriDate) {
   if (!hijriDate) return false
-  return hijriDate.month === 9
+  return getHijriMonth(hijriDate) === 9
 }
 
 export function getRamadanDay(hijriDate) {
   if (!isRamadanPeriod(hijriDate)) return null
-  return hijriDate.day
+  return getHijriDay(hijriDate)
 }
 
 export function resolveMode(hijriDate) {
@@ -31,5 +44,5 @@ export function setAppMode(mode) {
 
 export function isRamadanEve(hijriDate) {
   if (!hijriDate) return false
-  return hijriDate.month === 8 && hijriDate.day >= 29
+  return getHijriMonth(hijriDate) === 8 && getHijriDay(hijriDate) >= 29
 }
