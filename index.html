@@ -82,12 +82,11 @@
                     <span>Journal</span>
                     <div class="menu-item-bg"></div>
                 </a>
-                <div class="menu-item menu-item-disabled" id="nav-qibla">
-                    <i class="fa-solid fa-compass"></i>
-                    <span>Qibla</span>
-                    <span class="badge-coming-soon">Bientôt</span>
+                <a href="#" class="menu-item" id="nav-stats">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    <span>Statistiques</span>
                     <div class="menu-item-bg"></div>
-                </div>
+                </a>
             </nav>
 
             <div class="bottom-menu">
@@ -565,6 +564,61 @@
                     </div>
                 </div>
                 <div id="journal-history" class="journal-history"></div>
+            </div>
+
+            <!-- Statistics View -->
+            <div id="view-stats" class="view-section hidden">
+                <div class="stats-header">
+                    <h2 class="view-title"><i class="fa-solid fa-chart-simple"></i> Statistiques</h2>
+                    <div class="stats-period-btns">
+                        <button class="stats-period-btn active" data-period="week">Semaine</button>
+                        <button class="stats-period-btn" data-period="month">Mois</button>
+                        <button class="stats-period-btn" data-period="all">Tout</button>
+                    </div>
+                </div>
+
+                <div class="stats-content">
+                    <!-- Heatmap -->
+                    <div class="stats-section">
+                        <h3 class="stats-section-title">Activite</h3>
+                        <div id="stats-heatmap" class="stats-heatmap"></div>
+                        <div class="heatmap-legend">
+                            <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-none"></span> 0</span>
+                            <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-low"></span> 1-2</span>
+                            <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-mid"></span> 3-4</span>
+                            <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-full"></span> 5/5</span>
+                        </div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div id="stats-grid" class="stats-grid"></div>
+
+                    <!-- Streaks -->
+                    <div class="stats-section">
+                        <h3 class="stats-section-title">Series en cours</h3>
+                        <div id="stats-streaks" class="stats-streaks"></div>
+                    </div>
+
+                    <!-- Journal counter -->
+                    <div class="stats-section">
+                        <h3 class="stats-section-title">Journal</h3>
+                        <p id="stats-journal-count" class="stats-journal-count"></p>
+                    </div>
+
+                    <!-- Goals -->
+                    <div class="stats-section">
+                        <h3 class="stats-section-title">Objectifs</h3>
+                        <div id="stats-goals" class="stats-goals"></div>
+                        <div class="stats-add-goal">
+                            <select id="stats-goal-select" class="journal-filter">
+                                <option value="">Ajouter un objectif...</option>
+                            </select>
+                            <button id="stats-add-goal-btn" class="btn-icon-small">
+                                <i class="fa-solid fa-plus"></i> Ajouter
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
     </div>

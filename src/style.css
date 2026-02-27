@@ -3366,3 +3366,205 @@ body.mode-normal .ramadan-progress {
     padding: 30px 20px;
     font-size: 0.9rem;
 }
+
+/* ---------------------------------
+   STATISTICS VIEW
+   --------------------------------- */
+.stats-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.stats-period-btns {
+    display: flex;
+    gap: 4px;
+    background: var(--clr-glass-bg);
+    border-radius: var(--radius-full);
+    padding: 3px;
+}
+.stats-period-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-family: var(--font-main);
+    transition: all 0.2s;
+}
+.stats-period-btn.active {
+    background: var(--clr-gold);
+    color: var(--clr-dark-green);
+    font-weight: 600;
+}
+.stats-period-btn:hover:not(.active) {
+    background: var(--clr-glass-border);
+}
+.stats-content {
+    padding: 0 20px 20px;
+}
+.stats-section {
+    margin-bottom: 24px;
+}
+.stats-section-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.stats-heatmap {
+    overflow-x: auto;
+}
+.heatmap-svg {
+    width: 100%;
+    max-height: 160px;
+    display: block;
+}
+.heatmap-legend {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+.heatmap-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.heatmap-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    display: inline-block;
+}
+.heatmap-none {
+    background: var(--clr-glass-border);
+}
+.heatmap-low {
+    background: var(--clr-gold-dim);
+}
+.heatmap-mid {
+    background: var(--clr-gold);
+}
+.heatmap-full {
+    background: var(--clr-emerald, #2ecc71);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    padding: 12px;
+    border: 1px solid var(--clr-glass-border);
+    border-radius: var(--radius-md);
+    background: var(--clr-glass-bg);
+    text-align: center;
+}
+.stat-card-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--clr-gold);
+    display: block;
+}
+.stat-card-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    display: block;
+}
+.stat-card-icon {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+    display: block;
+}
+
+.stats-streaks {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.streak-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+}
+.streak-value {
+    font-weight: 700;
+    color: var(--clr-gold);
+}
+
+.stats-journal-count {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.stats-goals {}
+.goal-item {
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid var(--clr-glass-border);
+    border-radius: var(--radius-md);
+    background: var(--clr-glass-bg);
+}
+.goal-item.goal-completed {
+    border-color: var(--clr-emerald, #2ecc71);
+}
+.goal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+.goal-label {
+    font-size: 0.85rem;
+    color: var(--text-main);
+}
+.goal-progress-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+.goal-bar {
+    height: 6px;
+    background: var(--clr-glass-border);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+.goal-bar-fill {
+    height: 100%;
+    background: var(--clr-gold);
+    border-radius: var(--radius-full);
+    transition: width 0.3s ease;
+}
+.goal-item.goal-completed .goal-bar-fill {
+    background: var(--clr-emerald, #2ecc71);
+}
+.goal-remove-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 2px 6px;
+}
+.goal-remove-btn:hover {
+    color: #e74c3c;
+}
+.stats-add-goal {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+.stats-add-goal select {
+    flex: 1;
+}

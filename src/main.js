@@ -33,6 +33,7 @@ import { initDhikr } from './modules/dhikr.js'
 import { initQibla } from './modules/qibla.js'
 import { initDuas } from './modules/duas.js'
 import { initJournal } from './modules/journal.js'
+import { initStatistics } from './modules/statistics.js'
 
 // Intervals
 let fastingInterval = null
@@ -236,7 +237,8 @@ function setupNavigation() {
     dashboard: { btn: document.getElementById('nav-dashboard'), view: document.getElementById('view-dashboard') },
     horaires: { btn: document.getElementById('nav-horaires'), view: document.getElementById('view-horaires') },
     duas: { btn: document.getElementById('nav-duas'), view: document.getElementById('view-duas') },
-    journal: { btn: document.getElementById('nav-journal'), view: document.getElementById('view-journal') }
+    journal: { btn: document.getElementById('nav-journal'), view: document.getElementById('view-journal') },
+    stats: { btn: document.getElementById('nav-stats'), view: document.getElementById('view-stats') }
   };
 
   Object.values(navTabs).forEach(tab => {
@@ -267,6 +269,11 @@ function setupNavigation() {
         // Initialize journal on first visit
         if (tab.btn === navTabs.journal?.btn) {
           initJournal()
+        }
+
+        // Initialize statistics on first visit
+        if (tab.btn === navTabs.stats?.btn) {
+          initStatistics()
         }
       });
     }
