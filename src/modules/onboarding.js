@@ -1,10 +1,11 @@
 /**
- * onboarding.js — Interactive guided tour (4 steps)
+ * onboarding.js — Interactive guided tour (desktop & mobile variants)
  */
 
 import storage from './storage.js'
+import { isMobile } from './platform.js'
 
-const tourSteps = [
+const desktopTourSteps = [
   {
     title: 'Bienvenue sur GuideME',
     text: 'Découvrez votre nouveau compagnon pour le Ramadan. Commençons par une petite visite guidée !',
@@ -55,6 +56,47 @@ const tourSteps = [
   },
 ]
 
+const mobileTourSteps = [
+  {
+    title: 'Bienvenue sur GuideME',
+    text: 'Votre compagnon pour le Ramadan, maintenant dans votre poche ! Découvrons ensemble les fonctionnalités.',
+    target: null,
+    position: 'center',
+  },
+  {
+    title: 'Suivi du Jeûne',
+    text: "Suivez votre temps de jeûne, l'heure du Suhoor et de l'Iftar en un coup d'œil.",
+    target: '.fasting-card',
+    position: 'bottom',
+  },
+  {
+    title: 'Horaires des Prières',
+    text: 'Toutes les prières du jour avec un code couleur pour repérer la prière en cours.',
+    target: '.schedule-card',
+    position: 'bottom',
+  },
+  {
+    title: 'Notifications',
+    text: 'Appuyez sur les cloches pour activer ou désactiver les rappels de chaque prière.',
+    target: '.schedule-card',
+    position: 'bottom',
+  },
+  {
+    title: 'Le Menu',
+    text: 'Accédez à toutes les fonctionnalités depuis ce bouton : calendrier, paramètres, thème, et plus encore. Vous pouvez aussi glisser depuis le bord gauche.',
+    target: '#hamburger-btn',
+    position: 'bottom',
+  },
+  {
+    title: 'Boussole Qibla',
+    text: 'Retrouvez la direction de la Qibla dans le menu. La boussole utilise les capteurs de votre téléphone pour un guidage en temps réel !',
+    target: null,
+    position: 'center',
+  },
+]
+
+const tourSteps = isMobile ? mobileTourSteps : desktopTourSteps
+
 let currentStep = 0
 
 /**
@@ -98,8 +140,8 @@ function renderStep() {
   titleEl.textContent = step.title
   textEl.textContent = step.text
 
-  // Dots
-  dotsContainer.innerHTML = ''
+  // Dots — use DOM methods instead of innerHTML for safety
+  dotsContainer.replaceChildren()
   tourSteps.forEach((_, idx) => {
     const dot = document.createElement('span')
     dot.className = `dot ${idx === currentStep ? 'active' : ''}`
@@ -152,24 +194,35 @@ function renderStep() {
 
 function positionTooltip(tooltip, targetEl, position) {
   const rect = targetEl.getBoundingClientRect()
-  const gap = 24
+  const gap = isMobile ? 16 : 24
   let top, left
 
   tooltip.style.transform = 'none'
 
-  if (position === 'right') {
-    top = rect.top + rect.height / 2 - tooltip.offsetHeight / 2
-    left = rect.right + gap
-    if (left + tooltip.offsetWidth > window.innerWidth) {
-      left = rect.left - tooltip.offsetWidth - gap
-    }
-  } else if (position === 'top') {
-    top = rect.top - tooltip.offsetHeight - gap
-    left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2
-    if (top < 0) top = rect.bottom + gap
-  } else if (position === 'bottom') {
+  if (isMobile) {
+    // On mobile, always position below the target and center horizontally
     top = rect.bottom + gap
-    left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2
+    left = window.innerWidth / 2 - tooltip.offsetWidth / 2
+
+    // If not enough room below, try above
+    if (top + tooltip.offsetHeight > window.innerHeight - 10) {
+      top = rect.top - tooltip.offsetHeight - gap
+    }
+  } else {
+    if (position === 'right') {
+      top = rect.top + rect.height / 2 - tooltip.offsetHeight / 2
+      left = rect.right + gap
+      if (left + tooltip.offsetWidth > window.innerWidth) {
+        left = rect.left - tooltip.offsetWidth - gap
+      }
+    } else if (position === 'top') {
+      top = rect.top - tooltip.offsetHeight - gap
+      left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2
+      if (top < 0) top = rect.bottom + gap
+    } else if (position === 'bottom') {
+      top = rect.bottom + gap
+      left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2
+    }
   }
 
   // Clamp horizontal
