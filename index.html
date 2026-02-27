@@ -51,6 +51,12 @@
     </div>
 
     <div class="app-container" style="opacity: 0;"> <!-- Hidden initially via CSS until JS reveals it -->
+        <!-- Hamburger button (mobile only) -->
+        <button id="hamburger-btn" class="hamburger-btn" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <!-- Backdrop for drawer (mobile only) -->
+        <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
         <!-- Sidebar -->
         <aside class="sidebar">
             <button id="sidebar-toggle" class="sidebar-toggle-btn">
