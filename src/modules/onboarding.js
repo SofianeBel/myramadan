@@ -93,9 +93,9 @@ const mobileTourSteps = [
   },
   {
     title: 'Boussole Qibla',
-    text: 'Retrouvez la direction de la Qibla dans le menu. La boussole utilise les capteurs de votre téléphone pour un guidage en temps réel !',
-    target: null,
-    position: 'center',
+    text: 'Retrouvez la direction de la Qibla ici. La boussole utilise les capteurs de votre téléphone pour un guidage en temps réel !',
+    target: '#qibla-card',
+    position: 'bottom',
   },
 ]
 
@@ -167,21 +167,18 @@ function renderStep() {
     if (el) {
       if (isMobile) {
         // ── Mobile: spotlight ring approach ──
-        // Scroll element into view within .main-content (not the whole page)
-        scrollToTarget(el)
-
-        // Wait for scroll to settle, then show spotlight + position tooltip
-        setTimeout(() => {
-          showSpotlight(el, isDark)
-          positionTooltip(tooltip, el, step.position)
-        }, 400)
-
         // Overlay becomes transparent — the spotlight's box-shadow provides dimming
         // Also disable backdrop-filter to avoid blurring the content
         overlay.style.background = 'transparent'
         overlay.style.backdropFilter = 'none'
         overlay.style.webkitBackdropFilter = 'none'
         overlay.style.zIndex = '10002'
+
+        // Scroll element into view, then show spotlight once scroll finishes
+        scrollToTarget(el, () => {
+          showSpotlight(el, isDark)
+          positionTooltip(tooltip, el, step.position)
+        })
       } else {
         // ── Desktop: original approach ──
         el.classList.add('tour-highlight')
@@ -252,17 +249,18 @@ function removeSpotlight() {
 /**
  * Scroll target into view within .main-content only (not the whole page).
  * Skips fixed-position elements (always visible) and elements already in view.
+ * Calls `onDone()` once scroll finishes (or immediately if no scroll needed).
  */
-function scrollToTarget(el) {
+function scrollToTarget(el, onDone) {
   // Fixed elements are always in view
-  if (getComputedStyle(el).position === 'fixed') return
+  if (getComputedStyle(el).position === 'fixed') { onDone(); return }
 
   const rect = el.getBoundingClientRect()
   // Already fully visible — no scroll needed
-  if (rect.top >= 60 && rect.bottom <= window.innerHeight - 20) return
+  if (rect.top >= 60 && rect.bottom <= window.innerHeight - 20) { onDone(); return }
 
   const container = document.querySelector('.main-content')
-  if (!container) return
+  if (!container) { onDone(); return }
 
   // Scroll within the container to center the element
   const containerRect = container.getBoundingClientRect()
@@ -271,6 +269,22 @@ function scrollToTarget(el) {
   const targetScroll = container.scrollTop + elCenterInContainer - containerCenter
 
   container.scrollTo({ top: targetScroll, behavior: 'smooth' })
+
+  // Poll via rAF until scrollTop stabilises (3 consecutive idle frames)
+  let lastTop = container.scrollTop
+  let idleFrames = 0
+  function check() {
+    const top = container.scrollTop
+    if (Math.abs(top - lastTop) < 1) {
+      idleFrames++
+      if (idleFrames >= 3) { onDone(); return }
+    } else {
+      idleFrames = 0
+    }
+    lastTop = top
+    requestAnimationFrame(check)
+  }
+  requestAnimationFrame(check)
 }
 
 // ── Desktop: lift ancestor stacking contexts ──
