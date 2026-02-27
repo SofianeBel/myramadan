@@ -3086,3 +3086,199 @@ body.mode-normal .ramadan-progress {
 }
 .qibla-no-location.hidden { display: none; }
 .qibla-no-location p { margin-bottom: 12px; }
+
+/* ---------------------------------
+   14. DUAS ENCYCLOPEDIA
+   --------------------------------- */
+#view-duas.view-section.active-view {
+    display: block !important;
+    opacity: 1;
+    visibility: visible;
+}
+.duas-header {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.view-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+.view-title i {
+    color: var(--clr-gold);
+    margin-right: 6px;
+}
+.duas-search-wrapper {
+    position: relative;
+}
+.duas-search-wrapper > i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    pointer-events: none;
+}
+.duas-search {
+    width: 100%;
+    padding: 10px 12px 10px 36px;
+    border: 1px solid var(--clr-glass-border);
+    border-radius: var(--radius-md);
+    background: var(--clr-glass-bg);
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-family: var(--font-main);
+    outline: none;
+    transition: border-color 0.2s;
+}
+.duas-search:focus {
+    border-color: var(--clr-gold);
+}
+.duas-search::placeholder {
+    color: var(--text-muted);
+}
+.duas-container {
+    padding: 0 20px 20px;
+}
+.dua-category {
+    margin-bottom: 20px;
+}
+.dua-category-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--clr-glass-border);
+    margin-bottom: 8px;
+}
+.dua-category-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    flex: 1;
+}
+.dua-category-header i {
+    color: var(--clr-gold);
+    font-size: 1rem;
+}
+.dua-category-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: var(--clr-glass-bg);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+}
+.dua-subcategory-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    transition: background 0.2s;
+}
+.dua-subcategory-header:hover {
+    background: var(--clr-glass-bg);
+}
+.dua-chevron {
+    font-size: 0.7rem;
+    transition: transform 0.2s;
+    color: var(--text-muted);
+}
+.dua-chevron.open {
+    transform: rotate(90deg);
+}
+.dua-subcategory-content.hidden {
+    display: none;
+}
+.dua-item {
+    padding: 16px;
+    margin: 8px 0;
+    border: 1px solid var(--clr-glass-border);
+    border-radius: var(--radius-md);
+    background: var(--clr-glass-bg);
+}
+.dua-arabic {
+    font-size: 1.4rem;
+    font-family: 'Amiri', 'Traditional Arabic', serif;
+    text-align: center;
+    direction: rtl;
+    line-height: 2;
+    margin-bottom: 8px;
+    color: var(--text-main);
+}
+.dua-transliteration {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 8px;
+}
+.dua-translation {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+.dua-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.78rem;
+}
+.dua-reference {
+    color: var(--clr-gold);
+    font-weight: 500;
+}
+.dua-context {
+    color: var(--text-muted);
+    font-style: italic;
+}
+.dua-repeat {
+    background: var(--clr-gold-dim);
+    color: var(--clr-gold);
+    padding: 1px 6px;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+}
+.dua-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+}
+.dua-fav-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.2s;
+    padding: 4px;
+}
+.dua-fav-btn.active {
+    color: var(--clr-gold);
+}
+.dua-fav-btn:hover {
+    color: var(--clr-gold);
+}
+.dua-copy-btn {
+    font-size: 0.8rem;
+}
+.dua-favorites-section {
+    border-left: 3px solid var(--clr-gold);
+    padding-left: 12px;
+}
+.duas-empty,
+.duas-result-count {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 20px;
+    font-size: 0.9rem;
+}

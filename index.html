@@ -72,12 +72,11 @@
                     <span>Horaires</span>
                     <div class="menu-item-bg"></div>
                 </a>
-                <div class="menu-item menu-item-disabled" id="nav-quran">
-                    <i class="fa-solid fa-book-quran"></i>
-                    <span>Coran & Invocations</span>
-                    <span class="badge-coming-soon">Bientôt</span>
+                <a href="#" class="menu-item" id="nav-duas">
+                    <i class="fa-solid fa-hands-praying"></i>
+                    <span>Douas</span>
                     <div class="menu-item-bg"></div>
-                </div>
+                </a>
                 <div class="menu-item menu-item-disabled" id="nav-qibla">
                     <i class="fa-solid fa-compass"></i>
                     <span>Qibla</span>
@@ -529,6 +528,18 @@
                         <p style="margin-top: 12px; color: var(--text-muted);">Calcul des horaires en cours...</p>
                     </div>
                 </div>
+            </div>
+
+            <!-- Duas Encyclopedia View -->
+            <div id="view-duas" class="view-section hidden">
+                <div class="duas-header">
+                    <h2 class="view-title"><i class="fa-solid fa-hands-praying"></i> Encyclopedie des Douas</h2>
+                    <div class="duas-search-wrapper">
+                        <i class="fa-solid fa-search"></i>
+                        <input type="text" id="duas-search" class="duas-search" placeholder="Rechercher une doua...">
+                    </div>
+                </div>
+                <div id="duas-container" class="duas-container"></div>
             </div>
         </main>
     </div>

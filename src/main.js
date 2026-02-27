@@ -31,6 +31,7 @@ import { resolveMode, applyMode, getRamadanDay } from './modules/app-mode.js'
 import { initTracker } from './modules/practice-tracker.js'
 import { initDhikr } from './modules/dhikr.js'
 import { initQibla } from './modules/qibla.js'
+import { initDuas } from './modules/duas.js'
 
 // Intervals
 let fastingInterval = null
@@ -232,7 +233,8 @@ function setupInteractiveEffects() {
 function setupNavigation() {
   const navTabs = {
     dashboard: { btn: document.getElementById('nav-dashboard'), view: document.getElementById('view-dashboard') },
-    horaires: { btn: document.getElementById('nav-horaires'), view: document.getElementById('view-horaires') }
+    horaires: { btn: document.getElementById('nav-horaires'), view: document.getElementById('view-horaires') },
+    duas: { btn: document.getElementById('nav-duas'), view: document.getElementById('view-duas') }
   };
 
   Object.values(navTabs).forEach(tab => {
@@ -253,6 +255,11 @@ function setupNavigation() {
         // Initialize calendar on first visit
         if (tab.btn === navTabs.horaires.btn) {
           initCalendar();
+        }
+
+        // Initialize duas on first visit
+        if (tab.btn === navTabs.duas?.btn) {
+          initDuas()
         }
       });
     }
