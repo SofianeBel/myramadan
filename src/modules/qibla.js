@@ -152,39 +152,47 @@ function renderCompass(svgEl, angle) {
  * @param {number} qiblaBearing - Qibla bearing in degrees from North
  */
 function startLiveCompass(svgEl, qiblaBearing) {
-  let lastAlpha = null
+  let lastHeading = null
 
   function handleOrientation(event) {
-    let heading = event.alpha // 0-360, device compass heading
-    if (heading == null) return
-
-    // On Android, alpha is the compass heading (0 = North)
-    // We rotate the entire compass so the Qibla arrow points correctly
-    // Rotation = -(heading) to counter-rotate the compass as the phone turns
-    // The Qibla arrow is rendered at qiblaBearing from North,
-    // so when the compass rotates by -heading, it naturally points right
-    const rotation = -heading
+    // W3C spec: alpha increases counter-clockwise (0=North, 90=West, 270=East)
+    // We need compass heading clockwise from North (0=North, 90=East, 270=West)
+    // iOS provides webkitCompassHeading (already CW from North)
+    let compassHeading
+    if (event.webkitCompassHeading != null) {
+      compassHeading = event.webkitCompassHeading // iOS: CW from North
+    } else if (event.alpha != null) {
+      compassHeading = (360 - event.alpha) % 360 // Android: convert CCW → CW
+    } else {
+      return
+    }
 
     // Smooth out small jitters
-    if (lastAlpha !== null && Math.abs(heading - lastAlpha) < 0.5) return
-    lastAlpha = heading
+    if (lastHeading !== null && Math.abs(compassHeading - lastHeading) < 0.5) return
+    lastHeading = compassHeading
 
-    svgEl.style.transform = `rotate(${rotation}deg)`
+    // Rotate compass so real-world directions align with screen
+    // When facing East (heading=90), North is to the left → rotate SVG by -90°
+    svgEl.style.transform = `rotate(${-compassHeading}deg)`
     svgEl.style.transition = 'transform 0.15s ease-out'
   }
+
+  // Prefer 'deviceorientationabsolute' on Android (reliable compass heading)
+  const hasAbsolute = 'ondeviceorientationabsolute' in window
+  const eventName = hasAbsolute ? 'deviceorientationabsolute' : 'deviceorientation'
 
   // Request permission on iOS 13+ (needed for DeviceOrientationEvent)
   if (typeof DeviceOrientationEvent.requestPermission === 'function') {
     DeviceOrientationEvent.requestPermission()
       .then(state => {
         if (state === 'granted') {
-          window.addEventListener('deviceorientation', handleOrientation, true)
+          window.addEventListener(eventName, handleOrientation, true)
         }
       })
       .catch(() => {})
   } else {
     // Android — works directly
-    window.addEventListener('deviceorientation', handleOrientation, true)
+    window.addEventListener(eventName, handleOrientation, true)
   }
 }
 
