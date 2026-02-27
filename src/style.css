@@ -1998,12 +1998,6 @@ body {
     z-index: 10001 !important;
 }
 
-/* Unclip overflow containers so highlighted children can poke through,
-   without changing z-index (which would push the entire container above the overlay) */
-.tour-unclip {
-    overflow: visible !important;
-}
-
 /* ═══════════════════════════════════════════════════════════════════
    Settings Modal — Map Tab & Tabs
    ═══════════════════════════════════════════════════════════════════ */

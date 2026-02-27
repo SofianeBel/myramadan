@@ -1,5 +1,9 @@
 /**
  * onboarding.js — Interactive guided tour (desktop & mobile variants)
+ *
+ * Desktop: uses tour-highlight class (z-index above overlay) + tour-lift on ancestors
+ * Mobile:  uses a fixed-position spotlight ring with box-shadow for dimming
+ *          (no overflow/z-index manipulation on content — avoids scroll reset)
  */
 
 import storage from './storage.js'
@@ -140,7 +144,7 @@ function renderStep() {
   titleEl.textContent = step.title
   textEl.textContent = step.text
 
-  // Dots — use DOM methods instead of innerHTML for safety
+  // Dots
   dotsContainer.replaceChildren()
   tourSteps.forEach((_, idx) => {
     const dot = document.createElement('span')
@@ -151,54 +155,123 @@ function renderStep() {
   // Button text
   btnNext.textContent = currentStep === tourSteps.length - 1 ? 'Terminer' : 'Suivant'
 
-  // Cleanup highlights and lifted/unclipped ancestors
+  // Cleanup previous step
+  removeSpotlight()
   document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'))
   document.querySelectorAll('.tour-lift').forEach(el => el.classList.remove('tour-lift'))
-  document.querySelectorAll('.tour-unclip').forEach(el => el.classList.remove('tour-unclip'))
 
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
 
   if (step.target) {
     const el = document.querySelector(step.target)
     if (el) {
-      // Scroll the target into view first (elements can be off-screen on mobile)
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      if (isMobile) {
+        // ── Mobile: spotlight ring approach ──
+        // Scroll element into view within .main-content (not the whole page)
+        scrollToTarget(el)
 
-      // Wait for scroll to settle, then highlight and position tooltip
-      setTimeout(() => {
+        // Wait for scroll to settle, then show spotlight + position tooltip
+        setTimeout(() => {
+          showSpotlight(el, isDark)
+          positionTooltip(tooltip, el, step.position)
+        }, 400)
+
+        // Overlay becomes transparent — the spotlight's box-shadow provides dimming
+        overlay.style.background = 'transparent'
+        overlay.style.zIndex = '10002'
+      } else {
+        // ── Desktop: original approach ──
         el.classList.add('tour-highlight')
         liftAncestors(el)
         positionTooltip(tooltip, el, step.position)
-      }, 400)
-    }
 
-    overlay.style.background = isDark ? 'rgba(0, 0, 0, 0.85)' : 'rgba(11, 43, 27, 0.85)'
+        overlay.style.background = isDark ? 'rgba(0, 0, 0, 0.85)' : 'rgba(11, 43, 27, 0.85)'
+        overlay.style.zIndex = '9999'
+      }
+    }
   } else {
-    // Center tooltip
+    // No target — center tooltip
     tooltip.style.top = '50%'
     tooltip.style.left = '50%'
     tooltip.style.transform = 'translate(-50%, -50%)'
 
     overlay.style.background = isDark ? 'rgba(0, 0, 0, 0.92)' : 'rgba(11, 43, 27, 0.92)'
+    overlay.style.zIndex = '9999'
   }
 }
 
+// ── Mobile Spotlight ──
+
 /**
- * Lift ancestor stacking contexts and unclip overflow containers
- * so the highlighted element is visible above the onboarding overlay.
+ * Create a fixed-position ring around the target element.
+ * The ring's massive box-shadow acts as the dimming overlay,
+ * leaving a "hole" around the highlighted element.
  *
- * Two distinct classes:
- * - .tour-lift   → parents with z-index/transform/etc → raise z-index to 10001
- * - .tour-unclip → parents with overflow:auto/hidden → set overflow:visible
- *                   (without touching z-index, to avoid pushing entire container
- *                    above the overlay)
+ * z-index stack:
+ *   10001  spotlight ring (border + box-shadow dimming)
+ *   10002  overlay (transparent, captures pointer-events) + tooltip
  */
+function showSpotlight(el, isDark) {
+  removeSpotlight()
+  const rect = el.getBoundingClientRect()
+  const pad = 6
+  const ring = document.createElement('div')
+  ring.id = 'tour-spotlight'
+
+  const dimColor = isDark ? 'rgba(0, 0, 0, 0.88)' : 'rgba(11, 43, 27, 0.88)'
+
+  Object.assign(ring.style, {
+    position: 'fixed',
+    top: `${rect.top - pad}px`,
+    left: `${rect.left - pad}px`,
+    width: `${rect.width + pad * 2}px`,
+    height: `${rect.height + pad * 2}px`,
+    borderRadius: '16px',
+    border: '3px solid var(--clr-gold)',
+    zIndex: '10001',
+    pointerEvents: 'none',
+    boxShadow: `0 0 0 200vmax ${dimColor}, 0 0 20px rgba(212, 175, 55, 0.4)`,
+    transition: 'top 0.3s ease, left 0.3s ease, width 0.3s ease, height 0.3s ease',
+  })
+
+  document.body.appendChild(ring)
+}
+
+function removeSpotlight() {
+  const existing = document.getElementById('tour-spotlight')
+  if (existing) existing.remove()
+}
+
+/**
+ * Scroll target into view within .main-content only (not the whole page).
+ * Skips fixed-position elements (always visible) and elements already in view.
+ */
+function scrollToTarget(el) {
+  // Fixed elements are always in view
+  if (getComputedStyle(el).position === 'fixed') return
+
+  const rect = el.getBoundingClientRect()
+  // Already fully visible — no scroll needed
+  if (rect.top >= 60 && rect.bottom <= window.innerHeight - 20) return
+
+  const container = document.querySelector('.main-content')
+  if (!container) return
+
+  // Scroll within the container to center the element
+  const containerRect = container.getBoundingClientRect()
+  const elCenterInContainer = rect.top - containerRect.top + rect.height / 2
+  const containerCenter = containerRect.height / 2
+  const targetScroll = container.scrollTop + elCenterInContainer - containerCenter
+
+  container.scrollTo({ top: targetScroll, behavior: 'smooth' })
+}
+
+// ── Desktop: lift ancestor stacking contexts ──
+
 function liftAncestors(el) {
   let parent = el.parentElement
   while (parent && parent !== document.body) {
     const cs = getComputedStyle(parent)
-
-    // Parents that create stacking contexts → need z-index lift
     if (
       cs.zIndex !== 'auto' ||
       (cs.backdropFilter && cs.backdropFilter !== 'none') ||
@@ -208,18 +281,11 @@ function liftAncestors(el) {
     ) {
       parent.classList.add('tour-lift')
     }
-
-    // Parents that clip overflow → only unclip (no z-index change)
-    if (
-      cs.overflow === 'auto' || cs.overflow === 'hidden' ||
-      cs.overflowY === 'auto' || cs.overflowY === 'hidden'
-    ) {
-      parent.classList.add('tour-unclip')
-    }
-
     parent = parent.parentElement
   }
 }
+
+// ── Tooltip Positioning ──
 
 function positionTooltip(tooltip, targetEl, position) {
   const rect = targetEl.getBoundingClientRect()
@@ -229,13 +295,13 @@ function positionTooltip(tooltip, targetEl, position) {
   tooltip.style.transform = 'none'
 
   if (isMobile) {
-    // On mobile, always position below the target and center horizontally
-    top = rect.bottom + gap
+    // On mobile, position below target, centered horizontally
+    top = rect.bottom + gap + 6 // extra space for spotlight ring
     left = window.innerWidth / 2 - tooltip.offsetWidth / 2
 
     // If not enough room below, try above
     if (top + tooltip.offsetHeight > window.innerHeight - 10) {
-      top = rect.top - tooltip.offsetHeight - gap
+      top = rect.top - tooltip.offsetHeight - gap - 6
     }
   } else {
     if (position === 'right') {
@@ -260,7 +326,7 @@ function positionTooltip(tooltip, targetEl, position) {
     left = window.innerWidth - tooltip.offsetWidth - 10
   }
 
-  // Clamp vertical: keep tooltip within viewport
+  // Clamp vertical
   if (top < 10) top = 10
   if (top + tooltip.offsetHeight > window.innerHeight - 10) {
     top = window.innerHeight - tooltip.offsetHeight - 10
@@ -270,13 +336,18 @@ function positionTooltip(tooltip, targetEl, position) {
   tooltip.style.left = `${left}px`
 }
 
+// ── End Tour ──
+
 function endTour() {
   const overlay = document.getElementById('onboarding-overlay')
-  if (overlay) overlay.classList.add('hidden')
+  if (overlay) {
+    overlay.classList.add('hidden')
+    overlay.style.zIndex = '9999'
+  }
 
+  removeSpotlight()
   document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'))
   document.querySelectorAll('.tour-lift').forEach(el => el.classList.remove('tour-lift'))
-  document.querySelectorAll('.tour-unclip').forEach(el => el.classList.remove('tour-unclip'))
 
   storage.set('tourCompleted', true)
 }
