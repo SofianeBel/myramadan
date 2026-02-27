@@ -5,9 +5,24 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.6.1'
+const APP_VERSION = '1.7.0'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.7.0',
+    date: '27 février 2026',
+    changes: [
+      { type: 'feature', text: 'Mode Ramadan / Normal — détection automatique via la date Hijri, ou choix manuel dans les paramètres' },
+      { type: 'feature', text: 'Tracker de pratique quotidienne — suivi des 5 prières, jeûne, pages de Coran et dhikr avec streaks' },
+      { type: 'feature', text: 'Compteur de dhikr / tasbih — 5 préréglages, raccourci clavier Espace, avancement automatique' },
+      { type: 'feature', text: 'Encyclopédie de douas — 88 invocations, 9 catégories, recherche, favoris et copie' },
+      { type: 'feature', text: 'Boussole Qibla — calcul trigonométrique avec compas SVG' },
+      { type: 'feature', text: 'Journal de gratitude — sauvegarde automatique, historique filtrable par mois' },
+      { type: 'feature', text: 'Statistiques — heatmap 12 semaines, streaks, objectifs personnels avec barres de progression' },
+      { type: 'improvement', text: 'Contenu quotidien enrichi — 69 entrées avec translittération, catégories et contenu spécifique Ramadan' },
+      { type: 'fix', text: 'Géolocalisation honnête — fin du fallback silencieux vers Paris, avertissements clairs à l\'utilisateur' },
+    ],
+  },
   {
     version: '1.6.1',
     date: '25 février 2026',

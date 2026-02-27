@@ -5,6 +5,28 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.7.0] - 2026-02-27
+
+### Ajouté
+
+- **Mode Ramadan / Normal** — détection automatique via la date Hijri (mois 9), ou choix manuel dans les paramètres
+- **Tracker de pratique quotidienne** — suivi des 5 prières, jeûne, pages de Coran et dhikr avec calcul de streaks
+- **Compteur de dhikr / tasbih** — 5 préréglages (post-prière, SubhanAllah, Astaghfirullah, La ilaha illa Allah, Salawat), raccourci clavier Espace
+- **Encyclopédie de douas** — 88 invocations réparties en 9 catégories et 25 sous-catégories, avec recherche, favoris et copie
+- **Boussole Qibla** — calcul trigonométrique grand-cercle avec compas SVG interactif
+- **Journal de gratitude** — sauvegarde automatique (3s), historique filtrable par mois, purge à 365 jours
+- **Statistiques** — heatmap 12 semaines, grille de stats, streaks multiples, objectifs personnels avec barres de progression
+- **Barre de progression Ramadan** — affiche le jour courant du Ramadan avec barre visuelle
+
+### Amélioré
+
+- **Contenu quotidien enrichi** — 69 entrées (contre 30) avec translittération, catégories (Coran/Hadith/Doua/Sagesse) et contenu spécifique Ramadan
+- **CSS responsive** — breakpoints 768px et 480px pour tous les nouveaux composants
+
+### Corrigé
+
+- **Géolocalisation honnête** — fin du fallback silencieux vers Paris (48.8566, 2.3522), avertissements clairs pour positions GPS/sauvegardées/absentes
+
 ## [1.6.1] - 2026-02-25
 
 ### Corrigé
