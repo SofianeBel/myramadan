@@ -3928,6 +3928,19 @@ body.mode-normal .ramadan-progress {
   box-shadow: var(--shadow-md);
 }
 
+/* Status bar backdrop — subtle tinted strip behind system icons */
+.platform-android .status-bar-strip {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top, 28px);
+  z-index: 997;
+  pointer-events: none;
+  background: var(--bg-main);
+  opacity: 0.92;
+}
+
 /* Main content adjustments for mobile */
 .platform-android .main-content {
   margin-left: 0 !important;

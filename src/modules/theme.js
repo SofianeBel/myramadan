@@ -15,6 +15,7 @@ export function initTheme() {
   const savedTheme = storage.get('theme') || 'dark'
   rootElement.setAttribute('data-theme', savedTheme)
   updateThemeIcon(savedTheme === 'dark')
+  syncStatusBar(savedTheme)
 
   if (themeToggle) {
     themeToggle.addEventListener('click', (e) => {
@@ -25,7 +26,18 @@ export function initTheme() {
       rootElement.setAttribute('data-theme', newTheme)
       storage.set('theme', newTheme)
       updateThemeIcon(newTheme === 'dark')
+      syncStatusBar(newTheme)
     })
+  }
+}
+
+/**
+ * Update Android status bar icon colors to match the app theme.
+ * Uses the JavascriptInterface bridge injected by MainActivity.
+ */
+function syncStatusBar(theme) {
+  if (typeof window.AndroidStatusBar !== 'undefined') {
+    window.AndroidStatusBar.setTheme(theme)
   }
 }
 
