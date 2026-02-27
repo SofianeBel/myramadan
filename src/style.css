@@ -69,7 +69,7 @@
     /* Translucent sidebar */
     --bg-card: rgba(20, 35, 58, 0.55);
     /* Glassmorphism card */
-    --text-main: #F4EBD0;
+    --text-main: var(--clr-sand);
     /* Sand color for main text */
     --text-muted: #8CA0BE;
     /* Muted blue-grey */
@@ -180,7 +180,7 @@ body {
 }
 
 .splash-subtitle {
-    color: #F4EBD0;
+    color: var(--clr-sand);
     font-size: 1.2rem;
     font-weight: 300;
     opacity: 0;
@@ -703,7 +703,7 @@ body {
 /* Premium Card (Fasting) */
 .premium-card {
     background: linear-gradient(135deg, var(--clr-dark-green) 0%, var(--clr-green) 100%);
-    color: #F4EBD0;
+    color: var(--clr-sand);
     position: relative;
     overflow: hidden;
 }
@@ -735,7 +735,7 @@ body {
 }
 
 .premium-card .card-header i {
-    color: #F4EBD0;
+    color: var(--clr-sand);
     background: rgba(255, 255, 255, 0.1);
     padding: 10px;
     border-radius: 50%;
@@ -2082,7 +2082,7 @@ body {
 [data-theme="midnight"] .leaflet-control-zoom a,
 [data-theme="amoled"] .leaflet-control-zoom a {
     background: rgba(20, 35, 58, 0.85) !important;
-    color: #F4EBD0 !important;
+    color: var(--clr-sand) !important;
     border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
@@ -2426,7 +2426,7 @@ body {
 }
 
 .calendar-table td {
-    color: #F4EBD0;
+    color: var(--clr-sand);
     font-weight: 500;
 }
 
@@ -2978,7 +2978,7 @@ body.mode-normal .ramadan-progress {
 
 .tracker-summary {
     font-weight: 600;
-    color: #F4EBD0;
+    color: var(--clr-sand);
 }
 
 .tracker-expanded {
@@ -3043,7 +3043,7 @@ body.mode-normal .ramadan-progress {
     border: 1px solid var(--clr-glass-border);
     border-radius: var(--radius-md);
     background: var(--clr-glass-bg);
-    color: #F4EBD0;
+    color: var(--clr-sand);
     font-size: 0.9rem;
     font-family: var(--font-main);
     text-align: center;

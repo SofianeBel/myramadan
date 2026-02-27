@@ -88,6 +88,6 @@ export function initDailyContentActions() {
           textNode.textContent = originalText
         }
       }, 2000)
-    })
+    }).catch(() => {})
   })
 }

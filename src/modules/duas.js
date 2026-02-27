@@ -47,7 +47,7 @@ function copyDua(dua) {
   const parts = [dua.arabic, dua.transliteration, dua.translation, dua.reference]
   if (dua.context) parts.push(dua.context)
   const text = parts.filter(Boolean).join('\n\n')
-  navigator.clipboard.writeText(text)
+  navigator.clipboard.writeText(text).catch(() => {})
 }
 
 // ─── Rendering ───
