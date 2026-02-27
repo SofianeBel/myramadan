@@ -410,6 +410,34 @@
                     <div id="tracker-expanded" class="tracker-expanded hidden"></div>
                 </div>
 
+                <!-- Dhikr Counter -->
+                <div id="dhikr-card" class="card premium-card dhikr-card animate-entry" style="--anim-delay: 0.4s;">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-circle-notch"></i> Dhikr</h2>
+                        <select id="dhikr-preset-select" class="dhikr-select"></select>
+                    </div>
+                    <div class="dhikr-content">
+                        <p class="dhikr-arabic" id="dhikr-arabic"></p>
+                        <p class="dhikr-translit" id="dhikr-translit"></p>
+                        <div class="dhikr-counter">
+                            <span id="dhikr-count" class="dhikr-count-number">0</span>
+                            <span id="dhikr-target" class="dhikr-count-target">/ 33</span>
+                        </div>
+                        <div class="dhikr-progress-bar">
+                            <div id="dhikr-progress-fill" class="dhikr-progress-fill"></div>
+                        </div>
+                        <span id="dhikr-step-indicator" class="dhikr-step-indicator hidden"></span>
+                    </div>
+                    <div class="dhikr-actions">
+                        <button id="dhikr-reset" class="btn-icon-small" title="Reinitialiser">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button id="dhikr-increment" class="dhikr-btn-increment" title="Incrementer (Espace)">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Daily Quote / Hadith -->
                 <div class="card quote-card full-width animate-entry" style="--anim-delay: 0.5s;">
                     <div class="quote-icon floating-icon"><i class="fa-solid fa-quote-left"></i></div>

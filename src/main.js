@@ -29,6 +29,7 @@ import { initChangelog } from './modules/changelog.js'
 import { initUpdater } from './modules/updater.js'
 import { resolveMode, applyMode, getRamadanDay } from './modules/app-mode.js'
 import { initTracker } from './modules/practice-tracker.js'
+import { initDhikr } from './modules/dhikr.js'
 
 // Intervals
 let fastingInterval = null
@@ -321,6 +322,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 6.5. Practice tracker (dashboard card)
   initTracker()
+
+  // 6.6. Dhikr counter (dashboard card)
+  initDhikr()
 
   // 7. Interactive effects
   setupInteractiveEffects()
