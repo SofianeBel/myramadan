@@ -284,9 +284,10 @@
                 </div>
             </header>
 
-            <div id="ramadan-progress" class="ramadan-progress hidden">
-                <span id="ramadan-day">Jour 1/30 du Ramadan</span>
-                <div class="ramadan-progress-bar">
+            <div id="ramadan-progress" class="card premium-card ramadan-progress full-width hidden animate-entry"
+                style="--anim-delay: 0.15s; flex-direction: row; justify-content: space-between; padding: 16px 24px;">
+                <span id="ramadan-day" style="font-weight: 600; color: var(--clr-gold);">Jour 1/30 du Ramadan</span>
+                <div class="ramadan-progress-bar" style="flex: 0.8; margin-left: 16px;">
                     <div id="ramadan-progress-fill" class="ramadan-progress-fill"></div>
                 </div>
             </div>
@@ -395,10 +396,15 @@
                 </div>
 
                 <!-- Practice Tracker -->
-                <div id="tracker-card" class="card premium-card tracker-card animate-entry" style="--anim-delay: 0.35s; cursor: pointer;">
+                <div id="tracker-card" class="card premium-card tracker-card animate-entry"
+                    style="--anim-delay: 0.35s; cursor: pointer;">
                     <div class="card-header">
                         <h2>Aujourd'hui</h2>
-                        <span id="tracker-streak" class="tracker-streak"></span>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span id="tracker-streak" class="tracker-streak"></span>
+                            <i id="tracker-chevron" class="fa-solid fa-chevron-down"
+                                style="color: var(--text-muted); transition: transform 0.3s ease;"></i>
+                        </div>
                     </div>
                     <div class="tracker-compact">
                         <div class="tracker-row">
@@ -455,7 +461,8 @@
                         </div>
                     </div>
                     <div id="qibla-no-location" class="qibla-no-location hidden">
-                        <i class="fa-solid fa-location-crosshairs" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 8px;"></i>
+                        <i class="fa-solid fa-location-crosshairs"
+                            style="font-size: 2rem; color: var(--text-muted); margin-bottom: 8px;"></i>
                         <p>Position requise pour la boussole Qibla</p>
                         <button class="qibla-settings-link btn-icon-small">
                             <i class="fa-solid fa-gear"></i> Ouvrir les parametres
@@ -464,15 +471,19 @@
                 </div>
 
                 <!-- Daily Quote / Hadith -->
-                <div class="card quote-card full-width animate-entry" style="--anim-delay: 0.5s;">
-                    <div class="quote-icon floating-icon"><i class="fa-solid fa-quote-left"></i></div>
-                    <div class="quote-content">
-                        <span id="daily-category" class="daily-category-badge"></span>
-                        <p class="arabic-text" id="daily-arabic"></p>
-                        <p class="transliteration" id="daily-transliteration"></p>
-                        <p class="translation" id="daily-translation"></p>
-                        <div class="quote-footer">
-                            <span class="reference" id="daily-reference"></span>
+                <div class="card quote-card full-width animate-entry" style="--anim-delay: 0.5s; text-align: center;">
+                    <div class="quote-icon" style="color: var(--clr-gold); font-size: 2rem; margin-bottom: 12px;"><i
+                            class="fa-solid fa-quote-left"></i></div>
+                    <div class="quote-content" style="display: flex; flex-direction: column; align-items: center;">
+                        <span id="daily-category" class="daily-category-badge" style="margin-bottom: 12px;"></span>
+                        <p class="arabic-text" id="daily-arabic" style="margin-bottom: 16px;"></p>
+                        <p class="transliteration" id="daily-transliteration" style="margin-bottom: 8px;"></p>
+                        <p class="translation" id="daily-translation" style="margin-bottom: 20px; font-style: italic;">
+                        </p>
+                        <div class="quote-footer"
+                            style="display: flex; justify-content: center; align-items: center; gap: 16px; width: 100%; border-top: 1px solid rgba(122, 139, 128, 0.15); padding-top: 16px;">
+                            <span class="reference" id="daily-reference"
+                                style="font-weight: 600; color: var(--clr-gold);"></span>
                             <button id="daily-copy-btn" class="btn-icon-small" title="Copier">
                                 <i class="fa-regular fa-copy"></i> Copier
                             </button>
@@ -536,86 +547,121 @@
 
             <!-- Duas Encyclopedia View -->
             <div id="view-duas" class="view-section hidden">
-                <div class="duas-header">
-                    <h2 class="view-title"><i class="fa-solid fa-hands-praying"></i> Encyclopedie des Douas</h2>
-                    <div class="duas-search-wrapper">
-                        <i class="fa-solid fa-search"></i>
-                        <input type="text" id="duas-search" class="duas-search" placeholder="Rechercher une doua...">
+                <div class="card premium-card full-width animate-entry"
+                    style="--anim-delay: 0.2s; min-height: calc(100vh - 140px); display: flex; flex-direction: column;">
+                    <div class="duas-header animate-entry" style="--anim-delay: 0.3s; margin-bottom: 24px;">
+                        <h2 class="view-title" style="color: var(--clr-gold);"><i class="fa-solid fa-hands-praying"></i>
+                            Encyclopedie des Douas</h2>
+                        <div class="duas-search-wrapper"
+                            style="background: var(--clr-glass-bg); border-color: var(--clr-glass-border);">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="duas-search" class="duas-search" placeholder="Rechercher une doua..."
+                                style="color: var(--clr-sand);">
+                        </div>
                     </div>
+                    <div id="duas-container" class="duas-container animate-entry"
+                        style="--anim-delay: 0.4s; flex: 1; overflow-y: auto;"></div>
                 </div>
-                <div id="duas-container" class="duas-container"></div>
             </div>
 
             <!-- Journal View -->
             <div id="view-journal" class="view-section hidden">
-                <div class="journal-header">
-                    <h2 class="view-title"><i class="fa-solid fa-book-open"></i> Journal de gratitude</h2>
-                    <div class="journal-controls">
-                        <select id="journal-month-filter" class="journal-filter"></select>
+                <div class="card premium-card full-width animate-entry"
+                    style="--anim-delay: 0.2s; min-height: calc(100vh - 140px); display: flex; flex-direction: column;">
+                    <div class="journal-header animate-entry" style="--anim-delay: 0.3s; margin-bottom: 24px;">
+                        <h2 class="view-title" style="color: var(--clr-gold);"><i class="fa-solid fa-book-open"></i>
+                            Journal de gratitude</h2>
+                        <div class="journal-controls">
+                            <select id="journal-month-filter" class="journal-filter"
+                                style="background: var(--clr-glass-bg); color: var(--clr-sand); border-color: var(--clr-glass-border);"></select>
+                        </div>
                     </div>
-                </div>
-                <div class="journal-write-section">
-                    <textarea id="journal-textarea" class="journal-textarea" rows="5"></textarea>
-                    <div class="journal-write-footer">
-                        <span id="journal-save-indicator" class="journal-save-indicator hidden">Sauvegarde</span>
-                        <button id="journal-save-btn" class="btn-icon-small">
-                            <i class="fa-solid fa-floppy-disk"></i> Sauvegarder
-                        </button>
+                    <div class="journal-write-section animate-entry"
+                        style="--anim-delay: 0.35s; background: var(--clr-glass-bg); border-color: var(--clr-glass-border);">
+                        <textarea id="journal-textarea" class="journal-textarea" rows="5"
+                            style="color: var(--clr-sand); background: transparent;"></textarea>
+                        <div class="journal-write-footer">
+                            <span id="journal-save-indicator" class="journal-save-indicator hidden">Sauvegarde</span>
+                            <button id="journal-save-btn" class="btn-icon-small"
+                                style="background: var(--clr-gold); color: var(--clr-dark-green);">
+                                <i class="fa-solid fa-floppy-disk"></i> Sauvegarder
+                            </button>
+                        </div>
                     </div>
+                    <div id="journal-history" class="journal-history animate-entry"
+                        style="--anim-delay: 0.4s; flex: 1; overflow-y: auto;"></div>
                 </div>
-                <div id="journal-history" class="journal-history"></div>
             </div>
 
             <!-- Statistics View -->
             <div id="view-stats" class="view-section hidden">
-                <div class="stats-header">
-                    <h2 class="view-title"><i class="fa-solid fa-chart-simple"></i> Statistiques</h2>
-                    <div class="stats-period-btns">
-                        <button class="stats-period-btn active" data-period="week">Semaine</button>
-                        <button class="stats-period-btn" data-period="month">Mois</button>
-                        <button class="stats-period-btn" data-period="all">Tout</button>
-                    </div>
-                </div>
-
-                <div class="stats-content">
-                    <!-- Heatmap -->
-                    <div class="stats-section">
-                        <h3 class="stats-section-title">Activite</h3>
-                        <div id="stats-heatmap" class="stats-heatmap"></div>
-                        <div class="heatmap-legend">
-                            <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-none"></span> 0</span>
-                            <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-low"></span> 1-2</span>
-                            <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-mid"></span> 3-4</span>
-                            <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-full"></span> 5/5</span>
+                <div class="card premium-card full-width animate-entry"
+                    style="--anim-delay: 0.2s; min-height: calc(100vh - 140px); display: flex; flex-direction: column;">
+                    <div class="stats-header animate-entry" style="--anim-delay: 0.3s; margin-bottom: 24px;">
+                        <h2 class="view-title" style="color: var(--clr-gold);"><i class="fa-solid fa-chart-simple"></i>
+                            Statistiques</h2>
+                        <div class="stats-period-btns">
+                            <button class="stats-period-btn active" data-period="week">Semaine</button>
+                            <button class="stats-period-btn" data-period="month">Mois</button>
+                            <button class="stats-period-btn" data-period="all">Tout</button>
                         </div>
                     </div>
 
-                    <!-- Stats Grid -->
-                    <div id="stats-grid" class="stats-grid"></div>
+                    <div class="stats-content animate-entry" style="--anim-delay: 0.4s; flex: 1; overflow-y: auto;">
+                        <!-- Heatmap -->
+                        <div class="stats-section">
+                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Activite</h3>
+                            <div id="stats-heatmap" class="stats-heatmap"></div>
+                            <div class="heatmap-legend">
+                                <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-none"></span>
+                                    0</span>
+                                <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-low"></span>
+                                    1-2</span>
+                                <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-mid"></span>
+                                    3-4</span>
+                                <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-full"></span>
+                                    5/5</span>
+                            </div>
+                        </div>
 
-                    <!-- Streaks -->
-                    <div class="stats-section">
-                        <h3 class="stats-section-title">Series en cours</h3>
-                        <div id="stats-streaks" class="stats-streaks"></div>
-                    </div>
+                        <!-- Stats Grid -->
+                        <div id="stats-grid" class="stats-grid"></div>
 
-                    <!-- Journal counter -->
-                    <div class="stats-section">
-                        <h3 class="stats-section-title">Journal</h3>
-                        <p id="stats-journal-count" class="stats-journal-count"></p>
-                    </div>
+                        <!-- Streaks -->
+                        <div class="stats-section" style="margin-top: 24px;">
+                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Series en cours</h3>
+                            <div id="stats-streaks" class="stats-streaks"></div>
+                        </div>
 
-                    <!-- Goals -->
-                    <div class="stats-section">
-                        <h3 class="stats-section-title">Objectifs</h3>
-                        <div id="stats-goals" class="stats-goals"></div>
-                        <div class="stats-add-goal">
-                            <select id="stats-goal-select" class="journal-filter">
-                                <option value="">Ajouter un objectif...</option>
-                            </select>
-                            <button id="stats-add-goal-btn" class="btn-icon-small">
-                                <i class="fa-solid fa-plus"></i> Ajouter
-                            </button>
+                        <!-- Journal counter -->
+                        <div class="stats-section" style="margin-top: 24px;">
+                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Journal</h3>
+                            <p id="stats-journal-count" class="stats-journal-count"
+                                style="font-size: 1.5rem; font-weight: 700; color: var(--clr-gold);"></p>
+                        </div>
+
+                        <!-- Goals -->
+                        <div class="stats-section" style="margin-top: 24px;">
+                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Objectifs</h3>
+                            <div id="stats-goals" class="stats-goals"></div>
+                            <div class="stats-add-goal"
+                                style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
+                                <select id="stats-goal-select" class="journal-filter"
+                                    style="background: var(--clr-glass-bg); color: var(--clr-sand); border-color: var(--clr-glass-border); padding: 8px; border-radius: 8px;">
+                                    <option value="">Ajouter un objectif...
+                                    </option>
+                                    <option value="pray_5">5 prières par jour
+                                    </option>
+                                    <option value="quran_10">10 pages du Coran /
+                                        jour</option>
+                                    <option value="dhikr_100">100 Dhikr / jour
+                                    </option>
+                                </select>
+                                <button id="stats-add-goal-btn" class="btn-icon-small"
+                                    style="background: var(--clr-gold); color: var(--clr-dark-green);">
+                                    <i class="fa-solid fa-plus"></i> Ajouter
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -855,8 +901,8 @@
     <div id="bug-report-modal" class="onboarding-overlay hidden">
         <div class="onboarding-tooltip settings-tooltip"
             style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 500px;">
-            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><i class="fa-solid fa-comment-dots"
-                    style="color: var(--clr-gold);"></i> Signaler ou suggérer</h3>
+            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><i
+                    class="fa-solid fa-comment-dots" style="color: var(--clr-gold);"></i> Signaler ou suggérer</h3>
             <p style="margin-bottom: 24px; color: var(--text-muted); font-size: 0.95rem;">Un problème ou une idée ?
                 Dites-nous tout.</p>
 

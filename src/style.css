@@ -1663,6 +1663,7 @@ body {
 }
 
 @media (max-width: 768px) {
+
     /* Statistics grid: 3 cols → 2 cols */
     .stats-grid {
         grid-template-columns: 1fr 1fr;
@@ -1714,6 +1715,7 @@ body {
 }
 
 @media (max-width: 480px) {
+
     /* Statistics grid: 2 cols → 1 col */
     .stats-grid {
         grid-template-columns: 1fr;
@@ -2891,6 +2893,7 @@ body {
     padding: 8px 20px;
     font-size: 0.85rem;
     color: var(--clr-gold);
+    margin-bottom: 24px;
 }
 
 .ramadan-progress.hidden {
@@ -2985,10 +2988,18 @@ body.mode-normal .ramadan-progress {
     padding-top: 12px;
     border-top: 1px solid var(--clr-glass-border);
     margin-top: 8px;
+    transition: all 0.3s ease;
+    opacity: 1;
+    max-height: 200px;
 }
 
 .tracker-expanded.hidden {
-    display: none;
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0;
+    padding-top: 0;
+    border-top-color: transparent;
+    pointer-events: none;
 }
 
 .tracker-prayer-list {
@@ -3065,12 +3076,21 @@ body.mode-normal .ramadan-progress {
 .dhikr-select {
     background: var(--clr-glass-bg);
     border: 1px solid var(--clr-glass-border);
-    color: var(--clr-sand);
-    padding: 4px 8px;
+    color: var(--text-main);
+    padding: 6px 12px;
     border-radius: var(--radius-md);
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 500;
     font-family: var(--font-main);
     cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.dhikr-select:hover,
+.dhikr-select:focus {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--clr-gold);
 }
 
 .dhikr-arabic {
@@ -3173,8 +3193,15 @@ body.mode-normal .ramadan-progress {
 }
 
 @keyframes dhikrFlash {
-    0%, 100% { box-shadow: none; }
-    50% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.5); }
+
+    0%,
+    100% {
+        box-shadow: none;
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+    }
 }
 
 /* Cycle complete animation */
@@ -3183,22 +3210,39 @@ body.mode-normal .ramadan-progress {
 }
 
 @keyframes dhikrCycleComplete {
-    0%, 100% { box-shadow: none; }
-    25% { box-shadow: 0 0 30px rgba(212, 175, 55, 0.6); }
-    50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.3); }
-    75% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); }
+
+    0%,
+    100% {
+        box-shadow: none;
+    }
+
+    25% {
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
+    }
+
+    50% {
+        box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+    }
+
+    75% {
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+    }
 }
 
 /* ======================== */
 /* Qibla Compass            */
 /* ======================== */
-.qibla-card { text-align: center; }
+.qibla-card {
+    text-align: center;
+}
+
 .qibla-compass-svg {
     width: 180px;
     height: 180px;
     margin: 8px auto;
     display: block;
 }
+
 .qibla-info {
     display: flex;
     align-items: center;
@@ -3206,19 +3250,23 @@ body.mode-normal .ramadan-progress {
     gap: 8px;
     margin-top: 8px;
 }
+
 .qibla-angle {
     font-size: 1.4rem;
     font-weight: 700;
     color: var(--clr-gold);
 }
+
 .qibla-direction {
     font-size: 1rem;
     color: var(--text-muted);
 }
+
 .qibla-city {
     font-size: 0.85rem;
     color: var(--text-muted);
 }
+
 .qibla-no-location {
     display: flex;
     flex-direction: column;
@@ -3227,8 +3275,14 @@ body.mode-normal .ramadan-progress {
     color: var(--text-muted);
     font-size: 0.9rem;
 }
-.qibla-no-location.hidden { display: none; }
-.qibla-no-location p { margin-bottom: 12px; }
+
+.qibla-no-location.hidden {
+    display: none;
+}
+
+.qibla-no-location p {
+    margin-bottom: 12px;
+}
 
 /* ---------------------------------
    14. DUAS ENCYCLOPEDIA
@@ -3240,25 +3294,30 @@ body.mode-normal .ramadan-progress {
     opacity: 1;
     visibility: visible;
 }
+
 .duas-header {
     padding: 16px 20px;
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
+
 .view-title {
     font-size: 1.2rem;
     font-weight: 700;
     color: var(--text-main);
 }
+
 .view-title i {
     color: var(--clr-gold);
     margin-right: 6px;
 }
+
 .duas-search-wrapper {
     position: relative;
 }
-.duas-search-wrapper > i {
+
+.duas-search-wrapper>i {
     position: absolute;
     left: 12px;
     top: 50%;
@@ -3267,6 +3326,7 @@ body.mode-normal .ramadan-progress {
     font-size: 0.85rem;
     pointer-events: none;
 }
+
 .duas-search {
     width: 100%;
     padding: 10px 12px 10px 36px;
@@ -3279,18 +3339,23 @@ body.mode-normal .ramadan-progress {
     outline: none;
     transition: border-color 0.2s;
 }
+
 .duas-search:focus {
     border-color: var(--clr-gold);
 }
+
 .duas-search::placeholder {
     color: var(--text-muted);
 }
+
 .duas-container {
     padding: 0 20px 20px;
 }
+
 .dua-category {
     margin-bottom: 20px;
 }
+
 .dua-category-header {
     display: flex;
     align-items: center;
@@ -3299,16 +3364,19 @@ body.mode-normal .ramadan-progress {
     border-bottom: 1px solid var(--clr-glass-border);
     margin-bottom: 8px;
 }
+
 .dua-category-header h3 {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    color: var(--text-main);
+    color: var(--clr-gold);
     flex: 1;
 }
+
 .dua-category-header i {
     color: var(--clr-gold);
     font-size: 1rem;
 }
+
 .dua-category-count {
     font-size: 0.75rem;
     color: var(--text-muted);
@@ -3316,6 +3384,7 @@ body.mode-normal .ramadan-progress {
     padding: 2px 8px;
     border-radius: var(--radius-full);
 }
+
 .dua-subcategory-header {
     display: flex;
     align-items: center;
@@ -3323,24 +3392,29 @@ body.mode-normal .ramadan-progress {
     padding: 8px 12px;
     cursor: pointer;
     border-radius: var(--radius-md);
-    font-size: 0.9rem;
-    color: var(--text-muted);
+    font-size: 0.95rem;
+    color: var(--clr-sand);
     transition: background 0.2s;
 }
+
 .dua-subcategory-header:hover {
     background: var(--clr-glass-bg);
 }
+
 .dua-chevron {
     font-size: 0.7rem;
     transition: transform 0.2s;
     color: var(--text-muted);
 }
+
 .dua-chevron.open {
     transform: rotate(90deg);
 }
+
 .dua-subcategory-content.hidden {
     display: none;
 }
+
 .dua-item {
     padding: 16px;
     margin: 8px 0;
@@ -3348,6 +3422,7 @@ body.mode-normal .ramadan-progress {
     border-radius: var(--radius-md);
     background: var(--clr-glass-bg);
 }
+
 .dua-arabic {
     font-size: 1.4rem;
     font-family: 'Amiri', 'Traditional Arabic', serif;
@@ -3357,6 +3432,7 @@ body.mode-normal .ramadan-progress {
     margin-bottom: 8px;
     color: var(--text-main);
 }
+
 .dua-transliteration {
     font-style: italic;
     color: var(--text-muted);
@@ -3364,12 +3440,14 @@ body.mode-normal .ramadan-progress {
     text-align: center;
     margin-bottom: 8px;
 }
+
 .dua-translation {
     font-size: 0.95rem;
     color: var(--text-muted);
     line-height: 1.6;
     margin-bottom: 8px;
 }
+
 .dua-meta {
     display: flex;
     flex-wrap: wrap;
@@ -3377,14 +3455,17 @@ body.mode-normal .ramadan-progress {
     margin-bottom: 8px;
     font-size: 0.78rem;
 }
+
 .dua-reference {
     color: var(--clr-gold);
     font-weight: 500;
 }
+
 .dua-context {
     color: var(--text-muted);
     font-style: italic;
 }
+
 .dua-repeat {
     background: var(--clr-gold-dim);
     color: var(--clr-gold);
@@ -3392,12 +3473,14 @@ body.mode-normal .ramadan-progress {
     border-radius: var(--radius-full);
     font-weight: 600;
 }
+
 .dua-actions {
     display: flex;
     align-items: center;
     gap: 8px;
     justify-content: flex-end;
 }
+
 .dua-fav-btn {
     background: none;
     border: none;
@@ -3407,19 +3490,24 @@ body.mode-normal .ramadan-progress {
     transition: color 0.2s;
     padding: 4px;
 }
+
 .dua-fav-btn.active {
     color: var(--clr-gold);
 }
+
 .dua-fav-btn:hover {
     color: var(--clr-gold);
 }
+
 .dua-copy-btn {
     font-size: 0.8rem;
 }
+
 .dua-favorites-section {
     border-left: 3px solid var(--clr-gold);
     padding-left: 12px;
 }
+
 .duas-empty,
 .duas-result-count {
     text-align: center;
@@ -3435,6 +3523,7 @@ body.mode-normal .ramadan-progress {
     align-items: center;
     justify-content: space-between;
 }
+
 .journal-filter {
     background: var(--clr-glass-bg);
     border: 1px solid var(--clr-glass-border);
@@ -3445,9 +3534,11 @@ body.mode-normal .ramadan-progress {
     font-family: var(--font-main);
     cursor: pointer;
 }
+
 .journal-write-section {
     padding: 0 20px 16px;
 }
+
 .journal-textarea {
     width: 100%;
     padding: 12px;
@@ -3462,13 +3553,16 @@ body.mode-normal .ramadan-progress {
     line-height: 1.6;
     box-sizing: border-box;
 }
+
 .journal-textarea::placeholder {
     color: var(--text-muted);
 }
+
 .journal-textarea:focus {
     outline: none;
     border-color: var(--clr-gold);
 }
+
 .journal-write-footer {
     display: flex;
     align-items: center;
@@ -3476,35 +3570,42 @@ body.mode-normal .ramadan-progress {
     gap: 12px;
     margin-top: 8px;
 }
+
 .journal-save-indicator {
     font-size: 0.8rem;
     color: var(--clr-status-success);
 }
+
 .journal-save-indicator.hidden {
     display: none;
 }
+
 .journal-history {
     padding: 0 20px 20px;
 }
+
 .journal-entry {
-    padding: 12px;
-    margin-bottom: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
     border: 1px solid var(--clr-glass-border);
-    border-radius: var(--radius-md);
+    border-radius: 16px;
     background: var(--clr-glass-bg);
 }
+
 .journal-entry-date {
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--clr-gold);
     margin-bottom: 6px;
 }
+
 .journal-entry-text {
     font-size: 0.9rem;
     color: var(--text-muted);
     line-height: 1.6;
     white-space: pre-wrap;
 }
+
 .journal-empty {
     text-align: center;
     color: var(--text-muted);
@@ -3521,6 +3622,7 @@ body.mode-normal .ramadan-progress {
     align-items: center;
     justify-content: space-between;
 }
+
 .stats-period-btns {
     display: flex;
     gap: 4px;
@@ -3528,6 +3630,7 @@ body.mode-normal .ramadan-progress {
     border-radius: var(--radius-full);
     padding: 3px;
 }
+
 .stats-period-btn {
     padding: 6px 14px;
     border: none;
@@ -3539,20 +3642,25 @@ body.mode-normal .ramadan-progress {
     font-family: var(--font-main);
     transition: all 0.2s;
 }
+
 .stats-period-btn.active {
     background: var(--clr-gold);
     color: var(--clr-dark-green);
     font-weight: 600;
 }
+
 .stats-period-btn:hover:not(.active) {
     background: var(--clr-glass-border);
 }
+
 .stats-content {
     padding: 0 20px 20px;
 }
+
 .stats-section {
     margin-bottom: 24px;
 }
+
 .stats-section-title {
     font-size: 0.9rem;
     font-weight: 600;
@@ -3561,14 +3669,17 @@ body.mode-normal .ramadan-progress {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+
 .stats-heatmap {
     overflow-x: auto;
 }
+
 .heatmap-svg {
     width: 100%;
     max-height: 160px;
     display: block;
 }
+
 .heatmap-legend {
     display: flex;
     gap: 12px;
@@ -3577,26 +3688,32 @@ body.mode-normal .ramadan-progress {
     font-size: 0.75rem;
     color: var(--text-muted);
 }
+
 .heatmap-legend-item {
     display: flex;
     align-items: center;
     gap: 4px;
 }
+
 .heatmap-dot {
     width: 12px;
     height: 12px;
     border-radius: 3px;
     display: inline-block;
 }
+
 .heatmap-none {
     background: var(--clr-glass-border);
 }
+
 .heatmap-low {
     background: var(--clr-gold-dim);
 }
+
 .heatmap-mid {
     background: var(--clr-gold);
 }
+
 .heatmap-full {
     background: var(--clr-emerald, #2ecc71);
 }
@@ -3607,6 +3724,7 @@ body.mode-normal .ramadan-progress {
     gap: 12px;
     margin-bottom: 24px;
 }
+
 .stat-card {
     padding: 12px;
     border: 1px solid var(--clr-glass-border);
@@ -3614,18 +3732,21 @@ body.mode-normal .ramadan-progress {
     background: var(--clr-glass-bg);
     text-align: center;
 }
+
 .stat-card-value {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--clr-gold);
     display: block;
 }
+
 .stat-card-label {
     font-size: 0.75rem;
     color: var(--text-muted);
     margin-top: 4px;
     display: block;
 }
+
 .stat-card-icon {
     font-size: 1rem;
     color: var(--text-muted);
@@ -3638,12 +3759,14 @@ body.mode-normal .ramadan-progress {
     gap: 16px;
     flex-wrap: wrap;
 }
+
 .streak-item {
     display: flex;
     align-items: center;
     gap: 6px;
     font-size: 0.9rem;
 }
+
 .streak-value {
     font-weight: 700;
     color: var(--clr-gold);
@@ -3655,6 +3778,7 @@ body.mode-normal .ramadan-progress {
 }
 
 .stats-goals {}
+
 .goal-item {
     padding: 10px;
     margin-bottom: 8px;
@@ -3662,38 +3786,46 @@ body.mode-normal .ramadan-progress {
     border-radius: var(--radius-md);
     background: var(--clr-glass-bg);
 }
+
 .goal-item.goal-completed {
     border-color: var(--clr-emerald, #2ecc71);
 }
+
 .goal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 6px;
 }
+
 .goal-label {
     font-size: 0.85rem;
     color: var(--text-main);
 }
+
 .goal-progress-text {
     font-size: 0.8rem;
     color: var(--text-muted);
 }
+
 .goal-bar {
     height: 6px;
     background: var(--clr-glass-border);
     border-radius: var(--radius-full);
     overflow: hidden;
 }
+
 .goal-bar-fill {
     height: 100%;
     background: var(--clr-gold);
     border-radius: var(--radius-full);
     transition: width 0.3s ease;
 }
+
 .goal-item.goal-completed .goal-bar-fill {
     background: var(--clr-emerald, #2ecc71);
 }
+
 .goal-remove-btn {
     background: none;
     border: none;
@@ -3702,14 +3834,24 @@ body.mode-normal .ramadan-progress {
     font-size: 0.8rem;
     padding: 2px 6px;
 }
+
 .goal-remove-btn:hover {
     color: #e74c3c;
 }
+
 .stats-add-goal {
     display: flex;
     gap: 8px;
     margin-top: 12px;
 }
+
 .stats-add-goal select {
     flex: 1;
+}
+
+.stats-add-goal select option {
+    background-color: #0d2116;
+    /* dark green fallback */
+    background-color: var(--clr-dark-green, #0d2116);
+    color: var(--clr-sand);
 }
