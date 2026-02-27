@@ -1,152 +1,554 @@
 [
   {
     "arabic": "إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+    "transliteration": "Inna ma'al 'usri yusra",
     "translation": "En vérité, avec la difficulté il y a une facilité.",
-    "reference": "Coran — Sourate Ash-Sharh (94:6)"
+    "reference": "Coran — Sourate Ash-Sharh (94:6)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "وَاصْبِرْ فَإِنَّ اللَّهَ لَا يُضِيعُ أَجْرَ الْمُحْسِنِينَ",
+    "transliteration": "Wasbir fa inna Allaha la youdi'ou ajral mouhsinine",
     "translation": "Et sois patient, car Allah ne laisse pas perdre la récompense de ceux qui font le bien.",
-    "reference": "Coran — Sourate Hud (11:115)"
+    "reference": "Coran — Sourate Hud (11:115)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ",
+    "transliteration": "Wa man yatawakkal 'ala Allahi fahouwa hasbouhou",
     "translation": "Et quiconque place sa confiance en Allah, Il lui suffit.",
-    "reference": "Coran — Sourate At-Talaq (65:3)"
+    "reference": "Coran — Sourate At-Talaq (65:3)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "فَاذْكُرُونِي أَذْكُرْكُمْ",
+    "transliteration": "Fadhkouroni adhkourkoum",
     "translation": "Souvenez-vous de Moi, Je me souviendrai de vous.",
-    "reference": "Coran — Sourate Al-Baqara (2:152)"
+    "reference": "Coran — Sourate Al-Baqara (2:152)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ",
+    "transliteration": "Wa lasawfa you'tika rabbouka fatarda",
     "translation": "Et ton Seigneur t'accordera certes Ses faveurs, et tu seras satisfait.",
-    "reference": "Coran — Sourate Ad-Duha (93:5)"
+    "reference": "Coran — Sourate Ad-Duha (93:5)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي",
+    "transliteration": "Rabbi ishrah li sadri wa yassir li amri",
     "translation": "Seigneur, ouvre-moi ma poitrine et facilite-moi ma tâche.",
-    "reference": "Coran — Sourate Ta-Ha (20:25-26)"
+    "reference": "Coran — Sourate Ta-Ha (20:25-26)",
+    "category": "doua",
+    "ramadan": false
   },
   {
     "arabic": "إِنَّ اللَّهَ مَعَ الصَّابِرِينَ",
+    "transliteration": "Inna Allaha ma'a as-sabirine",
     "translation": "En vérité, Allah est avec ceux qui sont patients.",
-    "reference": "Coran — Sourate Al-Baqara (2:153)"
+    "reference": "Coran — Sourate Al-Baqara (2:153)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "وَقُل رَّبِّ زِدْنِي عِلْمًا",
+    "transliteration": "Wa qoul rabbi zidni 'ilma",
     "translation": "Et dis : Seigneur, accroît mes connaissances.",
-    "reference": "Coran — Sourate Ta-Ha (20:114)"
+    "reference": "Coran — Sourate Ta-Ha (20:114)",
+    "category": "doua",
+    "ramadan": false
   },
   {
     "arabic": "لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا",
+    "transliteration": "La youkallifou Allahou nafsan illa wous'aha",
     "translation": "Allah n'impose à aucune âme une charge supérieure à sa capacité.",
-    "reference": "Coran — Sourate Al-Baqara (2:286)"
+    "reference": "Coran — Sourate Al-Baqara (2:286)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "وَإِذَا سَأَلَكَ عِبَادِي عَنِّي فَإِنِّي قَرِيبٌ",
+    "transliteration": "Wa idha sa'alaka 'ibadi 'anni fa inni qarib",
     "translation": "Et quand Mes serviteurs t'interrogent sur Moi, alors Je suis tout proche.",
-    "reference": "Coran — Sourate Al-Baqara (2:186)"
+    "reference": "Coran — Sourate Al-Baqara (2:186)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ",
+    "transliteration": "Ala bi dhikri Allahi tatma'innou al-qouloub",
     "translation": "N'est-ce point par l'évocation d'Allah que se tranquillisent les cœurs ?",
-    "reference": "Coran — Sourate Ar-Ra'd (13:28)"
+    "reference": "Coran — Sourate Ar-Ra'd (13:28)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "خَيْرُكُمْ مَنْ تَعَلَّمَ الْقُرْآنَ وَعَلَّمَهُ",
+    "transliteration": "Khayroukoum man ta'allama al-Qur'ana wa 'allamah",
     "translation": "Le meilleur d'entre vous est celui qui apprend le Coran et l'enseigne.",
-    "reference": "Hadith — Sahih Al-Bukhari"
+    "reference": "Hadith — Sahih Al-Bukhari",
+    "category": "hadith",
+    "ramadan": false
   },
   {
     "arabic": "مَنْ صَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ",
+    "transliteration": "Man sama Ramadana imanan wahtisaban ghoufira lahou ma taqaddama min dhanbihi",
     "translation": "Quiconque jeûne le Ramadan avec foi et espérance, ses péchés passés lui seront pardonnés.",
-    "reference": "Hadith — Sahih Al-Bukhari & Muslim"
+    "reference": "Hadith — Sahih Al-Bukhari & Muslim",
+    "category": "hadith",
+    "ramadan": true
   },
   {
     "arabic": "إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ",
+    "transliteration": "Innama al-a'malou bi an-niyyat",
     "translation": "Les actions ne valent que par les intentions.",
-    "reference": "Hadith — Sahih Al-Bukhari"
+    "reference": "Hadith — Sahih Al-Bukhari",
+    "category": "hadith",
+    "ramadan": false
   },
   {
     "arabic": "الدُّعَاءُ هُوَ الْعِبَادَةُ",
+    "transliteration": "Ad-dou'a'ou houwa al-'ibada",
     "translation": "L'invocation est l'essence même de l'adoration.",
-    "reference": "Hadith — Sunan At-Tirmidhi"
+    "reference": "Hadith — Sunan At-Tirmidhi",
+    "category": "hadith",
+    "ramadan": false
   },
   {
     "arabic": "وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ",
+    "transliteration": "Wa nounazzilou minal Qur'ani ma houwa shifa'oun wa rahmatoun lil-mou'minine",
     "translation": "Nous faisons descendre du Coran ce qui est une guérison et une miséricorde pour les croyants.",
-    "reference": "Coran — Sourate Al-Isra (17:82)"
+    "reference": "Coran — Sourate Al-Isra (17:82)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+    "transliteration": "Hasbounallah wa ni'ma al-wakil",
     "translation": "Allah nous suffit, Il est notre meilleur Garant.",
-    "reference": "Coran — Sourate Al-Imran (3:173)"
+    "reference": "Coran — Sourate Al-Imran (3:173)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "وَلَنَبْلُوَنَّكُم بِشَيْءٍ مِّنَ الْخَوْفِ وَالْجُوعِ",
+    "transliteration": "Wa lanablouvannakoum bi shay'in minal khawfi wal jou'",
     "translation": "Très certainement, Nous vous éprouverons par un peu de peur, de faim...",
-    "reference": "Coran — Sourate Al-Baqara (2:155)"
+    "reference": "Coran — Sourate Al-Baqara (2:155)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "يَا أَيُّهَا الَّذِينَ آمَنُوا كُتِبَ عَلَيْكُمُ الصِّيَامُ",
+    "transliteration": "Ya ayyouha alladhina amanou koutiba 'alaykoumou as-siyam",
     "translation": "Ô vous qui croyez ! Le jeûne vous a été prescrit.",
-    "reference": "Coran — Sourate Al-Baqara (2:183)"
+    "reference": "Coran — Sourate Al-Baqara (2:183)",
+    "category": "quran",
+    "ramadan": true
   },
   {
     "arabic": "شَهْرُ رَمَضَانَ الَّذِي أُنزِلَ فِيهِ الْقُرْآنُ",
+    "transliteration": "Shahrou Ramadana alladhi ounzila fihi al-Qur'an",
     "translation": "Le mois de Ramadan au cours duquel le Coran a été descendu.",
-    "reference": "Coran — Sourate Al-Baqara (2:185)"
+    "reference": "Coran — Sourate Al-Baqara (2:185)",
+    "category": "quran",
+    "ramadan": true
   },
   {
     "arabic": "ادْعُونِي أَسْتَجِبْ لَكُمْ",
+    "transliteration": "Oud'ouni astajib lakoum",
     "translation": "Invoquez-Moi, Je vous répondrai.",
-    "reference": "Coran — Sourate Ghafir (40:60)"
+    "reference": "Coran — Sourate Ghafir (40:60)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "وَتُوبُوا إِلَى اللَّهِ جَمِيعًا أَيُّهَ الْمُؤْمِنُونَ لَعَلَّكُمْ تُفْلِحُونَ",
+    "transliteration": "Wa toubou ila Allahi jami'an ayyouha al-mou'minouna la'allakoum touflihoun",
     "translation": "Et repentez-vous tous devant Allah, ô croyants, afin que vous réussissiez.",
-    "reference": "Coran — Sourate An-Nur (24:31)"
+    "reference": "Coran — Sourate An-Nur (24:31)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "إِنَّ الصَّلَاةَ تَنْهَىٰ عَنِ الْفَحْشَاءِ وَالْمُنكَرِ",
+    "transliteration": "Inna as-salata tanha 'anil fahsha'i wal mounkar",
     "translation": "En vérité, la prière préserve de la turpitude et du blâmable.",
-    "reference": "Coran — Sourate Al-Ankabut (29:45)"
+    "reference": "Coran — Sourate Al-Ankabut (29:45)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "وَاسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ",
+    "transliteration": "Wasta'inou bi as-sabri wa as-salat",
     "translation": "Et cherchez secours dans la patience et la prière.",
-    "reference": "Coran — Sourate Al-Baqara (2:45)"
+    "reference": "Coran — Sourate Al-Baqara (2:45)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً",
+    "transliteration": "Rabbana atina fi ad-dunya hasanatan wa fi al-akhirati hasanah",
     "translation": "Seigneur ! Accorde-nous une belle part ici-bas et une belle part dans l'au-delà.",
-    "reference": "Coran — Sourate Al-Baqara (2:201)"
+    "reference": "Coran — Sourate Al-Baqara (2:201)",
+    "category": "doua",
+    "ramadan": false
   },
   {
     "arabic": "وَلَا تَيْأَسُوا مِن رَّوْحِ اللَّهِ",
+    "transliteration": "Wa la tay'asou min rawhi Allah",
     "translation": "Et ne désespérez pas de la miséricorde d'Allah.",
-    "reference": "Coran — Sourate Yusuf (12:87)"
+    "reference": "Coran — Sourate Yusuf (12:87)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا",
+    "transliteration": "Fa inna ma'al 'usri yusra",
     "translation": "Car en vérité, avec la difficulté vient la facilité.",
-    "reference": "Coran — Sourate Ash-Sharh (94:5)"
+    "reference": "Coran — Sourate Ash-Sharh (94:5)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "وَمَا تَوْفِيقِي إِلَّا بِاللَّهِ",
+    "transliteration": "Wa ma tawfiqi illa billah",
     "translation": "Et ma réussite ne dépend que d'Allah.",
-    "reference": "Coran — Sourate Hud (11:88)"
+    "reference": "Coran — Sourate Hud (11:88)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "إِنَّ اللَّهَ لَا يُغَيِّرُ مَا بِقَوْمٍ حَتَّىٰ يُغَيِّرُوا مَا بِأَنفُسِهِمْ",
+    "transliteration": "Inna Allaha la youghayyirou ma bi qawmin hatta youghayyirou ma bi anfousihim",
     "translation": "En vérité, Allah ne modifie point l'état d'un peuple tant qu'ils ne modifient pas ce qui est en eux-mêmes.",
-    "reference": "Coran — Sourate Ar-Ra'd (13:11)"
+    "reference": "Coran — Sourate Ar-Ra'd (13:11)",
+    "category": "quran",
+    "ramadan": false
   },
   {
     "arabic": "تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
+    "transliteration": "Tabaraka alladhi biyadihi al-moulk wa houwa 'ala koulli shay'in qadir",
     "translation": "Béni soit Celui dans la main de Qui est la royauté, et Il est Omnipotent.",
-    "reference": "Coran — Sourate Al-Mulk (67:1)"
+    "reference": "Coran — Sourate Al-Mulk (67:1)",
+    "category": "quran",
+    "ramadan": false
+  },
+  {
+    "arabic": "مَنْ قَامَ لَيْلَةَ الْقَدْرِ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ",
+    "transliteration": "Man qama laylatal qadri imanan wahtisaban ghoufira lahou ma taqaddama min dhanbihi",
+    "translation": "Quiconque prie durant la Nuit du Destin avec foi et espérance verra ses péchés passés pardonnés.",
+    "reference": "Hadith — Sahih Al-Bukhari & Muslim",
+    "category": "hadith",
+    "ramadan": true
+  },
+  {
+    "arabic": "إِنَّا أَنزَلْنَاهُ فِي لَيْلَةِ الْقَدْرِ",
+    "transliteration": "Inna anzalnahou fi laylatil qadr",
+    "translation": "Nous l'avons certes fait descendre durant la Nuit du Destin.",
+    "reference": "Coran — Sourate Al-Qadr (97:1)",
+    "category": "quran",
+    "ramadan": true
+  },
+  {
+    "arabic": "لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ",
+    "transliteration": "Laylatoul qadri khayroun min alfi shahr",
+    "translation": "La Nuit du Destin est meilleure que mille mois.",
+    "reference": "Coran — Sourate Al-Qadr (97:3)",
+    "category": "quran",
+    "ramadan": true
+  },
+  {
+    "arabic": "كُلُّ عَمَلِ ابْنِ آدَمَ لَهُ إِلَّا الصِّيَامَ فَإِنَّهُ لِي وَأَنَا أَجْزِي بِهِ",
+    "transliteration": "Koullou 'amali ibni Adama lahou illa as-siyama fa innahou li wa ana ajzi bih",
+    "translation": "Chaque action du fils d'Adam lui appartient sauf le jeûne, car il est pour Moi et c'est Moi qui en donne la récompense.",
+    "reference": "Hadith — Sahih Al-Bukhari & Muslim",
+    "category": "hadith",
+    "ramadan": true
+  },
+  {
+    "arabic": "إِذَا جَاءَ رَمَضَانُ فُتِّحَتْ أَبْوَابُ الْجَنَّةِ وَغُلِّقَتْ أَبْوَابُ النَّارِ وَصُفِّدَتِ الشَّيَاطِينُ",
+    "transliteration": "Idha ja'a Ramadanou fouttihat abwaboul jannati wa ghoulliqat abwabou an-nar wa souffidat ash-shayatine",
+    "translation": "Quand arrive le Ramadan, les portes du Paradis sont ouvertes, les portes de l'Enfer sont fermées et les démons sont enchaînés.",
+    "reference": "Hadith — Sahih Al-Bukhari & Muslim",
+    "category": "hadith",
+    "ramadan": true
+  },
+  {
+    "arabic": "لِلصَّائِمِ فَرْحَتَانِ: فَرْحَةٌ عِنْدَ فِطْرِهِ وَفَرْحَةٌ عِنْدَ لِقَاءِ رَبِّهِ",
+    "transliteration": "Lis-sa'imi farhatani: farhatan 'inda fitrihi wa farhatan 'inda liqa'i rabbihi",
+    "translation": "Le jeûneur a deux joies : une joie au moment de rompre son jeûne et une joie quand il rencontrera son Seigneur.",
+    "reference": "Hadith — Sahih Al-Bukhari & Muslim",
+    "category": "hadith",
+    "ramadan": true
+  },
+  {
+    "arabic": "مَنْ فَطَّرَ صَائِمًا كَانَ لَهُ مِثْلُ أَجْرِهِ",
+    "transliteration": "Man fattara sa'iman kana lahou mithlou ajrihi",
+    "translation": "Celui qui offre le repas de rupture du jeûne à un jeûneur aura une récompense égale à la sienne.",
+    "reference": "Hadith — Sunan At-Tirmidhi",
+    "category": "hadith",
+    "ramadan": true
+  },
+  {
+    "arabic": "تَسَحَّرُوا فَإِنَّ فِي السُّحُورِ بَرَكَةً",
+    "transliteration": "Tasahharou fa inna fi as-souhouori barakah",
+    "translation": "Prenez le repas du Suhoor car il contient une bénédiction.",
+    "reference": "Hadith — Sahih Al-Bukhari & Muslim",
+    "category": "hadith",
+    "ramadan": true
+  },
+  {
+    "arabic": "الصِّيَامُ جُنَّةٌ",
+    "transliteration": "As-siyamou jounnah",
+    "translation": "Le jeûne est un bouclier (une protection).",
+    "reference": "Hadith — Sahih Al-Bukhari",
+    "category": "hadith",
+    "ramadan": true
+  },
+  {
+    "arabic": "اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",
+    "transliteration": "Allahoumma innaka 'afouwwoun touhibboul 'afwa fa'fou 'anni",
+    "translation": "Ô Allah, Tu es le Pardonneur, Tu aimes pardonner, alors pardonne-moi.",
+    "reference": "Hadith — Sunan At-Tirmidhi (doua Laylat al-Qadr)",
+    "category": "doua",
+    "ramadan": true
+  },
+  {
+    "arabic": "مَنْ لَمْ يَدَعْ قَوْلَ الزُّورِ وَالْعَمَلَ بِهِ فَلَيْسَ لِلَّهِ حَاجَةٌ فِي أَنْ يَدَعَ طَعَامَهُ وَشَرَابَهُ",
+    "transliteration": "Man lam yada' qawla az-zouri wal 'amala bihi falaysa lillahi hajatoun fi an yada'a ta'amahou wa sharabah",
+    "translation": "Celui qui ne délaisse pas le mensonge et sa pratique, Allah n'a nul besoin qu'il se prive de nourriture et de boisson.",
+    "reference": "Hadith — Sahih Al-Bukhari",
+    "category": "hadith",
+    "ramadan": true
+  },
+  {
+    "arabic": "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+    "transliteration": "Bismillahi alladhi la yadourrou ma'a ismihi shay'oun fil ardi wa la fi as-sama'i wa houwa as-sami'oul 'alim",
+    "translation": "Au nom d'Allah, avec le nom duquel rien sur terre ni dans le ciel ne peut nuire, et Il est l'Audient, l'Omniscient.",
+    "reference": "Hadith — Sunan Abu Dawud & At-Tirmidhi",
+    "category": "doua",
+    "ramadan": false
+  },
+  {
+    "arabic": "رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِن لَّدُنكَ رَحْمَةً",
+    "transliteration": "Rabbana la touzigh qouloubana ba'da idh hadaytana wa hab lana min ladounka rahmah",
+    "translation": "Seigneur ! Ne fais pas dévier nos cœurs après nous avoir guidés, et accorde-nous une miséricorde de Ta part.",
+    "reference": "Coran — Sourate Al-Imran (3:8)",
+    "category": "doua",
+    "ramadan": false
+  },
+  {
+    "arabic": "رَبِّ هَبْ لِي مِن لَّدُنكَ ذُرِّيَّةً طَيِّبَةً إِنَّكَ سَمِيعُ الدُّعَاءِ",
+    "transliteration": "Rabbi hab li min ladounka dhourriyyatan tayyibatan innaka sami'ou ad-dou'a'",
+    "translation": "Seigneur ! Donne-moi de Ta part une descendance vertueuse, Tu es certes Celui qui entend les invocations.",
+    "reference": "Coran — Sourate Al-Imran (3:38)",
+    "category": "doua",
+    "ramadan": false
+  },
+  {
+    "arabic": "إِنَّ اللَّهَ وَمَلَائِكَتَهُ يُصَلُّونَ عَلَى النَّبِيِّ",
+    "transliteration": "Inna Allaha wa mala'ikatahou yousallona 'ala an-nabiyy",
+    "translation": "Certes, Allah et Ses anges prient sur le Prophète.",
+    "reference": "Coran — Sourate Al-Ahzab (33:56)",
+    "category": "quran",
+    "ramadan": false
+  },
+  {
+    "arabic": "وَمَن يَعْمَلْ مِثْقَالَ ذَرَّةٍ خَيْرًا يَرَهُ",
+    "transliteration": "Wa man ya'mal mithqala dharratin khayran yarah",
+    "translation": "Quiconque fait un bien fût-ce du poids d'un atome le verra.",
+    "reference": "Coran — Sourate Az-Zalzala (99:7)",
+    "category": "quran",
+    "ramadan": false
+  },
+  {
+    "arabic": "إِقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ",
+    "transliteration": "Iqra' bismi rabbika alladhi khalaq",
+    "translation": "Lis, au nom de ton Seigneur qui a créé.",
+    "reference": "Coran — Sourate Al-Alaq (96:1)",
+    "category": "quran",
+    "ramadan": false
+  },
+  {
+    "arabic": "وَلَا تَمْشِ فِي الْأَرْضِ مَرَحًا",
+    "transliteration": "Wa la tamshi fil ardi maraha",
+    "translation": "Et ne foule pas la terre avec orgueil.",
+    "reference": "Coran — Sourate Al-Isra (17:37)",
+    "category": "quran",
+    "ramadan": false
+  },
+  {
+    "arabic": "خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ",
+    "transliteration": "Khayroun nasi anfa'ouhoum linnass",
+    "translation": "Les meilleurs des gens sont ceux qui sont les plus utiles aux gens.",
+    "reference": "Hadith — At-Tabarani",
+    "category": "hadith",
+    "ramadan": false
+  },
+  {
+    "arabic": "الْمُسْلِمُ مَنْ سَلِمَ الْمُسْلِمُونَ مِنْ لِسَانِهِ وَيَدِهِ",
+    "transliteration": "Al-mouslimou man salima al-mouslimona min lisanihi wa yadihi",
+    "translation": "Le musulman est celui dont les autres musulmans sont à l'abri de sa langue et de sa main.",
+    "reference": "Hadith — Sahih Al-Bukhari & Muslim",
+    "category": "hadith",
+    "ramadan": false
+  },
+  {
+    "arabic": "تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ صَدَقَةٌ",
+    "transliteration": "Tabassoumouka fi wajhi akhika sadaqah",
+    "translation": "Ton sourire en face de ton frère est une aumône.",
+    "reference": "Hadith — Sunan At-Tirmidhi",
+    "category": "hadith",
+    "ramadan": false
+  },
+  {
+    "arabic": "مَنْ كَانَ يُؤْمِنُ بِاللَّهِ وَالْيَوْمِ الْآخِرِ فَلْيَقُلْ خَيْرًا أَوْ لِيَصْمُتْ",
+    "transliteration": "Man kana you'minou billahi wal yawmil akhiri falyaqoul khayran aw liyasmout",
+    "translation": "Que celui qui croit en Allah et au Jour dernier dise du bien ou qu'il se taise.",
+    "reference": "Hadith — Sahih Al-Bukhari & Muslim",
+    "category": "hadith",
+    "ramadan": false
+  },
+  {
+    "arabic": "لَا تَحْقِرَنَّ مِنَ الْمَعْرُوفِ شَيْئًا وَلَوْ أَنْ تَلْقَى أَخَاكَ بِوَجْهٍ طَلْقٍ",
+    "transliteration": "La tahqiranna minal ma'roufi shay'an wa law an talqa akhaka bi wajhin talq",
+    "translation": "Ne méprise aucune bonne action, même si c'est de rencontrer ton frère avec un visage souriant.",
+    "reference": "Hadith — Sahih Muslim",
+    "category": "hadith",
+    "ramadan": false
+  },
+  {
+    "arabic": "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
+    "transliteration": "Allahoumma a'inni 'ala dhikrika wa shoukrika wa housni 'ibadatik",
+    "translation": "Ô Allah, aide-moi à T'évoquer, Te remercier et T'adorer de la meilleure manière.",
+    "reference": "Hadith — Sunan Abu Dawud",
+    "category": "doua",
+    "ramadan": false
+  },
+  {
+    "arabic": "رَبَّنَا ظَلَمْنَا أَنفُسَنَا وَإِن لَّمْ تَغْفِرْ لَنَا وَتَرْحَمْنَا لَنَكُونَنَّ مِنَ الْخَاسِرِينَ",
+    "transliteration": "Rabbana zalamna anfousana wa in lam taghfir lana wa tarhamna lanakounanna minal khasirine",
+    "translation": "Seigneur ! Nous nous sommes fait du tort à nous-mêmes. Si Tu ne nous pardonnes pas et ne nous fais pas miséricorde, nous serons des perdants.",
+    "reference": "Coran — Sourate Al-A'raf (7:23)",
+    "category": "doua",
+    "ramadan": false
+  },
+  {
+    "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْهُدَى وَالتُّقَى وَالْعَفَافَ وَالْغِنَى",
+    "transliteration": "Allahoumma inni as'alouka al-houda wa at-touqa wal 'afafa wal ghina",
+    "translation": "Ô Allah, je Te demande la guidée, la piété, la chasteté et la suffisance.",
+    "reference": "Hadith — Sahih Muslim",
+    "category": "doua",
+    "ramadan": false
+  },
+  {
+    "arabic": "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ",
+    "transliteration": "Dhahaba adh-dhama'ou wabtallat al-'ourouqou wa thabata al-ajrou in sha'a Allah",
+    "translation": "La soif est partie, les veines se sont humidifiées et la récompense est confirmée si Allah le veut.",
+    "reference": "Hadith — Sunan Abu Dawud (doua de rupture du jeûne)",
+    "category": "doua",
+    "ramadan": true
+  },
+  {
+    "arabic": "اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ",
+    "transliteration": "Allahoumma laka soumtou wa 'ala rizqika aftartou",
+    "translation": "Ô Allah, c'est pour Toi que j'ai jeûné et c'est avec Ta subsistance que je romps mon jeûne.",
+    "reference": "Hadith — Sunan Abu Dawud (doua de l'iftar)",
+    "category": "doua",
+    "ramadan": true
+  },
+  {
+    "arabic": "الصَّبْرُ عِنْدَ الصَّدْمَةِ الْأُولَى",
+    "transliteration": "As-sabrou 'inda as-sadmati al-oula",
+    "translation": "La vraie patience est celle du premier choc.",
+    "reference": "Hadith — Sahih Al-Bukhari",
+    "category": "sagesse",
+    "ramadan": false
+  },
+  {
+    "arabic": "الدُّنْيَا سِجْنُ الْمُؤْمِنِ وَجَنَّةُ الْكَافِرِ",
+    "transliteration": "Ad-dounya sijnou al-mou'mini wa jannatul kafir",
+    "translation": "Ce bas monde est la prison du croyant et le paradis du mécréant.",
+    "reference": "Hadith — Sahih Muslim",
+    "category": "sagesse",
+    "ramadan": false
+  },
+  {
+    "arabic": "إِنَّمَا بُعِثْتُ لِأُتَمِّمَ مَكَارِمَ الْأَخْلَاقِ",
+    "transliteration": "Innama bou'ithtou li-outammima makarima al-akhlaq",
+    "translation": "Je n'ai été envoyé que pour parachever les nobles caractères.",
+    "reference": "Hadith — Musnad Ahmad",
+    "category": "sagesse",
+    "ramadan": false
+  },
+  {
+    "arabic": "أَحَبُّ الْأَعْمَالِ إِلَى اللَّهِ أَدْوَمُهَا وَإِنْ قَلَّ",
+    "transliteration": "Ahabboul a'mali ila Allahi adwamouha wa in qall",
+    "translation": "Les actes les plus aimés d'Allah sont les plus réguliers, même s'ils sont peu nombreux.",
+    "reference": "Hadith — Sahih Al-Bukhari & Muslim",
+    "category": "sagesse",
+    "ramadan": false
+  },
+  {
+    "arabic": "لَا يَدْخُلُ الْجَنَّةَ مَنْ كَانَ فِي قَلْبِهِ مِثْقَالُ ذَرَّةٍ مِنْ كِبْرٍ",
+    "transliteration": "La yadkhouloul jannata man kana fi qalbihi mithqalou dharratin min kibr",
+    "translation": "N'entrera pas au Paradis celui qui a dans son cœur ne serait-ce qu'un atome d'orgueil.",
+    "reference": "Hadith — Sahih Muslim",
+    "category": "sagesse",
+    "ramadan": false
+  },
+  {
+    "arabic": "اتَّقِ اللَّهَ حَيْثُمَا كُنْتَ وَأَتْبِعِ السَّيِّئَةَ الْحَسَنَةَ تَمْحُهَا وَخَالِقِ النَّاسَ بِخُلُقٍ حَسَنٍ",
+    "transliteration": "Ittaqi Allaha haythouma kounta wa atbi'i as-sayyi'ata al-hasanata tamhouha wa khaliqin nasa bi khoulouqin hasan",
+    "translation": "Crains Allah où que tu sois, fais suivre la mauvaise action d'une bonne qui l'effacera, et comporte-toi bien envers les gens.",
+    "reference": "Hadith — Sunan At-Tirmidhi",
+    "category": "sagesse",
+    "ramadan": false
+  },
+  {
+    "arabic": "عُمْرَةٌ فِي رَمَضَانَ تَعْدِلُ حَجَّةً",
+    "transliteration": "Oumratoun fi Ramadana ta'dilou hajjah",
+    "translation": "Une 'Omra pendant le Ramadan équivaut à un pèlerinage (Hajj).",
+    "reference": "Hadith — Sahih Al-Bukhari & Muslim",
+    "category": "hadith",
+    "ramadan": true
+  },
+  {
+    "arabic": "مَنْ قَامَ رَمَضَانَ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ",
+    "transliteration": "Man qama Ramadana imanan wahtisaban ghoufira lahou ma taqaddama min dhanbihi",
+    "translation": "Quiconque prie la nuit durant le Ramadan avec foi et espérance, ses péchés passés lui seront pardonnés.",
+    "reference": "Hadith — Sahih Al-Bukhari & Muslim",
+    "category": "hadith",
+    "ramadan": true
+  },
+  {
+    "arabic": "قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ",
+    "transliteration": "Qoul houwa Allahou ahad. Allahu as-samad",
+    "translation": "Dis : Il est Allah, Unique. Allah, le Seul à être imploré.",
+    "reference": "Coran — Sourate Al-Ikhlas (112:1-2)",
+    "category": "quran",
+    "ramadan": false
+  },
+  {
+    "arabic": "وَلَقَدْ يَسَّرْنَا الْقُرْآنَ لِلذِّكْرِ فَهَلْ مِن مُّدَّكِرٍ",
+    "transliteration": "Wa laqad yassarna al-Qur'ana li adh-dhikri fahal min mouddakir",
+    "translation": "Et Nous avons certes rendu le Coran facile pour le rappel. Y a-t-il quelqu'un pour se rappeler ?",
+    "reference": "Coran — Sourate Al-Qamar (54:17)",
+    "category": "quran",
+    "ramadan": false
+  },
+  {
+    "arabic": "قُلْ يَا عِبَادِيَ الَّذِينَ أَسْرَفُوا عَلَىٰ أَنفُسِهِمْ لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ",
+    "transliteration": "Qoul ya 'ibadiya alladhina asrafou 'ala anfousihim la taqnatou min rahmati Allah",
+    "translation": "Dis : Ô Mes serviteurs qui avez commis des excès à votre propre détriment, ne désespérez pas de la miséricorde d'Allah.",
+    "reference": "Coran — Sourate Az-Zumar (39:53)",
+    "category": "quran",
+    "ramadan": false
   }
 ]

@@ -1359,6 +1359,68 @@ body {
     transition: opacity 0.5s ease;
 }
 
+/* Daily content enriched */
+.daily-category-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.badge-quran {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+}
+
+.badge-hadith {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+}
+
+.badge-doua {
+    background: rgba(168, 85, 247, 0.15);
+    color: #a855f7;
+}
+
+.badge-sagesse {
+    background: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+}
+
+.transliteration {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 4px 0;
+}
+
+.quote-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+
+.btn-icon-small {
+    background: none;
+    border: 1px solid var(--clr-glass-border);
+    color: var(--text-muted);
+    padding: 4px 10px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.78rem;
+    transition: all 0.2s;
+}
+
+.btn-icon-small:hover {
+    background: var(--clr-glass-bg);
+    color: var(--clr-gold);
+}
+
 /* Interactive Elements Base Effects */
 .interactive-element {
     cursor: pointer;

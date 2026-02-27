@@ -13,7 +13,7 @@ import { updateFasting, updateFastingReference } from './modules/fasting.js'
 import { startCountdown, stopCountdown } from './modules/countdown.js'
 import { renderPrayerSchedule } from './modules/schedule.js'
 import { updateDates } from './modules/hijri-date.js'
-import { updateDailyContent } from './modules/daily-content.js'
+import { updateDailyContent, initDailyContentActions } from './modules/daily-content.js'
 import { initTheme } from './modules/theme.js'
 import { initSplash } from './modules/splash.js'
 import { initOnboarding } from './modules/onboarding.js'
@@ -313,8 +313,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadPrayerData(slug, offset)
   })
 
-  // 6. Daily verse/hadith
-  updateDailyContent()
+  // 6. Daily verse/hadith (Ramadan mode detected via body class set by applyMode)
+  const isRamadanMode = document.body.classList.contains('mode-ramadan')
+  updateDailyContent(isRamadanMode)
+  initDailyContentActions()
 
   // 7. Interactive effects
   setupInteractiveEffects()
