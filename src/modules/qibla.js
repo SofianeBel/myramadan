@@ -1,4 +1,5 @@
 import storage from './storage.js'
+import { isMobile } from './platform.js'
 
 // Kaaba coordinates
 const KAABA_LAT = 21.4225
@@ -144,6 +145,49 @@ function renderCompass(svgEl, angle) {
   svgEl.appendChild(kaaba)
 }
 
+/**
+ * Start live compass on mobile — rotates SVG based on device heading.
+ * The compass rotates so Qibla arrow always points to the real-world Qibla.
+ * @param {SVGElement} svgEl - The compass SVG element
+ * @param {number} qiblaBearing - Qibla bearing in degrees from North
+ */
+function startLiveCompass(svgEl, qiblaBearing) {
+  let lastAlpha = null
+
+  function handleOrientation(event) {
+    let heading = event.alpha // 0-360, device compass heading
+    if (heading == null) return
+
+    // On Android, alpha is the compass heading (0 = North)
+    // We rotate the entire compass so the Qibla arrow points correctly
+    // Rotation = -(heading) to counter-rotate the compass as the phone turns
+    // The Qibla arrow is rendered at qiblaBearing from North,
+    // so when the compass rotates by -heading, it naturally points right
+    const rotation = -heading
+
+    // Smooth out small jitters
+    if (lastAlpha !== null && Math.abs(heading - lastAlpha) < 0.5) return
+    lastAlpha = heading
+
+    svgEl.style.transform = `rotate(${rotation}deg)`
+    svgEl.style.transition = 'transform 0.15s ease-out'
+  }
+
+  // Request permission on iOS 13+ (needed for DeviceOrientationEvent)
+  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission()
+      .then(state => {
+        if (state === 'granted') {
+          window.addEventListener('deviceorientation', handleOrientation, true)
+        }
+      })
+      .catch(() => {})
+  } else {
+    // Android — works directly
+    window.addEventListener('deviceorientation', handleOrientation, true)
+  }
+}
+
 export function initQibla() {
   const card = document.getElementById('qibla-card')
   const svgEl = document.getElementById('qibla-compass')
@@ -181,7 +225,11 @@ export function initQibla() {
   if (compassContainer) compassContainer.classList.remove('hidden')
   if (noLocationEl) noLocationEl.classList.add('hidden')
 
-  if (svgEl) renderCompass(svgEl, bearing)
+  if (svgEl) {
+    renderCompass(svgEl, bearing)
+    // On mobile, start live compass rotation using device gyroscope/magnetometer
+    if (isMobile) startLiveCompass(svgEl, bearing)
+  }
   if (angleEl) angleEl.textContent = `${Math.round(bearing)}\u00B0`
   if (directionEl) directionEl.textContent = cardinal
 
