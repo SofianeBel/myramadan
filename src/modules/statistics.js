@@ -275,12 +275,19 @@ function calculateGoalProgress(goal) {
 
   if (goal.type === 'prayer-streak') {
     if (goal.prayer === 'all') return getStreak('prayers')
-    // specific prayer streak
-    const keys = Object.keys(log).sort().reverse()
+    // specific prayer streak — check consecutive calendar days
     let streak = 0
-    for (const k of keys) {
-      if (log[k]?.prayers?.[goal.prayer]) streak++
-      else break
+    const today = formatDate(new Date())
+    let expected = today
+    while (log[expected]) {
+      if (log[expected]?.prayers?.[goal.prayer]) {
+        streak++
+        const [y, m, d] = expected.split('-').map(Number)
+        const prev = new Date(y, m - 1, d - 1)
+        expected = formatDate(prev)
+      } else {
+        break
+      }
     }
     return streak
   }

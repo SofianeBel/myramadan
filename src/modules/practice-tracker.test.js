@@ -177,6 +177,25 @@ describe('getStreak', () => {
     expect(getStreak('fasting')).toBe(1)
   })
 
+  it('does not count non-consecutive days (date gap with no entry)', () => {
+    const d = new Date()
+    const today = todayKey()
+    // Skip yesterday entirely (no entry), have an entry two days ago
+    const twoDaysAgo = new Date(d)
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2)
+    const twoDaysAgoKey = `${twoDaysAgo.getFullYear()}-${String(twoDaysAgo.getMonth() + 1).padStart(2, '0')}-${String(twoDaysAgo.getDate()).padStart(2, '0')}`
+
+    setLog({
+      [today]: { prayers: [true, true, true, true, true], fasting: true, quranPages: 5, dhikrCount: 10 },
+      [twoDaysAgoKey]: { prayers: [true, true, true, true, true], fasting: true, quranPages: 5, dhikrCount: 10 },
+    })
+    // Streak should be 1 for all fields (yesterday missing = gap)
+    expect(getStreak('prayers')).toBe(1)
+    expect(getStreak('fasting')).toBe(1)
+    expect(getStreak('quran')).toBe(1)
+    expect(getStreak('dhikr')).toBe(1)
+  })
+
   it('counts quran streak when pages >= 1', () => {
     const today = todayKey()
     setLog({

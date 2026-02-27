@@ -87,15 +87,19 @@ export function addDhikrCount(count) {
   saveLog(log)
 }
 
+function prevDateKey(dateKey) {
+  const [y, m, d] = dateKey.split('-').map(Number)
+  const prev = new Date(y, m - 1, d - 1)
+  return `${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, '0')}-${String(prev.getDate()).padStart(2, '0')}`
+}
+
 export function getStreak(field) {
   const log = getLog()
-  const keys = Object.keys(log).sort().reverse()
   let streak = 0
-  const today = getToday()
+  let expectedDate = getToday()
 
-  for (const dateKey of keys) {
-    if (dateKey > today) continue
-    const entry = log[dateKey]
+  while (log[expectedDate]) {
+    const entry = log[expectedDate]
     let active = false
 
     if (field === 'prayers') active = entry.prayers && entry.prayers.every(Boolean)
@@ -103,8 +107,12 @@ export function getStreak(field) {
     else if (field === 'quran') active = (entry.quranPages || 0) >= 1
     else if (field === 'dhikr') active = (entry.dhikrCount || 0) >= 1
 
-    if (active) streak++
-    else break
+    if (active) {
+      streak++
+      expectedDate = prevDateKey(expectedDate)
+    } else {
+      break
+    }
   }
   return streak
 }
