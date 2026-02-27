@@ -316,6 +316,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 3.5. Setup navigation
   setupNavigation()
 
+  // 3.5.1 Android back button handling
+  if (isMobile) {
+    document.addEventListener('backbutton', (e) => {
+      // 1. Close drawer if open
+      const sidebar = document.querySelector('.sidebar')
+      if (sidebar?.classList.contains('drawer-open')) {
+        sidebar.classList.remove('drawer-open')
+        document.getElementById('sidebar-backdrop')?.classList.remove('visible')
+        e.preventDefault()
+        return
+      }
+
+      // 2. Close any open modal
+      const openModal = document.querySelector('.modal.show, .modal-overlay.active, .settings-modal.show')
+      if (openModal) {
+        openModal.classList.remove('show', 'active')
+        e.preventDefault()
+        return
+      }
+
+      // 3. On dashboard → let OS handle (minimize app)
+    })
+  }
+
   // 3.6 Setup sidebar
   initSidebar()
 
