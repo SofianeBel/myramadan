@@ -250,6 +250,10 @@ function removeSpotlight() {
  * Scroll target into view within .main-content only (not the whole page).
  * Skips fixed-position elements (always visible) and elements already in view.
  * Calls `onDone()` once scroll finishes (or immediately if no scroll needed).
+ *
+ * Two-phase rAF polling:
+ *   Phase 1 ('waiting'): wait until scrollTop actually moves (smooth scroll has lag)
+ *   Phase 2 ('scrolling'): wait until scrollTop stabilises (3 idle frames)
  */
 function scrollToTarget(el, onDone) {
   // Fixed elements are always in view
@@ -268,19 +272,40 @@ function scrollToTarget(el, onDone) {
   const containerCenter = containerRect.height / 2
   const targetScroll = container.scrollTop + elCenterInContainer - containerCenter
 
+  // Already at target — no scroll needed
+  if (Math.abs(container.scrollTop - targetScroll) < 2) { onDone(); return }
+
   container.scrollTo({ top: targetScroll, behavior: 'smooth' })
 
-  // Poll via rAF until scrollTop stabilises (3 consecutive idle frames)
-  let lastTop = container.scrollTop
-  let idleFrames = 0
+  const startTop = container.scrollTop
+  let lastTop = startTop
+  let phase = 'waiting'
+  let stableFrames = 0
+  let waitFrames = 0
+
   function check() {
     const top = container.scrollTop
-    if (Math.abs(top - lastTop) < 1) {
-      idleFrames++
-      if (idleFrames >= 3) { onDone(); return }
-    } else {
-      idleFrames = 0
+
+    if (phase === 'waiting') {
+      if (Math.abs(top - startTop) >= 1) {
+        phase = 'scrolling'
+        stableFrames = 0
+      } else {
+        waitFrames++
+        // Safety: if scroll never starts after ~500ms (~30 frames), proceed
+        if (waitFrames > 30) { onDone(); return }
+      }
     }
+
+    if (phase === 'scrolling') {
+      if (Math.abs(top - lastTop) < 1) {
+        stableFrames++
+        if (stableFrames >= 3) { onDone(); return }
+      } else {
+        stableFrames = 0
+      }
+    }
+
     lastTop = top
     requestAnimationFrame(check)
   }
