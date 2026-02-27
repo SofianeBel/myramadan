@@ -94,10 +94,13 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_process::init())
         .setup(|_app| {
             #[cfg(desktop)]
             let app = _app;
+            // ── Process plugin (desktop only — used by updater relaunch) ──
+            #[cfg(desktop)]
+            app.handle().plugin(tauri_plugin_process::init())?;
+
             // ── Autostart plugin ──
             #[cfg(desktop)]
             app.handle().plugin(tauri_plugin_autostart::init(
