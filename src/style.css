@@ -1662,6 +1662,149 @@ body {
     }
 }
 
+@media (max-width: 768px) {
+    /* Statistics grid: 3 cols → 2 cols */
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Dhikr: slightly smaller arabic text */
+    .dhikr-arabic {
+        font-size: 1.4rem;
+    }
+
+    /* Duas: slightly smaller arabic text */
+    .dua-arabic {
+        font-size: 1.2rem;
+    }
+
+    /* Qibla compass: smaller on tablets */
+    .qibla-compass-svg {
+        width: 150px;
+        height: 150px;
+    }
+
+    /* Stats period buttons: smaller padding */
+    .stats-period-btn {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+
+    /* Journal textarea: shorter minimum */
+    .journal-textarea {
+        min-height: 80px;
+    }
+
+    /* Tracker dots: slightly smaller */
+    .tracker-dot {
+        width: 12px;
+        height: 12px;
+    }
+
+    /* Dhikr increment button: slightly smaller */
+    .dhikr-btn-increment {
+        width: 56px;
+        height: 56px;
+        font-size: 1.3rem;
+    }
+
+    .dhikr-count-number {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Statistics grid: 2 cols → 1 col */
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Streaks: stack vertically */
+    .stats-streaks {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Duas header: full width search */
+    .duas-header {
+        padding: 12px 16px;
+    }
+
+    .duas-container {
+        padding: 0 16px 16px;
+    }
+
+    /* Dua items: tighter padding */
+    .dua-item {
+        padding: 12px;
+    }
+
+    .dua-arabic {
+        font-size: 1.1rem;
+    }
+
+    /* Journal: tighter padding */
+    .journal-header {
+        padding: 12px 16px;
+    }
+
+    .journal-write-section {
+        padding: 0 16px 12px;
+    }
+
+    .journal-history {
+        padding: 0 16px 16px;
+    }
+
+    /* Stats: tighter padding */
+    .stats-header {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .stats-content {
+        padding: 0 16px 16px;
+    }
+
+    /* Goals: add-goal stacks */
+    .stats-add-goal {
+        flex-direction: column;
+    }
+
+    /* Dhikr: compact mode */
+    .dhikr-arabic {
+        font-size: 1.2rem;
+    }
+
+    .dhikr-count-number {
+        font-size: 2rem;
+    }
+
+    .dhikr-btn-increment {
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
+    }
+
+    /* Qibla: smaller on mobile */
+    .qibla-compass-svg {
+        width: 130px;
+        height: 130px;
+    }
+
+    .qibla-angle {
+        font-size: 1.2rem;
+    }
+
+    /* Tracker compact rows */
+    .tracker-row {
+        gap: 8px;
+        font-size: 0.85rem;
+    }
+}
+
 /* ---------------------------------
    Onboarding Overlay & Tutorial
    --------------------------------- */
