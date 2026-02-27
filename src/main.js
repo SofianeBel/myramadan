@@ -28,6 +28,7 @@ import { initSupport } from './modules/support.js'
 import { initChangelog } from './modules/changelog.js'
 import { initUpdater } from './modules/updater.js'
 import { resolveMode, applyMode, getRamadanDay } from './modules/app-mode.js'
+import { initTracker } from './modules/practice-tracker.js'
 
 // Intervals
 let fastingInterval = null
@@ -317,6 +318,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const isRamadanMode = document.body.classList.contains('mode-ramadan')
   updateDailyContent(isRamadanMode)
   initDailyContentActions()
+
+  // 6.5. Practice tracker (dashboard card)
+  initTracker()
 
   // 7. Interactive effects
   setupInteractiveEffects()

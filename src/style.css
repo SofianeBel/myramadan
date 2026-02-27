@@ -2780,3 +2780,133 @@ body.mode-normal .fasting-card {
 body.mode-normal .ramadan-progress {
     display: none;
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PRACTICE TRACKER
+   ═══════════════════════════════════════════════════════════════════ */
+
+.tracker-card {
+    transition: all 0.3s ease;
+}
+
+.tracker-streak {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--clr-gold);
+}
+
+.tracker-compact {
+    padding: 0 4px;
+}
+
+.tracker-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--clr-sand);
+}
+
+.tracker-dots {
+    display: flex;
+    gap: 6px;
+}
+
+.tracker-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--clr-glass-bg);
+    border: 2px solid var(--clr-glass-border);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tracker-dot.done {
+    background: var(--clr-status-success);
+    border-color: var(--clr-status-success);
+}
+
+.tracker-dot:hover {
+    transform: scale(1.2);
+}
+
+.tracker-summary {
+    font-weight: 600;
+    color: #F4EBD0;
+}
+
+.tracker-expanded {
+    padding-top: 12px;
+    border-top: 1px solid var(--clr-glass-border);
+    margin-top: 8px;
+}
+
+.tracker-expanded.hidden {
+    display: none;
+}
+
+.tracker-prayer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.tracker-prayer-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.tracker-prayer-row input[type="checkbox"] {
+    accent-color: var(--clr-status-success);
+}
+
+.tracker-fasting-row,
+.tracker-quran-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.tracker-toggle {
+    padding: 4px 16px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--clr-glass-border);
+    background: var(--clr-glass-bg);
+    color: var(--clr-sand);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: var(--font-main);
+    transition: all 0.2s;
+}
+
+.tracker-toggle.active {
+    background: var(--clr-status-success);
+    color: white;
+    border-color: var(--clr-status-success);
+}
+
+.tracker-quran-input {
+    width: 60px;
+    padding: 4px 8px;
+    border: 1px solid var(--clr-glass-border);
+    border-radius: var(--radius-md);
+    background: var(--clr-glass-bg);
+    color: #F4EBD0;
+    font-size: 0.9rem;
+    font-family: var(--font-main);
+    text-align: center;
+}
+
+.tracker-quran-input:focus {
+    outline: none;
+    border-color: var(--clr-gold);
+}
