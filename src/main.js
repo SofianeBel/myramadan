@@ -30,6 +30,7 @@ import { initUpdater } from './modules/updater.js'
 import { resolveMode, applyMode, getRamadanDay } from './modules/app-mode.js'
 import { initTracker } from './modules/practice-tracker.js'
 import { initDhikr } from './modules/dhikr.js'
+import { initQibla } from './modules/qibla.js'
 
 // Intervals
 let fastingInterval = null
@@ -325,6 +326,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 6.6. Dhikr counter (dashboard card)
   initDhikr()
+
+  // 6.7. Qibla compass (dashboard card)
+  initQibla()
 
   // 7. Interactive effects
   setupInteractiveEffects()

@@ -438,6 +438,28 @@
                     </div>
                 </div>
 
+                <!-- Qibla Compass -->
+                <div id="qibla-card" class="card premium-card qibla-card animate-entry" style="--anim-delay: 0.45s;">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-compass"></i> Qibla</h2>
+                    </div>
+                    <div id="qibla-compass-container">
+                        <svg id="qibla-compass" class="qibla-compass-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+                        <div class="qibla-info">
+                            <span id="qibla-angle" class="qibla-angle"></span>
+                            <span id="qibla-direction" class="qibla-direction"></span>
+                            <span id="qibla-city" class="qibla-city"></span>
+                        </div>
+                    </div>
+                    <div id="qibla-no-location" class="qibla-no-location hidden">
+                        <i class="fa-solid fa-location-crosshairs" style="font-size: 2rem; color: var(--text-muted); margin-bottom: 8px;"></i>
+                        <p>Position requise pour la boussole Qibla</p>
+                        <button class="qibla-settings-link btn-icon-small">
+                            <i class="fa-solid fa-gear"></i> Ouvrir les parametres
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Daily Quote / Hadith -->
                 <div class="card quote-card full-width animate-entry" style="--anim-delay: 0.5s;">
                     <div class="quote-icon floating-icon"><i class="fa-solid fa-quote-left"></i></div>

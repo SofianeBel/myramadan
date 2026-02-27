@@ -3045,3 +3045,44 @@ body.mode-normal .ramadan-progress {
     50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.3); }
     75% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); }
 }
+
+/* ======================== */
+/* Qibla Compass            */
+/* ======================== */
+.qibla-card { text-align: center; }
+.qibla-compass-svg {
+    width: 180px;
+    height: 180px;
+    margin: 8px auto;
+    display: block;
+}
+.qibla-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+.qibla-angle {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--clr-gold);
+}
+.qibla-direction {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+.qibla-city {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+.qibla-no-location {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+.qibla-no-location.hidden { display: none; }
+.qibla-no-location p { margin-bottom: 12px; }
