@@ -952,25 +952,32 @@ export function initSettings(onSave) {
       }
     }
 
-    // Autostart toggle
+    // Autostart toggle (desktop installed app only — not in dev mode)
     const autostartEl = document.getElementById('notif-autostart')
     if (autostartEl) {
-      isAutostartEnabled().then((enabled) => {
-        autostartEl.checked = enabled
-      }).catch(() => {
-        autostartEl.checked = false
-      })
+      if (import.meta.env.DEV) {
+        // Mode dev : désactiver le toggle et afficher un tooltip
+        autostartEl.disabled = true
+        autostartEl.closest('.notif-toggle')?.setAttribute('title',
+          'Autostart disponible uniquement dans l\'app installée')
+      } else {
+        isAutostartEnabled().then((enabled) => {
+          autostartEl.checked = enabled
+        }).catch(() => {
+          autostartEl.checked = false
+        })
 
-      autostartEl.onchange = async () => {
-        try {
-          if (autostartEl.checked) {
-            await enableAutostart()
-          } else {
-            await disableAutostart()
+        autostartEl.onchange = async () => {
+          try {
+            if (autostartEl.checked) {
+              await enableAutostart()
+            } else {
+              await disableAutostart()
+            }
+          } catch (err) {
+            console.warn('[settings] Autostart toggle error:', err)
+            autostartEl.checked = !autostartEl.checked
           }
-        } catch (err) {
-          console.warn('[settings] Autostart toggle error:', err)
-          autostartEl.checked = !autostartEl.checked
         }
       }
     }
