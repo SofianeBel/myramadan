@@ -27,6 +27,7 @@ import { initBugReport } from './modules/bug-report.js'
 import { initSupport } from './modules/support.js'
 import { initChangelog } from './modules/changelog.js'
 import { initUpdater } from './modules/updater.js'
+import { resolveMode, applyMode, getRamadanDay } from './modules/app-mode.js'
 
 // Intervals
 let fastingInterval = null
@@ -79,12 +80,28 @@ function initSakura() {
 
 
 /**
+ * Update the Ramadan progress bar with the current hijri day.
+ * @param {number|null} day - Current day of Ramadan (1-30) or null if not Ramadan
+ */
+function updateRamadanProgress(day) {
+  const bar = document.getElementById('ramadan-progress')
+  if (!bar) return
+  if (day === null) { bar.classList.add('hidden'); return }
+  bar.classList.remove('hidden')
+  const dayEl = document.getElementById('ramadan-day')
+  const fillEl = document.getElementById('ramadan-progress-fill')
+  if (dayEl) dayEl.textContent = `Jour ${day}/30 du Ramadan`
+  if (fillEl) fillEl.style.width = `${(day / 30) * 100}%`
+}
+
+/**
  * Load prayer data and refresh all dependent UI.
  * Strategy: Mawaqit (if mosque set) → Aladhan (fallback)
  * Hijri date: always from Aladhan (Mawaqit doesn't provide it)
  */
 async function loadPrayerData(mosqueSlug, offset = 0) {
   let timings = null
+  let currentHijriDate = null
   const isToday = offset === 0
   const method = getCalculationMethod()
   const angles = getMethodAngles()
@@ -114,6 +131,7 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
     const aladhanData = await fetchPrayerTimes(locationParams, aladhanDate)
     if (aladhanData) {
       timings = aladhanData.timings
+      currentHijriDate = aladhanData.hijriDate
       updateDates(aladhanData.hijriDate, offset)
     }
   }
@@ -123,12 +141,14 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
     // Mawaqit provided times for today — fetch Hijri separately
     const hijriDate = await fetchHijriDate(locationParams)
     if (hijriDate) {
+      currentHijriDate = hijriDate
       updateDates(hijriDate, 0)
     }
   } else if (mosqueSlug && !isToday && timings) {
     // Mosque set but non-today — Hijri needs date param
     const hijriDate = await fetchHijriDate(locationParams, aladhanDate)
     if (hijriDate) {
+      currentHijriDate = hijriDate
       updateDates(hijriDate, offset)
     }
   }
@@ -163,6 +183,11 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
     stopCountdown()
     stopNotifications()
   }
+
+  // Apply app mode based on hijri date
+  const mode = resolveMode(currentHijriDate)
+  applyMode(mode)
+  updateRamadanProgress(getRamadanDay(currentHijriDate))
 }
 
 /**

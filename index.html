@@ -281,6 +281,13 @@
                 </div>
             </header>
 
+            <div id="ramadan-progress" class="ramadan-progress hidden">
+                <span id="ramadan-day">Jour 1/30 du Ramadan</span>
+                <div class="ramadan-progress-bar">
+                    <div id="ramadan-progress-fill" class="ramadan-progress-fill"></div>
+                </div>
+            </div>
+
             <!-- Dashboard Grid -->
             <div id="view-dashboard" class="dashboard-grid view-section active-view">
 
@@ -613,6 +620,20 @@
 
             <!-- Tab: Calculation Method -->
             <div class="settings-tab-content hidden" id="tab-calc">
+                <div class="settings-group" style="margin-bottom: 16px;">
+                    <label class="settings-label" style="font-weight: 600; margin-bottom: 8px; display: block;">
+                        <i class="fa-solid fa-moon"></i> Mode de l'application
+                    </label>
+                    <select id="app-mode-select" class="notif-select" style="width: 100%; padding: 10px 14px;">
+                        <option value="auto">Automatique (detection Ramadan)</option>
+                        <option value="ramadan">Ramadan (force)</option>
+                        <option value="normal">Normal (force)</option>
+                    </select>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">
+                        En mode automatique, l'app detecte le Ramadan via la date Hijri.
+                    </p>
+                </div>
+                <div class="notif-divider"></div>
                 <div id="calc-mosque-hint" class="calc-hint" style="display: none;">
                     <i class="fa-solid fa-circle-info"></i>
                     <span>Une mosquee est selectionnee. Les horaires proviennent de la mosquee. La methode ci-dessous

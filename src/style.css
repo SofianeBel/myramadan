@@ -2674,3 +2674,47 @@ body {
 .report-type-option:has(input[value="feature"]:checked) i {
     color: var(--clr-gold);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Ramadan Progress Bar
+   ═══════════════════════════════════════════════════════════════════ */
+
+.ramadan-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 20px;
+    font-size: 0.85rem;
+    color: var(--clr-gold);
+}
+
+.ramadan-progress.hidden {
+    display: none;
+}
+
+.ramadan-progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--clr-gold-dim);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.ramadan-progress-fill {
+    height: 100%;
+    background: var(--clr-gold);
+    border-radius: var(--radius-full);
+    transition: width 0.5s ease;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Mode-specific visibility
+   ═══════════════════════════════════════════════════════════════════ */
+
+body.mode-normal .fasting-card {
+    display: none;
+}
+
+body.mode-normal .ramadan-progress {
+    display: none;
+}

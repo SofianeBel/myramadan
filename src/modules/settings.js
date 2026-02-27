@@ -8,6 +8,7 @@ import { enable as enableAutostart, disable as disableAutostart, isEnabled as is
 import { fetch as tauriFetch } from '@tauri-apps/plugin-http'
 import { open } from '@tauri-apps/plugin-shell'
 import storage from './storage.js'
+import { setAppMode } from './app-mode.js'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 
@@ -1009,6 +1010,13 @@ export function initSettings(onSave) {
   let calcSettingsPopulated = false
 
   function populateCalcSettings() {
+    // App mode selector
+    const modeSelect = document.getElementById('app-mode-select')
+    if (modeSelect) {
+      modeSelect.value = storage.get('appMode') || 'auto'
+      modeSelect.onchange = () => setAppMode(modeSelect.value)
+    }
+
     const methodSelect = document.getElementById('calc-method-select')
     const mosqueHint = document.getElementById('calc-mosque-hint')
 
