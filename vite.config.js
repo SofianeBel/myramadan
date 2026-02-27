@@ -11,4 +11,7 @@ export default defineConfig({
     target: 'esnext',
     outDir: 'dist',
   },
+  test: {
+    environment: 'jsdom',
+  },
 })

@@ -11,7 +11,7 @@ function toDeg(rad) { return rad * 180 / Math.PI }
  * Calculate great-circle bearing from point to Kaaba
  * @returns {number} bearing in degrees (0-360, 0=North, 90=East)
  */
-function calculateQiblaDirection(lat, lon) {
+export function calculateQiblaDirection(lat, lon) {
   const lat1 = toRad(lat)
   const lat2 = toRad(KAABA_LAT)
   const dLon = toRad(KAABA_LON - lon)
@@ -23,7 +23,7 @@ function calculateQiblaDirection(lat, lon) {
   return (bearing + 360) % 360
 }
 
-function getCardinalDirection(bearing) {
+export function getCardinalDirection(bearing) {
   const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO']
   const index = Math.round(bearing / 45) % 8
   return dirs[index]
