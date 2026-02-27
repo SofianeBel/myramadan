@@ -151,9 +151,10 @@ function renderStep() {
   // Button text
   btnNext.textContent = currentStep === tourSteps.length - 1 ? 'Terminer' : 'Suivant'
 
-  // Cleanup highlights and lifted ancestors
+  // Cleanup highlights and lifted/unclipped ancestors
   document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'))
   document.querySelectorAll('.tour-lift').forEach(el => el.classList.remove('tour-lift'))
+  document.querySelectorAll('.tour-unclip').forEach(el => el.classList.remove('tour-unclip'))
 
   const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
 
@@ -183,27 +184,39 @@ function renderStep() {
 }
 
 /**
- * Lift ancestor stacking contexts above the onboarding overlay
- * so the highlighted element is visible through the dark backdrop.
+ * Lift ancestor stacking contexts and unclip overflow containers
+ * so the highlighted element is visible above the onboarding overlay.
+ *
+ * Two distinct classes:
+ * - .tour-lift   → parents with z-index/transform/etc → raise z-index to 10001
+ * - .tour-unclip → parents with overflow:auto/hidden → set overflow:visible
+ *                   (without touching z-index, to avoid pushing entire container
+ *                    above the overlay)
  */
 function liftAncestors(el) {
   let parent = el.parentElement
   while (parent && parent !== document.body) {
     const cs = getComputedStyle(parent)
-    // Lift parents that create stacking contexts or clip overflow
+
+    // Parents that create stacking contexts → need z-index lift
     if (
       cs.zIndex !== 'auto' ||
       (cs.backdropFilter && cs.backdropFilter !== 'none') ||
       (cs.transform && cs.transform !== 'none') ||
       (cs.filter && cs.filter !== 'none') ||
-      (parseFloat(cs.opacity) < 1) ||
-      cs.overflow === 'auto' ||
-      cs.overflow === 'hidden' ||
-      cs.overflowY === 'auto' ||
-      cs.overflowY === 'hidden'
+      (parseFloat(cs.opacity) < 1)
     ) {
       parent.classList.add('tour-lift')
     }
+
+    // Parents that clip overflow → only unclip (no z-index change)
+    if (
+      cs.overflow === 'auto' || cs.overflow === 'hidden' ||
+      cs.overflowY === 'auto' || cs.overflowY === 'hidden'
+    ) {
+      parent.classList.add('tour-unclip')
+    }
+
     parent = parent.parentElement
   }
 }
@@ -263,6 +276,7 @@ function endTour() {
 
   document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'))
   document.querySelectorAll('.tour-lift').forEach(el => el.classList.remove('tour-lift'))
+  document.querySelectorAll('.tour-unclip').forEach(el => el.classList.remove('tour-unclip'))
 
   storage.set('tourCompleted', true)
 }
