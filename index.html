@@ -77,6 +77,11 @@
                     <span>Douas</span>
                     <div class="menu-item-bg"></div>
                 </a>
+                <a href="#" class="menu-item" id="nav-journal">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Journal</span>
+                    <div class="menu-item-bg"></div>
+                </a>
                 <div class="menu-item menu-item-disabled" id="nav-qibla">
                     <i class="fa-solid fa-compass"></i>
                     <span>Qibla</span>
@@ -540,6 +545,26 @@
                     </div>
                 </div>
                 <div id="duas-container" class="duas-container"></div>
+            </div>
+
+            <!-- Journal View -->
+            <div id="view-journal" class="view-section hidden">
+                <div class="journal-header">
+                    <h2 class="view-title"><i class="fa-solid fa-book-open"></i> Journal de gratitude</h2>
+                    <div class="journal-controls">
+                        <select id="journal-month-filter" class="journal-filter"></select>
+                    </div>
+                </div>
+                <div class="journal-write-section">
+                    <textarea id="journal-textarea" class="journal-textarea" rows="5"></textarea>
+                    <div class="journal-write-footer">
+                        <span id="journal-save-indicator" class="journal-save-indicator hidden">Sauvegarde</span>
+                        <button id="journal-save-btn" class="btn-icon-small">
+                            <i class="fa-solid fa-floppy-disk"></i> Sauvegarder
+                        </button>
+                    </div>
+                </div>
+                <div id="journal-history" class="journal-history"></div>
             </div>
         </main>
     </div>

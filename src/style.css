@@ -3282,3 +3282,87 @@ body.mode-normal .ramadan-progress {
     padding: 20px;
     font-size: 0.9rem;
 }
+
+/* ── Journal ── */
+.journal-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.journal-filter {
+    background: var(--clr-glass-bg);
+    border: 1px solid var(--clr-glass-border);
+    color: var(--text-main);
+    padding: 6px 10px;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-family: var(--font-main);
+    cursor: pointer;
+}
+.journal-write-section {
+    padding: 0 20px 16px;
+}
+.journal-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--clr-glass-border);
+    border-radius: var(--radius-md);
+    background: var(--clr-glass-bg);
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-family: var(--font-main);
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.6;
+    box-sizing: border-box;
+}
+.journal-textarea::placeholder {
+    color: var(--text-muted);
+}
+.journal-textarea:focus {
+    outline: none;
+    border-color: var(--clr-gold);
+}
+.journal-write-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+.journal-save-indicator {
+    font-size: 0.8rem;
+    color: var(--clr-status-success);
+}
+.journal-save-indicator.hidden {
+    display: none;
+}
+.journal-history {
+    padding: 0 20px 20px;
+}
+.journal-entry {
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid var(--clr-glass-border);
+    border-radius: var(--radius-md);
+    background: var(--clr-glass-bg);
+}
+.journal-entry-date {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--clr-gold);
+    margin-bottom: 6px;
+}
+.journal-entry-text {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+.journal-empty {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 30px 20px;
+    font-size: 0.9rem;
+}

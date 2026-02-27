@@ -32,6 +32,7 @@ import { initTracker } from './modules/practice-tracker.js'
 import { initDhikr } from './modules/dhikr.js'
 import { initQibla } from './modules/qibla.js'
 import { initDuas } from './modules/duas.js'
+import { initJournal } from './modules/journal.js'
 
 // Intervals
 let fastingInterval = null
@@ -234,7 +235,8 @@ function setupNavigation() {
   const navTabs = {
     dashboard: { btn: document.getElementById('nav-dashboard'), view: document.getElementById('view-dashboard') },
     horaires: { btn: document.getElementById('nav-horaires'), view: document.getElementById('view-horaires') },
-    duas: { btn: document.getElementById('nav-duas'), view: document.getElementById('view-duas') }
+    duas: { btn: document.getElementById('nav-duas'), view: document.getElementById('view-duas') },
+    journal: { btn: document.getElementById('nav-journal'), view: document.getElementById('view-journal') }
   };
 
   Object.values(navTabs).forEach(tab => {
@@ -260,6 +262,11 @@ function setupNavigation() {
         // Initialize duas on first visit
         if (tab.btn === navTabs.duas?.btn) {
           initDuas()
+        }
+
+        // Initialize journal on first visit
+        if (tab.btn === navTabs.journal?.btn) {
+          initJournal()
         }
       });
     }
