@@ -5,9 +5,19 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.7.0'
+const APP_VERSION = '1.8.0'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.8.0',
+    date: '27 février 2026',
+    changes: [
+      { type: 'feature', text: 'Port Android — l\'app est prête pour Tauri Mobile (UI adaptative, navigation drawer, bouton retour)' },
+      { type: 'feature', text: 'Navigation drawer mobile — menu hamburger + swipe depuis le bord gauche' },
+      { type: 'feature', text: 'Détection de plateforme — adaptation automatique desktop/mobile' },
+      { type: 'fix', text: 'Autostart desktop — désactivé en mode développement pour éviter les erreurs au démarrage Windows' },
+    ],
+  },
   {
     version: '1.7.0',
     date: '27 février 2026',

@@ -5,6 +5,27 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.8.0] - 2026-02-27
+
+### Ajouté
+
+- **Port Android (Tauri v2 Mobile)** — codebase partagé desktop/mobile, UI adaptative avec détection de plateforme
+- **Navigation drawer mobile** — menu hamburger + swipe depuis le bord gauche, backdrop overlay
+- **Bouton retour Android** — ferme le drawer ouvert, puis les modales, puis laisse l'OS minimiser
+- **Détection de plateforme** — module `platform.js` avec `isAndroid`, `isMobile`, `isDesktop`
+- **Capabilities séparées** — permissions desktop et Android dans des fichiers distincts
+
+### Corrigé
+
+- **Autostart desktop** — désactivé en mode développement pour éviter l'ouverture d'Edge avec erreur au démarrage Windows
+
+### Technique
+
+- `lib.rs` : `#[cfg(desktop)]` pour system tray, close-to-tray, menu
+- `lib.rs` : `#[cfg_attr(mobile, tauri::mobile_entry_point)]` pour l'entrée JNI Android
+- `tauri.conf.json` : `bundle.android.minSdkVersion = 24`
+- `updater.js` / `window.js` : guard `isMobile` pour éviter les appels à des APIs desktop-only
+
 ## [1.7.0] - 2026-02-27
 
 ### Ajouté
