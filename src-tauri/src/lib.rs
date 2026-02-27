@@ -6,6 +6,7 @@ use tauri::{
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
 };
 
+#[cfg(desktop)]
 use tauri::Manager;
 
 // ── Bug Report → GitHub Issues (server-side, token never reaches the frontend) ──
@@ -94,7 +95,9 @@ pub fn run() {
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_process::init())
-        .setup(|app| {
+        .setup(|_app| {
+            #[cfg(desktop)]
+            let app = _app;
             // ── Autostart plugin ──
             #[cfg(desktop)]
             app.handle().plugin(tauri_plugin_autostart::init(
@@ -156,12 +159,12 @@ pub fn run() {
             Ok(())
         })
         // ── Hide main window on close instead of quitting (close-to-tray) ──
-        .on_window_event(|window, event| {
+        .on_window_event(|_window, _event| {
             #[cfg(desktop)]
-            if window.label() == "main" {
-                if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+            if _window.label() == "main" {
+                if let tauri::WindowEvent::CloseRequested { api, .. } = _event {
                     api.prevent_close();
-                    let _ = window.hide();
+                    let _ = _window.hide();
                 }
             }
         })
