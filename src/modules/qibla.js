@@ -145,35 +145,59 @@ function renderCompass(svgEl, angle) {
   svgEl.appendChild(kaaba)
 }
 
+// Active compass cleanup function (null when no compass is running)
+let compassCleanup = null
+
 /**
  * Start live compass on mobile — rotates SVG based on device heading.
  * The compass rotates so Qibla arrow always points to the real-world Qibla.
+ * Uses a low-pass filter for smooth readings on noisy magnetometers.
  * @param {SVGElement} svgEl - The compass SVG element
  * @param {number} qiblaBearing - Qibla bearing in degrees from North
  */
 function startLiveCompass(svgEl, qiblaBearing) {
-  let lastHeading = null
+  // Cleanup any previous compass listener
+  if (compassCleanup) {
+    compassCleanup()
+    compassCleanup = null
+  }
+
+  let smoothedHeading = null
+  const SMOOTHING = 0.3 // Low-pass filter coefficient (0 = no change, 1 = raw value)
+  const JITTER_THRESHOLD = 1.5 // Ignore changes smaller than 1.5° after smoothing
 
   function handleOrientation(event) {
     // W3C spec: alpha increases counter-clockwise (0=North, 90=West, 270=East)
     // We need compass heading clockwise from North (0=North, 90=East, 270=West)
     // iOS provides webkitCompassHeading (already CW from North)
-    let compassHeading
+    let rawHeading
     if (event.webkitCompassHeading != null) {
-      compassHeading = event.webkitCompassHeading // iOS: CW from North
+      rawHeading = event.webkitCompassHeading // iOS: CW from North
     } else if (event.alpha != null) {
-      compassHeading = (360 - event.alpha) % 360 // Android: convert CCW → CW
+      rawHeading = (360 - event.alpha) % 360 // Android: convert CCW → CW
     } else {
       return
     }
 
-    // Smooth out small jitters
-    if (lastHeading !== null && Math.abs(compassHeading - lastHeading) < 0.5) return
-    lastHeading = compassHeading
+    // Low-pass filter to smooth magnetometer noise
+    if (smoothedHeading === null) {
+      smoothedHeading = rawHeading
+    } else {
+      // Handle wrap-around (e.g. 359° → 1°)
+      let delta = rawHeading - smoothedHeading
+      if (delta > 180) delta -= 360
+      if (delta < -180) delta += 360
+      smoothedHeading = (smoothedHeading + SMOOTHING * delta + 360) % 360
+    }
+
+    // Skip tiny changes to avoid unnecessary DOM updates
+    const displayHeading = Math.round(smoothedHeading * 10) / 10
+    if (svgEl._lastHeading !== undefined && Math.abs(displayHeading - svgEl._lastHeading) < JITTER_THRESHOLD) return
+    svgEl._lastHeading = displayHeading
 
     // Rotate compass so real-world directions align with screen
     // When facing East (heading=90), North is to the left → rotate SVG by -90°
-    svgEl.style.transform = `rotate(${-compassHeading}deg)`
+    svgEl.style.transform = `rotate(${-displayHeading}deg)`
     svgEl.style.transition = 'transform 0.15s ease-out'
   }
 
@@ -181,18 +205,27 @@ function startLiveCompass(svgEl, qiblaBearing) {
   const hasAbsolute = 'ondeviceorientationabsolute' in window
   const eventName = hasAbsolute ? 'deviceorientationabsolute' : 'deviceorientation'
 
+  const controller = new AbortController()
+
   // Request permission on iOS 13+ (needed for DeviceOrientationEvent)
   if (typeof DeviceOrientationEvent.requestPermission === 'function') {
     DeviceOrientationEvent.requestPermission()
       .then(state => {
         if (state === 'granted') {
-          window.addEventListener(eventName, handleOrientation, true)
+          window.addEventListener(eventName, handleOrientation, { capture: true, signal: controller.signal })
         }
       })
       .catch(() => {})
   } else {
     // Android — works directly
-    window.addEventListener(eventName, handleOrientation, true)
+    window.addEventListener(eventName, handleOrientation, { capture: true, signal: controller.signal })
+  }
+
+  // Store cleanup function
+  compassCleanup = () => {
+    controller.abort()
+    svgEl._lastHeading = undefined
+    smoothedHeading = null
   }
 }
 

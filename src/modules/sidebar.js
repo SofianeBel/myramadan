@@ -1,5 +1,7 @@
 import { isMobile } from './platform.js'
 
+let drawerInitialized = false
+
 export function initSidebar() {
     const sidebar = document.querySelector('.sidebar')
     const toggleBtn = document.getElementById('sidebar-toggle')
@@ -9,7 +11,10 @@ export function initSidebar() {
     if (!sidebar) return
 
     if (isMobile) {
-        initMobileDrawer(sidebar, hamburgerBtn, backdrop)
+        if (!drawerInitialized) {
+            initMobileDrawer(sidebar, hamburgerBtn, backdrop)
+            drawerInitialized = true
+        }
     } else {
         initDesktopSidebar(sidebar, toggleBtn)
     }

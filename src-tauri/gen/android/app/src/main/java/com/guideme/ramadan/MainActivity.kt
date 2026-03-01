@@ -3,10 +3,13 @@ package com.guideme.ramadan
 import android.os.Bundle
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 
 class MainActivity : TauriActivity() {
+
+  private var webViewRef: WebView? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -23,9 +26,31 @@ class MainActivity : TauriActivity() {
     // Inject JS bridge AFTER view hierarchy is fully built
     // (Tauri creates the WebView during super.onCreate but adds it async)
     window.decorView.post {
-      val webView = findWebView(window.decorView)
-      webView?.addJavascriptInterface(StatusBarBridge(this), "AndroidStatusBar")
+      webViewRef = findWebView(window.decorView)
+      webViewRef?.addJavascriptInterface(StatusBarBridge(this), "AndroidStatusBar")
     }
+
+    // Handle Android back button — dispatch custom event to WebView
+    onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+      override fun handleOnBackPressed() {
+        webViewRef?.evaluateJavascript(
+          """
+          (function() {
+            var e = new CustomEvent('backbutton', { cancelable: true });
+            var handled = !document.dispatchEvent(e);
+            return handled ? 'handled' : 'default';
+          })()
+          """.trimIndent()
+        ) { result ->
+          // If JS didn't handle it (preventDefault), let OS handle (minimize)
+          if (result?.contains("default") == true) {
+            isEnabled = false
+            onBackPressedDispatcher.onBackPressed()
+            isEnabled = true
+          }
+        }
+      }
+    })
   }
 
   fun setStatusBarAppearance(lightIcons: Boolean) {

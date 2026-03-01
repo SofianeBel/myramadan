@@ -317,6 +317,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupNavigation()
 
   // 3.5.1 Android back button handling
+  // Custom 'backbutton' event dispatched by MainActivity.kt via onBackPressedDispatcher
   if (isMobile) {
     document.addEventListener('backbutton', (e) => {
       // 1. Close drawer if open
@@ -336,7 +337,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return
       }
 
-      // 3. On dashboard → let OS handle (minimize app)
+      // 3. On dashboard → don't preventDefault → OS handles (minimize app)
     })
   }
 

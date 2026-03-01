@@ -282,8 +282,15 @@ function scrollToTarget(el, onDone) {
   let phase = 'waiting'
   let stableFrames = 0
   let waitFrames = 0
+  let done = false
+
+  // Absolute safety timeout (3s) for slow devices
+  const safetyTimeout = setTimeout(() => {
+    if (!done) { done = true; onDone() }
+  }, 3000)
 
   function check() {
+    if (done) return
     const top = container.scrollTop
 
     if (phase === 'waiting') {
@@ -293,14 +300,14 @@ function scrollToTarget(el, onDone) {
       } else {
         waitFrames++
         // Safety: if scroll never starts after ~500ms (~30 frames), proceed
-        if (waitFrames > 30) { onDone(); return }
+        if (waitFrames > 30) { done = true; clearTimeout(safetyTimeout); onDone(); return }
       }
     }
 
     if (phase === 'scrolling') {
       if (Math.abs(top - lastTop) < 1) {
         stableFrames++
-        if (stableFrames >= 3) { onDone(); return }
+        if (stableFrames >= 3) { done = true; clearTimeout(safetyTimeout); onDone(); return }
       } else {
         stableFrames = 0
       }

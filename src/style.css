@@ -3946,6 +3946,7 @@ body.mode-normal .ramadan-progress {
   margin-left: 0 !important;
   width: 100% !important;
   padding-top: calc(env(safe-area-inset-top, 28px) + 50px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Sidebar minimized state irrelevant on mobile */
