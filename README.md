@@ -18,13 +18,10 @@
 
 ---
 
-<!-- VIDEO DE PRESENTATION
-     Pour ajouter une video YouTube :
-     [![Demo](https://img.youtube.com/vi/VIDEO_ID/maxresdefault.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
+<!-- VIDEO DE PRESENTATION-->
 
-     Pour ajouter un MP4 directement (drag & drop dans l'editeur GitHub) :
-     Le lien sera genere automatiquement.
--->
+https://github.com/user-attachments/assets/67305de7-2c04-4491-b5e2-15dd823498c9
+
 
 ## Fonctionnalites
 
