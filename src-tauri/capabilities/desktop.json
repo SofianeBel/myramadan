@@ -1,8 +1,9 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
-  "identifier": "main-capability",
-  "description": "Capability for the main window",
+  "identifier": "desktop-capability",
+  "description": "Capabilities for desktop (Windows, macOS, Linux)",
   "windows": ["main"],
+  "platforms": ["windows", "macOS", "linux"],
   "permissions": [
     "core:default",
     "core:window:allow-start-dragging",

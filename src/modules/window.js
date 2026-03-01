@@ -1,6 +1,9 @@
 import { getCurrentWindow } from '@tauri-apps/api/window'
+import { isMobile } from './platform.js'
 
 export function initWindowControls() {
+    if (isMobile) return // No window controls on mobile
+
     let appWindow
     try {
         appWindow = getCurrentWindow()

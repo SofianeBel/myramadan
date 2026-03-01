@@ -1,10 +1,15 @@
 /**
- * onboarding.js — Interactive guided tour (4 steps)
+ * onboarding.js — Interactive guided tour (desktop & mobile variants)
+ *
+ * Desktop: uses tour-highlight class (z-index above overlay) + tour-lift on ancestors
+ * Mobile:  uses a fixed-position spotlight ring with box-shadow for dimming
+ *          (no overflow/z-index manipulation on content — avoids scroll reset)
  */
 
 import storage from './storage.js'
+import { isMobile } from './platform.js'
 
-const tourSteps = [
+const desktopTourSteps = [
   {
     title: 'Bienvenue sur GuideME',
     text: 'Découvrez votre nouveau compagnon pour le Ramadan. Commençons par une petite visite guidée !',
@@ -55,6 +60,47 @@ const tourSteps = [
   },
 ]
 
+const mobileTourSteps = [
+  {
+    title: 'Bienvenue sur GuideME',
+    text: 'Votre compagnon pour le Ramadan, maintenant dans votre poche ! Découvrons ensemble les fonctionnalités.',
+    target: null,
+    position: 'center',
+  },
+  {
+    title: 'Suivi du Jeûne',
+    text: "Suivez votre temps de jeûne, l'heure du Suhoor et de l'Iftar en un coup d'œil.",
+    target: '.fasting-card',
+    position: 'bottom',
+  },
+  {
+    title: 'Horaires des Prières',
+    text: 'Toutes les prières du jour avec un code couleur pour repérer la prière en cours.',
+    target: '.schedule-card',
+    position: 'bottom',
+  },
+  {
+    title: 'Notifications',
+    text: 'Appuyez sur les cloches pour activer ou désactiver les rappels de chaque prière.',
+    target: '.schedule-card',
+    position: 'bottom',
+  },
+  {
+    title: 'Le Menu',
+    text: 'Accédez à toutes les fonctionnalités depuis ce bouton : calendrier, paramètres, thème, et plus encore. Vous pouvez aussi glisser depuis le bord gauche.',
+    target: '#hamburger-btn',
+    position: 'bottom',
+  },
+  {
+    title: 'Boussole Qibla',
+    text: 'Retrouvez la direction de la Qibla ici. La boussole utilise les capteurs de votre téléphone pour un guidage en temps réel !',
+    target: '#qibla-card',
+    position: 'bottom',
+  },
+]
+
+const tourSteps = isMobile ? mobileTourSteps : desktopTourSteps
+
 let currentStep = 0
 
 /**
@@ -99,7 +145,7 @@ function renderStep() {
   textEl.textContent = step.text
 
   // Dots
-  dotsContainer.innerHTML = ''
+  dotsContainer.replaceChildren()
   tourSteps.forEach((_, idx) => {
     const dot = document.createElement('span')
     dot.className = `dot ${idx === currentStep ? 'active' : ''}`
@@ -109,67 +155,222 @@ function renderStep() {
   // Button text
   btnNext.textContent = currentStep === tourSteps.length - 1 ? 'Terminer' : 'Suivant'
 
-  // Cleanup highlights and lifted ancestors
+  // Cleanup previous step
+  removeSpotlight()
   document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'))
   document.querySelectorAll('.tour-lift').forEach(el => el.classList.remove('tour-lift'))
+
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
 
   if (step.target) {
     const el = document.querySelector(step.target)
     if (el) {
-      el.classList.add('tour-highlight')
+      if (isMobile) {
+        // ── Mobile: spotlight ring approach ──
+        // Overlay becomes transparent — the spotlight's box-shadow provides dimming
+        // Also disable backdrop-filter to avoid blurring the content
+        overlay.style.background = 'transparent'
+        overlay.style.backdropFilter = 'none'
+        overlay.style.webkitBackdropFilter = 'none'
+        overlay.style.zIndex = '10002'
 
-      // Lift ancestor stacking contexts above overlay
-      let parent = el.parentElement
-      while (parent && parent !== document.body) {
-        const cs = getComputedStyle(parent)
-        if (
-          cs.zIndex !== 'auto' ||
-          (cs.backdropFilter && cs.backdropFilter !== 'none') ||
-          (cs.transform && cs.transform !== 'none') ||
-          (cs.filter && cs.filter !== 'none') ||
-          (parseFloat(cs.opacity) < 1)
-        ) {
-          parent.classList.add('tour-lift')
-        }
-        parent = parent.parentElement
+        // Scroll element into view, then show spotlight once scroll finishes
+        scrollToTarget(el, () => {
+          showSpotlight(el, isDark)
+          positionTooltip(tooltip, el, step.position)
+        })
+      } else {
+        // ── Desktop: original approach ──
+        el.classList.add('tour-highlight')
+        liftAncestors(el)
+        positionTooltip(tooltip, el, step.position)
+
+        overlay.style.background = isDark ? 'rgba(0, 0, 0, 0.85)' : 'rgba(11, 43, 27, 0.85)'
+        overlay.style.backdropFilter = ''
+        overlay.style.webkitBackdropFilter = ''
+        overlay.style.zIndex = '9999'
       }
-
-      positionTooltip(tooltip, el, step.position)
     }
-
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
-    overlay.style.background = isDark ? 'rgba(0, 0, 0, 0.85)' : 'rgba(11, 43, 27, 0.85)'
   } else {
-    // Center tooltip
+    // No target — center tooltip
     tooltip.style.top = '50%'
     tooltip.style.left = '50%'
     tooltip.style.transform = 'translate(-50%, -50%)'
 
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark'
     overlay.style.background = isDark ? 'rgba(0, 0, 0, 0.92)' : 'rgba(11, 43, 27, 0.92)'
+    overlay.style.backdropFilter = ''
+    overlay.style.webkitBackdropFilter = ''
+    overlay.style.zIndex = '9999'
   }
 }
 
+// ── Mobile Spotlight ──
+
+/**
+ * Create a fixed-position ring around the target element.
+ * The ring's massive box-shadow acts as the dimming overlay,
+ * leaving a "hole" around the highlighted element.
+ *
+ * z-index stack:
+ *   10001  spotlight ring (border + box-shadow dimming)
+ *   10002  overlay (transparent, captures pointer-events) + tooltip
+ */
+function showSpotlight(el, isDark) {
+  removeSpotlight()
+  const rect = el.getBoundingClientRect()
+  const pad = 6
+  const ring = document.createElement('div')
+  ring.id = 'tour-spotlight'
+
+  const dimColor = isDark ? 'rgba(0, 0, 0, 0.88)' : 'rgba(11, 43, 27, 0.88)'
+
+  Object.assign(ring.style, {
+    position: 'fixed',
+    top: `${rect.top - pad}px`,
+    left: `${rect.left - pad}px`,
+    width: `${rect.width + pad * 2}px`,
+    height: `${rect.height + pad * 2}px`,
+    borderRadius: '16px',
+    border: '3px solid var(--clr-gold)',
+    zIndex: '10001',
+    pointerEvents: 'none',
+    boxShadow: `0 0 0 200vmax ${dimColor}, 0 0 20px rgba(212, 175, 55, 0.4)`,
+    transition: 'top 0.3s ease, left 0.3s ease, width 0.3s ease, height 0.3s ease',
+  })
+
+  document.body.appendChild(ring)
+}
+
+function removeSpotlight() {
+  const existing = document.getElementById('tour-spotlight')
+  if (existing) existing.remove()
+}
+
+/**
+ * Scroll target into view within .main-content only (not the whole page).
+ * Skips fixed-position elements (always visible) and elements already in view.
+ * Calls `onDone()` once scroll finishes (or immediately if no scroll needed).
+ *
+ * Two-phase rAF polling:
+ *   Phase 1 ('waiting'): wait until scrollTop actually moves (smooth scroll has lag)
+ *   Phase 2 ('scrolling'): wait until scrollTop stabilises (3 idle frames)
+ */
+function scrollToTarget(el, onDone) {
+  // Fixed elements are always in view
+  if (getComputedStyle(el).position === 'fixed') { onDone(); return }
+
+  const rect = el.getBoundingClientRect()
+  // Already fully visible — no scroll needed
+  if (rect.top >= 60 && rect.bottom <= window.innerHeight - 20) { onDone(); return }
+
+  const container = document.querySelector('.main-content')
+  if (!container) { onDone(); return }
+
+  // Scroll within the container to center the element
+  const containerRect = container.getBoundingClientRect()
+  const elCenterInContainer = rect.top - containerRect.top + rect.height / 2
+  const containerCenter = containerRect.height / 2
+  const targetScroll = container.scrollTop + elCenterInContainer - containerCenter
+
+  // Already at target — no scroll needed
+  if (Math.abs(container.scrollTop - targetScroll) < 2) { onDone(); return }
+
+  container.scrollTo({ top: targetScroll, behavior: 'smooth' })
+
+  const startTop = container.scrollTop
+  let lastTop = startTop
+  let phase = 'waiting'
+  let stableFrames = 0
+  let waitFrames = 0
+  let done = false
+
+  // Absolute safety timeout (3s) for slow devices
+  const safetyTimeout = setTimeout(() => {
+    if (!done) { done = true; onDone() }
+  }, 3000)
+
+  function check() {
+    if (done) return
+    const top = container.scrollTop
+
+    if (phase === 'waiting') {
+      if (Math.abs(top - startTop) >= 1) {
+        phase = 'scrolling'
+        stableFrames = 0
+      } else {
+        waitFrames++
+        // Safety: if scroll never starts after ~500ms (~30 frames), proceed
+        if (waitFrames > 30) { done = true; clearTimeout(safetyTimeout); onDone(); return }
+      }
+    }
+
+    if (phase === 'scrolling') {
+      if (Math.abs(top - lastTop) < 1) {
+        stableFrames++
+        if (stableFrames >= 3) { done = true; clearTimeout(safetyTimeout); onDone(); return }
+      } else {
+        stableFrames = 0
+      }
+    }
+
+    lastTop = top
+    requestAnimationFrame(check)
+  }
+  requestAnimationFrame(check)
+}
+
+// ── Desktop: lift ancestor stacking contexts ──
+
+function liftAncestors(el) {
+  let parent = el.parentElement
+  while (parent && parent !== document.body) {
+    const cs = getComputedStyle(parent)
+    if (
+      cs.zIndex !== 'auto' ||
+      (cs.backdropFilter && cs.backdropFilter !== 'none') ||
+      (cs.transform && cs.transform !== 'none') ||
+      (cs.filter && cs.filter !== 'none') ||
+      (parseFloat(cs.opacity) < 1)
+    ) {
+      parent.classList.add('tour-lift')
+    }
+    parent = parent.parentElement
+  }
+}
+
+// ── Tooltip Positioning ──
+
 function positionTooltip(tooltip, targetEl, position) {
   const rect = targetEl.getBoundingClientRect()
-  const gap = 24
+  const gap = isMobile ? 16 : 24
   let top, left
 
   tooltip.style.transform = 'none'
 
-  if (position === 'right') {
-    top = rect.top + rect.height / 2 - tooltip.offsetHeight / 2
-    left = rect.right + gap
-    if (left + tooltip.offsetWidth > window.innerWidth) {
-      left = rect.left - tooltip.offsetWidth - gap
+  if (isMobile) {
+    // On mobile, position below target, centered horizontally
+    top = rect.bottom + gap + 6 // extra space for spotlight ring
+    left = window.innerWidth / 2 - tooltip.offsetWidth / 2
+
+    // If not enough room below, try above
+    if (top + tooltip.offsetHeight > window.innerHeight - 10) {
+      top = rect.top - tooltip.offsetHeight - gap - 6
     }
-  } else if (position === 'top') {
-    top = rect.top - tooltip.offsetHeight - gap
-    left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2
-    if (top < 0) top = rect.bottom + gap
-  } else if (position === 'bottom') {
-    top = rect.bottom + gap
-    left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2
+  } else {
+    if (position === 'right') {
+      top = rect.top + rect.height / 2 - tooltip.offsetHeight / 2
+      left = rect.right + gap
+      if (left + tooltip.offsetWidth > window.innerWidth) {
+        left = rect.left - tooltip.offsetWidth - gap
+      }
+    } else if (position === 'top') {
+      top = rect.top - tooltip.offsetHeight - gap
+      left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2
+      if (top < 0) top = rect.bottom + gap
+    } else if (position === 'bottom') {
+      top = rect.bottom + gap
+      left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2
+    }
   }
 
   // Clamp horizontal
@@ -178,7 +379,7 @@ function positionTooltip(tooltip, targetEl, position) {
     left = window.innerWidth - tooltip.offsetWidth - 10
   }
 
-  // Clamp vertical: keep tooltip within viewport
+  // Clamp vertical
   if (top < 10) top = 10
   if (top + tooltip.offsetHeight > window.innerHeight - 10) {
     top = window.innerHeight - tooltip.offsetHeight - 10
@@ -188,10 +389,18 @@ function positionTooltip(tooltip, targetEl, position) {
   tooltip.style.left = `${left}px`
 }
 
+// ── End Tour ──
+
 function endTour() {
   const overlay = document.getElementById('onboarding-overlay')
-  if (overlay) overlay.classList.add('hidden')
+  if (overlay) {
+    overlay.classList.add('hidden')
+    overlay.style.zIndex = '9999'
+    overlay.style.backdropFilter = ''
+    overlay.style.webkitBackdropFilter = ''
+  }
 
+  removeSpotlight()
   document.querySelectorAll('.tour-highlight').forEach(el => el.classList.remove('tour-highlight'))
   document.querySelectorAll('.tour-lift').forEach(el => el.classList.remove('tour-lift'))
 

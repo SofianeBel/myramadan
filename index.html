@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>GuideME - Ramadan Edition</title>
     <link rel="stylesheet" href="/src/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -50,7 +50,16 @@
         </div>
     </div>
 
+    <!-- Status bar backdrop (Android only — provides background behind system icons) -->
+    <div class="status-bar-strip"></div>
+
     <div class="app-container" style="opacity: 0;"> <!-- Hidden initially via CSS until JS reveals it -->
+        <!-- Hamburger button (mobile only) -->
+        <button id="hamburger-btn" class="hamburger-btn" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <!-- Backdrop for drawer (mobile only) -->
+        <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
         <!-- Sidebar -->
         <aside class="sidebar">
             <button id="sidebar-toggle" class="sidebar-toggle-btn">
@@ -72,18 +81,21 @@
                     <span>Horaires</span>
                     <div class="menu-item-bg"></div>
                 </a>
-                <div class="menu-item menu-item-disabled" id="nav-quran">
-                    <i class="fa-solid fa-book-quran"></i>
-                    <span>Coran & Invocations</span>
-                    <span class="badge-coming-soon">Bientôt</span>
+                <a href="#" class="menu-item" id="nav-duas">
+                    <i class="fa-solid fa-hands-praying"></i>
+                    <span>Douas</span>
                     <div class="menu-item-bg"></div>
-                </div>
-                <div class="menu-item menu-item-disabled" id="nav-qibla">
-                    <i class="fa-solid fa-compass"></i>
-                    <span>Qibla</span>
-                    <span class="badge-coming-soon">Bientôt</span>
+                </a>
+                <a href="#" class="menu-item" id="nav-journal">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Journal</span>
                     <div class="menu-item-bg"></div>
-                </div>
+                </a>
+                <a href="#" class="menu-item" id="nav-stats">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    <span>Statistiques</span>
+                    <div class="menu-item-bg"></div>
+                </a>
             </nav>
 
             <div class="bottom-menu">
@@ -274,7 +286,20 @@
                         <i class="fa-solid fa-user"></i>
                     </div>
                 </div>
+                <div id="location-warning" class="location-warning hidden">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span id="location-warning-text">Position non détectée</span>
+                    <button id="location-warning-btn" class="btn-link">Paramètres</button>
+                </div>
             </header>
+
+            <div id="ramadan-progress" class="card premium-card ramadan-progress full-width hidden animate-entry"
+                style="--anim-delay: 0.15s; flex-direction: row; justify-content: space-between; padding: 16px 24px;">
+                <span id="ramadan-day" style="font-weight: 600; color: var(--clr-gold);">Jour 1/30 du Ramadan</span>
+                <div class="ramadan-progress-bar" style="flex: 0.8; margin-left: 16px;">
+                    <div id="ramadan-progress-fill" class="ramadan-progress-fill"></div>
+                </div>
+            </div>
 
             <!-- Dashboard Grid -->
             <div id="view-dashboard" class="dashboard-grid view-section active-view">
@@ -379,13 +404,99 @@
                     </div>
                 </div>
 
+                <!-- Practice Tracker -->
+                <div id="tracker-card" class="card premium-card tracker-card animate-entry"
+                    style="--anim-delay: 0.35s; cursor: pointer;">
+                    <div class="card-header">
+                        <h2>Aujourd'hui</h2>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span id="tracker-streak" class="tracker-streak"></span>
+                            <i id="tracker-chevron" class="fa-solid fa-chevron-down"
+                                style="color: var(--text-muted); transition: transform 0.3s ease;"></i>
+                        </div>
+                    </div>
+                    <div class="tracker-compact">
+                        <div class="tracker-row">
+                            <div id="tracker-dots" class="tracker-dots"></div>
+                            <span id="tracker-summary" class="tracker-summary">Prieres 0/5</span>
+                        </div>
+                        <div class="tracker-row">
+                            <span>Jeune <span id="tracker-fasting-status">&mdash;</span></span>
+                            <span>Coran <span id="tracker-quran-count">0 pages</span></span>
+                        </div>
+                    </div>
+                    <div id="tracker-expanded" class="tracker-expanded hidden"></div>
+                </div>
+
+                <!-- Dhikr Counter -->
+                <div id="dhikr-card" class="card premium-card dhikr-card animate-entry" style="--anim-delay: 0.4s;">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-circle-notch"></i> Dhikr</h2>
+                        <select id="dhikr-preset-select" class="dhikr-select"></select>
+                    </div>
+                    <div class="dhikr-content">
+                        <p class="dhikr-arabic" id="dhikr-arabic"></p>
+                        <p class="dhikr-translit" id="dhikr-translit"></p>
+                        <div class="dhikr-counter">
+                            <span id="dhikr-count" class="dhikr-count-number">0</span>
+                            <span id="dhikr-target" class="dhikr-count-target">/ 33</span>
+                        </div>
+                        <div class="dhikr-progress-bar">
+                            <div id="dhikr-progress-fill" class="dhikr-progress-fill"></div>
+                        </div>
+                        <span id="dhikr-step-indicator" class="dhikr-step-indicator hidden"></span>
+                    </div>
+                    <div class="dhikr-actions">
+                        <button id="dhikr-reset" class="btn-icon-small" title="Reinitialiser">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button id="dhikr-increment" class="dhikr-btn-increment" title="Incrementer (Espace)">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Qibla Compass -->
+                <div id="qibla-card" class="card premium-card qibla-card animate-entry" style="--anim-delay: 0.45s;">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-compass"></i> Qibla</h2>
+                    </div>
+                    <div id="qibla-compass-container">
+                        <svg id="qibla-compass" class="qibla-compass-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+                        <div class="qibla-info">
+                            <span id="qibla-angle" class="qibla-angle"></span>
+                            <span id="qibla-direction" class="qibla-direction"></span>
+                            <span id="qibla-city" class="qibla-city"></span>
+                        </div>
+                    </div>
+                    <div id="qibla-no-location" class="qibla-no-location hidden">
+                        <i class="fa-solid fa-location-crosshairs"
+                            style="font-size: 2rem; color: var(--text-muted); margin-bottom: 8px;"></i>
+                        <p>Position requise pour la boussole Qibla</p>
+                        <button class="qibla-settings-link btn-icon-small">
+                            <i class="fa-solid fa-gear"></i> Ouvrir les parametres
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Daily Quote / Hadith -->
-                <div class="card quote-card full-width animate-entry" style="--anim-delay: 0.5s;">
-                    <div class="quote-icon floating-icon"><i class="fa-solid fa-quote-left"></i></div>
-                    <div class="quote-content">
-                        <p class="arabic-text" id="daily-arabic"></p>
-                        <p class="translation" id="daily-translation"></p>
-                        <span class="reference" id="daily-reference"></span>
+                <div class="card quote-card full-width animate-entry" style="--anim-delay: 0.5s; text-align: center;">
+                    <div class="quote-icon" style="color: var(--clr-gold); font-size: 2rem; margin-bottom: 12px;"><i
+                            class="fa-solid fa-quote-left"></i></div>
+                    <div class="quote-content" style="display: flex; flex-direction: column; align-items: center;">
+                        <span id="daily-category" class="daily-category-badge" style="margin-bottom: 12px;"></span>
+                        <p class="arabic-text" id="daily-arabic" style="margin-bottom: 16px;"></p>
+                        <p class="transliteration" id="daily-transliteration" style="margin-bottom: 8px;"></p>
+                        <p class="translation" id="daily-translation" style="margin-bottom: 20px; font-style: italic;">
+                        </p>
+                        <div class="quote-footer"
+                            style="display: flex; justify-content: center; align-items: center; gap: 16px; width: 100%; border-top: 1px solid rgba(122, 139, 128, 0.15); padding-top: 16px;">
+                            <span class="reference" id="daily-reference"
+                                style="font-weight: 600; color: var(--clr-gold);"></span>
+                            <button id="daily-copy-btn" class="btn-icon-small" title="Copier">
+                                <i class="fa-regular fa-copy"></i> Copier
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -439,6 +550,128 @@
                         style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 0;">
                         <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--clr-gold);"></i>
                         <p style="margin-top: 12px; color: var(--text-muted);">Calcul des horaires en cours...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Duas Encyclopedia View -->
+            <div id="view-duas" class="view-section hidden">
+                <div class="card premium-card full-width animate-entry"
+                    style="--anim-delay: 0.2s; min-height: calc(100vh - 140px); display: flex; flex-direction: column;">
+                    <div class="duas-header animate-entry" style="--anim-delay: 0.3s; margin-bottom: 24px;">
+                        <h2 class="view-title" style="color: var(--clr-gold);"><i class="fa-solid fa-hands-praying"></i>
+                            Encyclopedie des Douas</h2>
+                        <div class="duas-search-wrapper"
+                            style="background: var(--clr-glass-bg); border-color: var(--clr-glass-border);">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="duas-search" class="duas-search" placeholder="Rechercher une doua..."
+                                style="color: var(--clr-sand);">
+                        </div>
+                    </div>
+                    <div id="duas-container" class="duas-container animate-entry"
+                        style="--anim-delay: 0.4s; flex: 1; overflow-y: auto;"></div>
+                </div>
+            </div>
+
+            <!-- Journal View -->
+            <div id="view-journal" class="view-section hidden">
+                <div class="card premium-card full-width animate-entry"
+                    style="--anim-delay: 0.2s; min-height: calc(100vh - 140px); display: flex; flex-direction: column;">
+                    <div class="journal-header animate-entry" style="--anim-delay: 0.3s; margin-bottom: 24px;">
+                        <h2 class="view-title" style="color: var(--clr-gold);"><i class="fa-solid fa-book-open"></i>
+                            Journal de gratitude</h2>
+                        <div class="journal-controls">
+                            <select id="journal-month-filter" class="journal-filter"
+                                style="background: var(--clr-glass-bg); color: var(--clr-sand); border-color: var(--clr-glass-border);"></select>
+                        </div>
+                    </div>
+                    <div class="journal-write-section animate-entry"
+                        style="--anim-delay: 0.35s; background: var(--clr-glass-bg); border-color: var(--clr-glass-border);">
+                        <textarea id="journal-textarea" class="journal-textarea" rows="5"
+                            style="color: var(--clr-sand); background: transparent;"></textarea>
+                        <div class="journal-write-footer">
+                            <span id="journal-save-indicator" class="journal-save-indicator hidden">Sauvegarde</span>
+                            <button id="journal-save-btn" class="btn-icon-small"
+                                style="background: var(--clr-gold); color: var(--clr-dark-green);">
+                                <i class="fa-solid fa-floppy-disk"></i> Sauvegarder
+                            </button>
+                        </div>
+                    </div>
+                    <div id="journal-history" class="journal-history animate-entry"
+                        style="--anim-delay: 0.4s; flex: 1; overflow-y: auto;"></div>
+                </div>
+            </div>
+
+            <!-- Statistics View -->
+            <div id="view-stats" class="view-section hidden">
+                <div class="card premium-card full-width animate-entry"
+                    style="--anim-delay: 0.2s; min-height: calc(100vh - 140px); display: flex; flex-direction: column;">
+                    <div class="stats-header animate-entry" style="--anim-delay: 0.3s; margin-bottom: 24px;">
+                        <h2 class="view-title" style="color: var(--clr-gold);"><i class="fa-solid fa-chart-simple"></i>
+                            Statistiques</h2>
+                        <div class="stats-period-btns">
+                            <button class="stats-period-btn active" data-period="week">Semaine</button>
+                            <button class="stats-period-btn" data-period="month">Mois</button>
+                            <button class="stats-period-btn" data-period="all">Tout</button>
+                        </div>
+                    </div>
+
+                    <div class="stats-content animate-entry" style="--anim-delay: 0.4s; flex: 1; overflow-y: auto;">
+                        <!-- Heatmap -->
+                        <div class="stats-section">
+                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Activite</h3>
+                            <div id="stats-heatmap" class="stats-heatmap"></div>
+                            <div class="heatmap-legend">
+                                <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-none"></span>
+                                    0</span>
+                                <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-low"></span>
+                                    1-2</span>
+                                <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-mid"></span>
+                                    3-4</span>
+                                <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-full"></span>
+                                    5/5</span>
+                            </div>
+                        </div>
+
+                        <!-- Stats Grid -->
+                        <div id="stats-grid" class="stats-grid"></div>
+
+                        <!-- Streaks -->
+                        <div class="stats-section" style="margin-top: 24px;">
+                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Series en cours</h3>
+                            <div id="stats-streaks" class="stats-streaks"></div>
+                        </div>
+
+                        <!-- Journal counter -->
+                        <div class="stats-section" style="margin-top: 24px;">
+                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Journal</h3>
+                            <p id="stats-journal-count" class="stats-journal-count"
+                                style="font-size: 1.5rem; font-weight: 700; color: var(--clr-gold);"></p>
+                        </div>
+
+                        <!-- Goals -->
+                        <div class="stats-section" style="margin-top: 24px;">
+                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Objectifs</h3>
+                            <div id="stats-goals" class="stats-goals"></div>
+                            <div class="stats-add-goal"
+                                style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
+                                <select id="stats-goal-select" class="journal-filter"
+                                    style="background: var(--clr-glass-bg); color: var(--clr-sand); border-color: var(--clr-glass-border); padding: 8px; border-radius: 8px;">
+                                    <option value="">Ajouter un objectif...
+                                    </option>
+                                    <option value="pray_5">5 prières par jour
+                                    </option>
+                                    <option value="quran_10">10 pages du Coran /
+                                        jour</option>
+                                    <option value="dhikr_100">100 Dhikr / jour
+                                    </option>
+                                </select>
+                                <button id="stats-add-goal-btn" class="btn-icon-small"
+                                    style="background: var(--clr-gold); color: var(--clr-dark-green);">
+                                    <i class="fa-solid fa-plus"></i> Ajouter
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -608,6 +841,20 @@
 
             <!-- Tab: Calculation Method -->
             <div class="settings-tab-content hidden" id="tab-calc">
+                <div class="settings-group" style="margin-bottom: 16px;">
+                    <label class="settings-label" style="font-weight: 600; margin-bottom: 8px; display: block;">
+                        <i class="fa-solid fa-moon"></i> Mode de l'application
+                    </label>
+                    <select id="app-mode-select" class="notif-select" style="width: 100%; padding: 10px 14px;">
+                        <option value="auto">Automatique (detection Ramadan)</option>
+                        <option value="ramadan">Ramadan (force)</option>
+                        <option value="normal">Normal (force)</option>
+                    </select>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">
+                        En mode automatique, l'app detecte le Ramadan via la date Hijri.
+                    </p>
+                </div>
+                <div class="notif-divider"></div>
                 <div id="calc-mosque-hint" class="calc-hint" style="display: none;">
                     <i class="fa-solid fa-circle-info"></i>
                     <span>Une mosquee est selectionnee. Les horaires proviennent de la mosquee. La methode ci-dessous
@@ -663,8 +910,8 @@
     <div id="bug-report-modal" class="onboarding-overlay hidden">
         <div class="onboarding-tooltip settings-tooltip"
             style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 500px;">
-            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><i class="fa-solid fa-comment-dots"
-                    style="color: var(--clr-gold);"></i> Signaler ou suggérer</h3>
+            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><i
+                    class="fa-solid fa-comment-dots" style="color: var(--clr-gold);"></i> Signaler ou suggérer</h3>
             <p style="margin-bottom: 24px; color: var(--text-muted); font-size: 0.95rem;">Un problème ou une idée ?
                 Dites-nous tout.</p>
 

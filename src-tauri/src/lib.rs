@@ -1,9 +1,13 @@
 use serde::Deserialize;
+
+#[cfg(desktop)]
 use tauri::{
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
-    Manager,
 };
+
+#[cfg(desktop)]
+use tauri::Manager;
 
 // ── Bug Report → GitHub Issues (server-side, token never reaches the frontend) ──
 
@@ -82,6 +86,7 @@ async fn create_bug_report(input: BugReportInput) -> Result<String, String> {
     Ok("Issue créée avec succès.".to_string())
 }
 
+#[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![create_bug_report])
@@ -89,8 +94,13 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_shell::init())
-        .plugin(tauri_plugin_process::init())
-        .setup(|app| {
+        .setup(|_app| {
+            #[cfg(desktop)]
+            let app = _app;
+            // ── Process plugin (desktop only — used by updater relaunch) ──
+            #[cfg(desktop)]
+            app.handle().plugin(tauri_plugin_process::init())?;
+
             // ── Autostart plugin ──
             #[cfg(desktop)]
             app.handle().plugin(tauri_plugin_autostart::init(
@@ -102,58 +112,62 @@ pub fn run() {
             #[cfg(desktop)]
             app.handle().plugin(tauri_plugin_updater::Builder::new().build())?;
 
-            // ── System tray ──
-            let show_item =
-                MenuItem::with_id(app, "show", "Ouvrir GuideME", true, None::<&str>)?;
-            let quit_item = MenuItem::with_id(app, "quit", "Quitter", true, None::<&str>)?;
-            let menu = Menu::with_items(app, &[&show_item, &quit_item])?;
+            // ── System tray (desktop only) ──
+            #[cfg(desktop)]
+            {
+                let show_item =
+                    MenuItem::with_id(app, "show", "Ouvrir GuideME", true, None::<&str>)?;
+                let quit_item = MenuItem::with_id(app, "quit", "Quitter", true, None::<&str>)?;
+                let menu = Menu::with_items(app, &[&show_item, &quit_item])?;
 
-            TrayIconBuilder::new()
-                .icon(
-                    app.default_window_icon()
-                        .expect("App icon must be configured in tauri.conf.json")
-                        .clone(),
-                )
-                .tooltip("GuideME - Ramadan")
-                .menu(&menu)
-                .on_menu_event(|app, event| match event.id.as_ref() {
-                    "show" => {
-                        if let Some(window) = app.get_webview_window("main") {
-                            let _ = window.unminimize();
-                            let _ = window.show();
-                            let _ = window.set_focus();
+                TrayIconBuilder::new()
+                    .icon(
+                        app.default_window_icon()
+                            .expect("App icon must be configured in tauri.conf.json")
+                            .clone(),
+                    )
+                    .tooltip("GuideME - Ramadan")
+                    .menu(&menu)
+                    .on_menu_event(|app, event| match event.id.as_ref() {
+                        "show" => {
+                            if let Some(window) = app.get_webview_window("main") {
+                                let _ = window.unminimize();
+                                let _ = window.show();
+                                let _ = window.set_focus();
+                            }
                         }
-                    }
-                    "quit" => {
-                        app.exit(0);
-                    }
-                    _ => {}
-                })
-                .on_tray_icon_event(|tray, event| {
-                    if let TrayIconEvent::Click {
-                        button: MouseButton::Left,
-                        button_state: MouseButtonState::Up,
-                        ..
-                    } = event
-                    {
-                        let app = tray.app_handle();
-                        if let Some(window) = app.get_webview_window("main") {
-                            let _ = window.unminimize();
-                            let _ = window.show();
-                            let _ = window.set_focus();
+                        "quit" => {
+                            app.exit(0);
                         }
-                    }
-                })
-                .build(app)?;
+                        _ => {}
+                    })
+                    .on_tray_icon_event(|tray, event| {
+                        if let TrayIconEvent::Click {
+                            button: MouseButton::Left,
+                            button_state: MouseButtonState::Up,
+                            ..
+                        } = event
+                        {
+                            let app = tray.app_handle();
+                            if let Some(window) = app.get_webview_window("main") {
+                                let _ = window.unminimize();
+                                let _ = window.show();
+                                let _ = window.set_focus();
+                            }
+                        }
+                    })
+                    .build(app)?;
+            }
 
             Ok(())
         })
         // ── Hide main window on close instead of quitting (close-to-tray) ──
-        .on_window_event(|window, event| {
-            if window.label() == "main" {
-                if let tauri::WindowEvent::CloseRequested { api, .. } = event {
+        .on_window_event(|_window, _event| {
+            #[cfg(desktop)]
+            if _window.label() == "main" {
+                if let tauri::WindowEvent::CloseRequested { api, .. } = _event {
                     api.prevent_close();
-                    let _ = window.hide();
+                    let _ = _window.hide();
                 }
             }
         })

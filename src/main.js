@@ -13,7 +13,7 @@ import { updateFasting, updateFastingReference } from './modules/fasting.js'
 import { startCountdown, stopCountdown } from './modules/countdown.js'
 import { renderPrayerSchedule } from './modules/schedule.js'
 import { updateDates } from './modules/hijri-date.js'
-import { updateDailyContent } from './modules/daily-content.js'
+import { updateDailyContent, initDailyContentActions } from './modules/daily-content.js'
 import { initTheme } from './modules/theme.js'
 import { initSplash } from './modules/splash.js'
 import { initOnboarding } from './modules/onboarding.js'
@@ -27,6 +27,14 @@ import { initBugReport } from './modules/bug-report.js'
 import { initSupport } from './modules/support.js'
 import { initChangelog } from './modules/changelog.js'
 import { initUpdater } from './modules/updater.js'
+import { resolveMode, applyMode, getRamadanDay } from './modules/app-mode.js'
+import { initTracker } from './modules/practice-tracker.js'
+import { initDhikr } from './modules/dhikr.js'
+import { initQibla } from './modules/qibla.js'
+import { initDuas } from './modules/duas.js'
+import { initJournal } from './modules/journal.js'
+import { initStatistics } from './modules/statistics.js'
+import { applyPlatformClass, isMobile } from './modules/platform.js'
 
 // Intervals
 let fastingInterval = null
@@ -79,12 +87,28 @@ function initSakura() {
 
 
 /**
+ * Update the Ramadan progress bar with the current hijri day.
+ * @param {number|null} day - Current day of Ramadan (1-30) or null if not Ramadan
+ */
+function updateRamadanProgress(day) {
+  const bar = document.getElementById('ramadan-progress')
+  if (!bar) return
+  if (day === null) { bar.classList.add('hidden'); return }
+  bar.classList.remove('hidden')
+  const dayEl = document.getElementById('ramadan-day')
+  const fillEl = document.getElementById('ramadan-progress-fill')
+  if (dayEl) dayEl.textContent = `Jour ${day}/30 du Ramadan`
+  if (fillEl) fillEl.style.width = `${(day / 30) * 100}%`
+}
+
+/**
  * Load prayer data and refresh all dependent UI.
  * Strategy: Mawaqit (if mosque set) → Aladhan (fallback)
  * Hijri date: always from Aladhan (Mawaqit doesn't provide it)
  */
 async function loadPrayerData(mosqueSlug, offset = 0) {
   let timings = null
+  let currentHijriDate = null
   const isToday = offset === 0
   const method = getCalculationMethod()
   const angles = getMethodAngles()
@@ -114,6 +138,7 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
     const aladhanData = await fetchPrayerTimes(locationParams, aladhanDate)
     if (aladhanData) {
       timings = aladhanData.timings
+      currentHijriDate = aladhanData.hijriDate
       updateDates(aladhanData.hijriDate, offset)
     }
   }
@@ -123,12 +148,14 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
     // Mawaqit provided times for today — fetch Hijri separately
     const hijriDate = await fetchHijriDate(locationParams)
     if (hijriDate) {
+      currentHijriDate = hijriDate
       updateDates(hijriDate, 0)
     }
   } else if (mosqueSlug && !isToday && timings) {
     // Mosque set but non-today — Hijri needs date param
     const hijriDate = await fetchHijriDate(locationParams, aladhanDate)
     if (hijriDate) {
+      currentHijriDate = hijriDate
       updateDates(hijriDate, offset)
     }
   }
@@ -163,6 +190,11 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
     stopCountdown()
     stopNotifications()
   }
+
+  // Apply app mode based on hijri date
+  const mode = resolveMode(currentHijriDate)
+  applyMode(mode)
+  updateRamadanProgress(getRamadanDay(currentHijriDate))
 }
 
 /**
@@ -204,7 +236,10 @@ function setupInteractiveEffects() {
 function setupNavigation() {
   const navTabs = {
     dashboard: { btn: document.getElementById('nav-dashboard'), view: document.getElementById('view-dashboard') },
-    horaires: { btn: document.getElementById('nav-horaires'), view: document.getElementById('view-horaires') }
+    horaires: { btn: document.getElementById('nav-horaires'), view: document.getElementById('view-horaires') },
+    duas: { btn: document.getElementById('nav-duas'), view: document.getElementById('view-duas') },
+    journal: { btn: document.getElementById('nav-journal'), view: document.getElementById('view-journal') },
+    stats: { btn: document.getElementById('nav-stats'), view: document.getElementById('view-stats') }
   };
 
   Object.values(navTabs).forEach(tab => {
@@ -220,11 +255,29 @@ function setupNavigation() {
 
         // Add to current
         tab.btn.classList.add('active');
-        if (tab.view) tab.view.classList.add('active-view');
+        if (tab.view) {
+          tab.view.classList.remove('hidden');
+          tab.view.classList.add('active-view');
+        }
 
         // Initialize calendar on first visit
         if (tab.btn === navTabs.horaires.btn) {
           initCalendar();
+        }
+
+        // Initialize duas on first visit
+        if (tab.btn === navTabs.duas?.btn) {
+          initDuas()
+        }
+
+        // Initialize journal on first visit
+        if (tab.btn === navTabs.journal?.btn) {
+          initJournal()
+        }
+
+        // Initialize statistics on first visit
+        if (tab.btn === navTabs.stats?.btn) {
+          initStatistics()
         }
       });
     }
@@ -238,8 +291,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 0. Initialize persistent storage (loads from disk into memory cache)
   await storage.init()
 
+  // 0.5. Platform detection (adds CSS class before any rendering)
+  applyPlatformClass()
+
   // Window controls
-  initWindowControls()
+  if (!isMobile) initWindowControls()
 
   // 1. Theme (restore before anything visual)
   initTheme()
@@ -260,6 +316,31 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 3.5. Setup navigation
   setupNavigation()
 
+  // 3.5.1 Android back button handling
+  // Custom 'backbutton' event dispatched by MainActivity.kt via onBackPressedDispatcher
+  if (isMobile) {
+    document.addEventListener('backbutton', (e) => {
+      // 1. Close drawer if open
+      const sidebar = document.querySelector('.sidebar')
+      if (sidebar?.classList.contains('drawer-open')) {
+        sidebar.classList.remove('drawer-open')
+        document.getElementById('sidebar-backdrop')?.classList.remove('visible')
+        e.preventDefault()
+        return
+      }
+
+      // 2. Close any open modal
+      const openModal = document.querySelector('.modal.show, .modal-overlay.active, .settings-modal.show')
+      if (openModal) {
+        openModal.classList.remove('show', 'active')
+        e.preventDefault()
+        return
+      }
+
+      // 3. On dashboard → don't preventDefault → OS handles (minimize app)
+    })
+  }
+
   // 3.6 Setup sidebar
   initSidebar()
 
@@ -267,7 +348,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initBugReport()
 
   // 3.8 Initialize Sakura Titlebar Effects
-  initSakura()
+  if (!isMobile) initSakura()
 
   // 3.9 Initialize Support / Ads Feature
   await initSupport()
@@ -276,7 +357,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await initChangelog()
 
   // 3.11 Initialize Auto-updater
-  await initUpdater()
+  if (!isMobile) await initUpdater()
 
   // 4. Load prayer data (Mawaqit or Aladhan)
   const mosqueSlug = getMosqueSlug()
@@ -288,8 +369,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadPrayerData(slug, offset)
   })
 
-  // 6. Daily verse/hadith
-  updateDailyContent()
+  // 6. Daily verse/hadith (Ramadan mode detected via body class set by applyMode)
+  const isRamadanMode = document.body.classList.contains('mode-ramadan')
+  updateDailyContent(isRamadanMode)
+  initDailyContentActions()
+
+  // 6.5. Practice tracker (dashboard card)
+  initTracker()
+
+  // 6.6. Dhikr counter (dashboard card)
+  initDhikr()
+
+  // 6.7. Qibla compass (dashboard card)
+  initQibla()
 
   // 7. Interactive effects
   setupInteractiveEffects()
