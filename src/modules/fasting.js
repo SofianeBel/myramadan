@@ -53,7 +53,7 @@ export function updateFasting(fajrTime, maghribTime) {
     if (iftarStatus) iftarStatus.textContent = '--'
     if (progressFill) progressFill.style.width = '0%'
     if (progressPct) progressPct.textContent = '0%'
-    toggleProgressBar(false)
+    toggleProgressBar(true)
     if (timeRemaining) {
       const untilFajr = fajrMin - nowMin
       timeRemaining.textContent = `Bon appétit ! Suhoor dans ${formatDuration(untilFajr)}`
@@ -67,7 +67,7 @@ export function updateFasting(fajrTime, maghribTime) {
     if (iftarStatus) iftarStatus.textContent = 'C\'est l\'heure !'
     if (progressFill) progressFill.style.width = '100%'
     if (progressPct) progressPct.textContent = '100%'
-    toggleProgressBar(false)
+    toggleProgressBar(true)
     if (timeRemaining) timeRemaining.textContent = 'Le jeûne est terminé — Bon Iftar !'
     return
   }

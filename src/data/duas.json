@@ -1,0 +1,1062 @@
+{
+  "categories": [
+    {
+      "id": "daily-life",
+      "name": "Vie quotidienne",
+      "icon": "fa-sun",
+      "subcategories": [
+        {
+          "id": "morning",
+          "name": "Adhkar du matin",
+          "parentId": "daily-life",
+          "duas": [
+            {
+              "id": "morning-1",
+              "arabic": "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+              "transliteration": "Asbahna wa asbahal mulku lillah, wal hamdulillah, la ilaha illallahu wahdahu la sharika lah, lahul mulku wa lahul hamdu wa huwa 'ala kulli shay'in qadir",
+              "translation": "Nous voici au matin et le royaume appartient à Allah. Louange à Allah. Nul ne mérite d'être adoré sauf Allah, Unique, sans associé. A Lui la royauté, à Lui la louange et Il est capable de toute chose.",
+              "reference": "Sahih Muslim 2723",
+              "context": "Se dit le matin après Fajr",
+              "repeat": 1
+            },
+            {
+              "id": "morning-2",
+              "arabic": "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ",
+              "transliteration": "Allahumma bika asbahna wa bika amsayna, wa bika nahya wa bika namutu wa ilaykan nushur",
+              "translation": "O Allah, c'est par Toi que nous atteignons le matin et c'est par Toi que nous atteignons le soir. C'est par Toi que nous vivons et c'est par Toi que nous mourons, et c'est vers Toi la résurrection.",
+              "reference": "Sunan at-Tirmidhi 3391",
+              "context": "Se dit le matin après Fajr",
+              "repeat": 1
+            },
+            {
+              "id": "morning-3",
+              "arabic": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ",
+              "transliteration": "SubhanAllahi wa bihamdihi",
+              "translation": "Gloire et louange à Allah.",
+              "reference": "Sahih al-Bukhari 6405, Sahih Muslim 2692",
+              "context": "Celui qui dit cela 100 fois le matin, ses péchés seront effacés fussent-ils aussi nombreux que l'écume de la mer.",
+              "repeat": 100
+            },
+            {
+              "id": "morning-4",
+              "arabic": "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+              "transliteration": "La ilaha illallahu wahdahu la sharika lah, lahul mulku wa lahul hamdu, wa huwa 'ala kulli shay'in qadir",
+              "translation": "Nul ne mérite d'être adoré sauf Allah, Unique, sans associé. A Lui la royauté, à Lui la louange, et Il est capable de toute chose.",
+              "reference": "Sahih al-Bukhari 3293, Sahih Muslim 2693",
+              "context": "Celui qui dit cela 10 fois le matin aura la récompense d'avoir affranchi 4 esclaves parmi la descendance d'Ismaël.",
+              "repeat": 10
+            },
+            {
+              "id": "morning-5",
+              "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي",
+              "transliteration": "Allahumma inni as'alukal 'afiyata fid-dunya wal-akhira. Allahumma inni as'alukal 'afwa wal-'afiyata fi dini wa dunyaya wa ahli wa mali",
+              "translation": "O Allah, je Te demande le bien-être dans ce monde et dans l'au-delà. O Allah, je Te demande le pardon et le bien-être dans ma religion, ma vie, ma famille et mes biens.",
+              "reference": "Sunan Abi Dawud 5074, Sunan Ibn Majah 3871",
+              "context": "Le Prophète (saws) ne manquait jamais de faire cette invocation matin et soir.",
+              "repeat": 1
+            },
+            {
+              "id": "morning-6",
+              "arabic": "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+              "transliteration": "Bismillahil-ladhi la yadurru ma'asmihi shay'un fil-ardi wa la fis-sama'i wa huwas-Sami'ul-'Alim",
+              "translation": "Au nom d'Allah, Celui dont le nom protège de tout mal sur terre et dans le ciel, et Il est l'Audient, l'Omniscient.",
+              "reference": "Sunan Abi Dawud 5088, Sunan at-Tirmidhi 3388",
+              "context": "Rien ne lui nuira jusqu'au soir. Se dit 3 fois le matin et 3 fois le soir.",
+              "repeat": 3
+            }
+          ]
+        },
+        {
+          "id": "evening",
+          "name": "Adhkar du soir",
+          "parentId": "daily-life",
+          "duas": [
+            {
+              "id": "evening-1",
+              "arabic": "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ",
+              "transliteration": "Amsayna wa amsal mulku lillah, wal hamdulillah, la ilaha illallahu wahdahu la sharika lah, lahul mulku wa lahul hamdu wa huwa 'ala kulli shay'in qadir",
+              "translation": "Nous voici au soir et le royaume appartient à Allah. Louange à Allah. Nul ne mérite d'être adoré sauf Allah, Unique, sans associé. A Lui la royauté, à Lui la louange et Il est capable de toute chose.",
+              "reference": "Sahih Muslim 2723",
+              "context": "Se dit le soir après 'Asr",
+              "repeat": 1
+            },
+            {
+              "id": "evening-2",
+              "arabic": "اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ",
+              "transliteration": "Allahumma bika amsayna wa bika asbahna, wa bika nahya wa bika namutu wa ilaykal masir",
+              "translation": "O Allah, c'est par Toi que nous atteignons le soir et c'est par Toi que nous atteignons le matin. C'est par Toi que nous vivons et c'est par Toi que nous mourons, et c'est vers Toi le retour.",
+              "reference": "Sunan at-Tirmidhi 3391",
+              "context": "Se dit le soir après 'Asr",
+              "repeat": 1
+            },
+            {
+              "id": "evening-3",
+              "arabic": "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+              "transliteration": "A'udhu bi kalimatillahit-tammati min sharri ma khalaq",
+              "translation": "Je cherche refuge dans les paroles parfaites d'Allah contre le mal de ce qu'Il a créé.",
+              "reference": "Sahih Muslim 2708",
+              "context": "Se dit 3 fois le soir. Le Prophète (saws) a dit qu'aucun mal ne touchera celui qui la dit.",
+              "repeat": 3
+            },
+            {
+              "id": "evening-4",
+              "arabic": "اللَّهُمَّ عَالِمَ الْغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَاوَاتِ وَالْأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ",
+              "transliteration": "Allahumma 'alimal-ghaybi wash-shahadah, fatiras-samawati wal-ard, rabba kulli shay'in wa malikah, ash-hadu an la ilaha illa ant, a'udhu bika min sharri nafsi wa min sharrish-shaytani wa shirkihi",
+              "translation": "O Allah, Connaisseur de l'invisible et du visible, Créateur des cieux et de la terre, Seigneur et Maître de toute chose. J'atteste que nul ne mérite d'être adoré sauf Toi. Je cherche refuge auprès de Toi contre le mal de mon âme et contre le mal du diable et son associationnisme.",
+              "reference": "Sunan Abi Dawud 5067, Sunan at-Tirmidhi 3392",
+              "context": "Se dit le matin et le soir",
+              "repeat": 1
+            },
+            {
+              "id": "evening-5",
+              "arabic": "اللَّهُمَّ مَا أَمْسَى بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+              "transliteration": "Allahumma ma amsa bi min ni'matin aw bi ahadin min khalqika faminka wahdaka la sharika lak, falakal hamdu wa lakash-shukr",
+              "translation": "O Allah, tout bienfait dont je jouis ce soir, ou dont jouit l'une de Tes créatures, provient de Toi seul, sans associé. A Toi la louange et la reconnaissance.",
+              "reference": "Sunan Abi Dawud 5073",
+              "context": "Celui qui dit cela le soir a accompli le remerciement de cette soirée.",
+              "repeat": 1
+            },
+            {
+              "id": "evening-6",
+              "arabic": "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ",
+              "transliteration": "Ya Hayyu ya Qayyum, bi rahmatika astaghith, aslih li sha'ni kullahu wa la takilni ila nafsi tarfata 'ayn",
+              "translation": "O Vivant, O Subsistant par Lui-même, par Ta miséricorde j'implore secours. Améliore toute ma situation et ne me laisse pas à moi-même le temps d'un clin d'oeil.",
+              "reference": "Mustadrak al-Hakim 2000",
+              "context": "Invocation que le Prophète (saws) enseigna à Fatima pour le matin et le soir.",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "meals",
+          "name": "Avant et après le repas",
+          "parentId": "daily-life",
+          "duas": [
+            {
+              "id": "meals-1",
+              "arabic": "بِسْمِ اللَّهِ",
+              "transliteration": "Bismillah",
+              "translation": "Au nom d'Allah.",
+              "reference": "Sahih al-Bukhari 5376, Sahih Muslim 2017",
+              "context": "Se dit avant de commencer à manger. Si on oublie au début, on dit : Bismillahi fi awwalihi wa akhirihi.",
+              "repeat": 1
+            },
+            {
+              "id": "meals-2",
+              "arabic": "اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا وَقِنَا عَذَابَ النَّارِ، بِسْمِ اللَّهِ",
+              "transliteration": "Allahumma barik lana fima razaqtana wa qina 'adhaban-nar, bismillah",
+              "translation": "O Allah, bénis-nous dans ce que Tu nous as accordé comme subsistance et protège-nous du châtiment du Feu. Au nom d'Allah.",
+              "reference": "Rapporté par Ibn as-Sunni dans 'Amal al-Yawm wal-Laylah 457",
+              "context": "Se dit avant de manger",
+              "repeat": 1
+            },
+            {
+              "id": "meals-3",
+              "arabic": "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ",
+              "transliteration": "Alhamdulillahil-ladhi at'amani hadha wa razaqanihi min ghayri hawlin minni wa la quwwah",
+              "translation": "Louange à Allah qui m'a nourri de ceci et me l'a accordé sans effort ni force de ma part.",
+              "reference": "Sunan Abi Dawud 4023, Sunan at-Tirmidhi 3458",
+              "context": "Se dit après avoir fini de manger. Ses péchés antérieurs seront pardonnés.",
+              "repeat": 1
+            },
+            {
+              "id": "meals-4",
+              "arabic": "الْحَمْدُ لِلَّهِ حَمْدًا كَثِيرًا طَيِّبًا مُبَارَكًا فِيهِ، غَيْرَ مَكْفِيٍّ وَلَا مُوَدَّعٍ وَلَا مُسْتَغْنًى عَنْهُ رَبَّنَا",
+              "transliteration": "Alhamdulillahi hamdan kathiran tayyiban mubarakan fih, ghayra makfiyyin wa la muwadda'in wa la mustaghnan 'anhu Rabbana",
+              "translation": "Louange abondante, agréable et bénie à Allah, notre Seigneur. Nous ne pouvons ni nous passer de Lui, ni nous en détourner.",
+              "reference": "Sahih al-Bukhari 5458",
+              "context": "Se dit après avoir fini de manger",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "home",
+          "name": "Entrer et sortir de la maison",
+          "parentId": "daily-life",
+          "duas": [
+            {
+              "id": "home-1",
+              "arabic": "بِسْمِ اللَّهِ وَلَجْنَا، وَبِسْمِ اللَّهِ خَرَجْنَا، وَعَلَى رَبِّنَا تَوَكَّلْنَا",
+              "transliteration": "Bismillahi walajna, wa bismillahi kharajna, wa 'ala Rabbina tawakkalna",
+              "translation": "Au nom d'Allah nous entrons, au nom d'Allah nous sortons, et en notre Seigneur nous placons notre confiance.",
+              "reference": "Sunan Abi Dawud 5096",
+              "context": "Se dit en entrant dans la maison",
+              "repeat": 1
+            },
+            {
+              "id": "home-2",
+              "arabic": "بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+              "transliteration": "Bismillah, tawakkaltu 'alallah, wa la hawla wa la quwwata illa billah",
+              "translation": "Au nom d'Allah, je place ma confiance en Allah. Il n'y a de force ni de puissance qu'en Allah.",
+              "reference": "Sunan Abi Dawud 5095, Sunan at-Tirmidhi 3426",
+              "context": "Se dit en sortant de la maison. Il sera dit : tu es guidé, protégé et préservé.",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "sleep",
+          "name": "Sommeil et réveil",
+          "parentId": "daily-life",
+          "duas": [
+            {
+              "id": "sleep-1",
+              "arabic": "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا",
+              "transliteration": "Bismika Allahumma amutu wa ahya",
+              "translation": "En Ton nom, O Allah, je meurs et je vis.",
+              "reference": "Sahih al-Bukhari 6324",
+              "context": "Se dit avant de dormir",
+              "repeat": 1
+            },
+            {
+              "id": "sleep-2",
+              "arabic": "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ",
+              "transliteration": "Allahumma qini 'adhabaka yawma tab'athu 'ibadak",
+              "translation": "O Allah, protège-moi de Ton châtiment le Jour où Tu ressusciteras Tes serviteurs.",
+              "reference": "Sunan Abi Dawud 5045",
+              "context": "Se dit avant de dormir en posant la main droite sous la joue",
+              "repeat": 1
+            },
+            {
+              "id": "sleep-3",
+              "arabic": "اللَّهُمَّ بِاسْمِكَ أَمُوتُ وَأَحْيَا، الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ",
+              "transliteration": "Allahumma bismika amutu wa ahya. Alhamdulillahil-ladhi ahyana ba'da ma amatana wa ilayhin-nushur",
+              "translation": "O Allah, en Ton nom je meurs et je vis. Louange à Allah qui nous a rendu la vie après nous avoir fait mourir, et c'est vers Lui la résurrection.",
+              "reference": "Sahih al-Bukhari 6312",
+              "context": "La première partie se dit avant de dormir, la seconde au réveil",
+              "repeat": 1
+            },
+            {
+              "id": "sleep-4",
+              "arabic": "اللَّهُمَّ أَسْلَمْتُ نَفْسِي إِلَيْكَ، وَفَوَّضْتُ أَمْرِي إِلَيْكَ، وَوَجَّهْتُ وَجْهِي إِلَيْكَ، وَأَلْجَأْتُ ظَهْرِي إِلَيْكَ، رَغْبَةً وَرَهْبَةً إِلَيْكَ، لَا مَلْجَأَ وَلَا مَنْجَا مِنْكَ إِلَّا إِلَيْكَ، آمَنْتُ بِكِتَابِكَ الَّذِي أَنْزَلْتَ، وَبِنَبِيِّكَ الَّذِي أَرْسَلْتَ",
+              "transliteration": "Allahumma aslamtu nafsi ilayk, wa fawwadtu amri ilayk, wa wajjahtu wajhi ilayk, wa alja'tu dhahri ilayk, raghbatan wa rahbatan ilayk, la malja'a wa la manja minka illa ilayk, amantu bi kitabikal-ladhi anzalt, wa bi nabiyyikal-ladhi arsalt",
+              "translation": "O Allah, je me suis soumis à Toi, je T'ai confié mon sort, j'ai tourné mon visage vers Toi, et j'ai cherché refuge auprès de Toi, par désir et par crainte de Toi. Il n'y a ni refuge ni échappatoire de Toi qu'auprès de Toi. Je crois en Ton Livre que Tu as révélé et en Ton Prophète que Tu as envoyé.",
+              "reference": "Sahih al-Bukhari 247, Sahih Muslim 2710",
+              "context": "Se dit avant de dormir. Le Prophète (saws) a dit : si tu meurs cette nuit-là, tu mourras sur la fitra (nature originelle).",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "toilet",
+          "name": "Entrer et sortir des toilettes",
+          "parentId": "daily-life",
+          "duas": [
+            {
+              "id": "toilet-1",
+              "arabic": "بِسْمِ اللَّهِ، اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبُثِ وَالْخَبَائِثِ",
+              "transliteration": "Bismillah, Allahumma inni a'udhu bika minal-khubuthi wal-khaba'ith",
+              "translation": "Au nom d'Allah. O Allah, je cherche refuge auprès de Toi contre les démons mâles et femelles.",
+              "reference": "Sahih al-Bukhari 142, Sahih Muslim 375",
+              "context": "Se dit avant d'entrer aux toilettes en avancant le pied gauche",
+              "repeat": 1
+            },
+            {
+              "id": "toilet-2",
+              "arabic": "غُفْرَانَكَ",
+              "transliteration": "Ghufranaka",
+              "translation": "Je Te demande pardon.",
+              "reference": "Sunan Abi Dawud 30, Sunan at-Tirmidhi 7",
+              "context": "Se dit en sortant des toilettes en avancant le pied droit",
+              "repeat": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prayer",
+      "name": "Priere et adoration",
+      "icon": "fa-mosque",
+      "subcategories": [
+        {
+          "id": "before-after-prayer",
+          "name": "Avant et apres la priere",
+          "parentId": "prayer",
+          "duas": [
+            {
+              "id": "prayer-1",
+              "arabic": "اللَّهُمَّ بَاعِدْ بَيْنِي وَبَيْنَ خَطَايَايَ كَمَا بَاعَدْتَ بَيْنَ الْمَشْرِقِ وَالْمَغْرِبِ، اللَّهُمَّ نَقِّنِي مِنْ خَطَايَايَ كَمَا يُنَقَّى الثَّوْبُ الْأَبْيَضُ مِنَ الدَّنَسِ، اللَّهُمَّ اغْسِلْنِي مِنْ خَطَايَايَ بِالثَّلْجِ وَالْمَاءِ وَالْبَرَدِ",
+              "transliteration": "Allahumma ba'id bayni wa bayna khatayaya kama ba'adta baynal-mashriqi wal-maghrib. Allahumma naqqini min khatayaya kama yunaqqa-ththawbul-abyadhu minad-danas. Allahummaghsilni min khatayaya bith-thalji wal-ma'i wal-barad",
+              "translation": "O Allah, eloigne-moi de mes peches comme Tu as eloigne l'orient de l'occident. O Allah, purifie-moi de mes peches comme on purifie le vetement blanc de la souillure. O Allah, lave-moi de mes peches avec la neige, l'eau et la grele.",
+              "reference": "Sahih al-Bukhari 744, Sahih Muslim 598",
+              "context": "Invocation d'ouverture de la priere, apres le takbir al-ihram",
+              "repeat": 1
+            },
+            {
+              "id": "prayer-2",
+              "arabic": "سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، وَتَبَارَكَ اسْمُكَ، وَتَعَالَى جَدُّكَ، وَلَا إِلَهَ غَيْرُكَ",
+              "transliteration": "Subhanakal-lahumma wa bihamdik, wa tabarakasmuk, wa ta'ala jadduk, wa la ilaha ghayruk",
+              "translation": "Gloire et louange a Toi, O Allah. Beni soit Ton nom, exaltee soit Ta grandeur. Il n'y a pas d'autre divinite que Toi.",
+              "reference": "Sunan Abi Dawud 775, Sunan at-Tirmidhi 243",
+              "context": "Invocation d'ouverture de la priere (dou'a al-istiftah)",
+              "repeat": 1
+            },
+            {
+              "id": "prayer-3",
+              "arabic": "أَسْتَغْفِرُ اللَّهَ، أَسْتَغْفِرُ اللَّهَ، أَسْتَغْفِرُ اللَّهَ، اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ",
+              "transliteration": "Astaghfirullah, astaghfirullah, astaghfirullah. Allahumma antas-Salamu wa minkas-salam, tabarakta ya dhal-jalali wal-ikram",
+              "translation": "Je demande pardon a Allah (3 fois). O Allah, Tu es la Paix et de Toi vient la paix. Beni sois-Tu, O Detenteur de la majeste et de la generosite.",
+              "reference": "Sahih Muslim 591",
+              "context": "Se dit immediatement apres le salam de la priere",
+              "repeat": 1
+            },
+            {
+              "id": "prayer-4",
+              "arabic": "سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَاللَّهُ أَكْبَرُ",
+              "transliteration": "SubhanAllah, wal-hamdulillah, wallahu akbar",
+              "translation": "Gloire a Allah, louange a Allah, Allah est le plus grand.",
+              "reference": "Sahih Muslim 595",
+              "context": "Se dit 33 fois chacun apres chaque priere obligatoire. Puis on complete a 100 en disant : La ilaha illallahu wahdahu la sharika lah, lahul mulku wa lahul hamdu wa huwa 'ala kulli shay'in qadir.",
+              "repeat": 33
+            },
+            {
+              "id": "prayer-5",
+              "arabic": "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+              "transliteration": "Rabbana atina fid-dunya hasanatan wa fil-akhirati hasanatan wa qina 'adhaban-nar",
+              "translation": "Notre Seigneur, accorde-nous une belle part ici-bas et une belle part dans l'au-dela, et protege-nous du chatiment du Feu.",
+              "reference": "Coran 2:201",
+              "context": "Doua frequemment recitee dans la priere et en dehors",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "mosque",
+          "name": "Entrer a la mosquee",
+          "parentId": "prayer",
+          "duas": [
+            {
+              "id": "mosque-1",
+              "arabic": "اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ",
+              "transliteration": "Allahummaf-tah li abwaba rahmatik",
+              "translation": "O Allah, ouvre-moi les portes de Ta misericorde.",
+              "reference": "Sahih Muslim 713",
+              "context": "Se dit en entrant dans la mosquee en avancant le pied droit",
+              "repeat": 1
+            },
+            {
+              "id": "mosque-2",
+              "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ",
+              "transliteration": "Allahumma inni as'aluka min fadlik",
+              "translation": "O Allah, je Te demande de Ta grace.",
+              "reference": "Sahih Muslim 713",
+              "context": "Se dit en sortant de la mosquee en avancant le pied gauche",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "night-prayer",
+          "name": "Priere de nuit (Qiyam)",
+          "parentId": "prayer",
+          "duas": [
+            {
+              "id": "night-prayer-1",
+              "arabic": "اللَّهُمَّ لَكَ الْحَمْدُ أَنْتَ نُورُ السَّمَاوَاتِ وَالْأَرْضِ وَمَنْ فِيهِنَّ، وَلَكَ الْحَمْدُ أَنْتَ قَيِّمُ السَّمَاوَاتِ وَالْأَرْضِ وَمَنْ فِيهِنَّ، وَلَكَ الْحَمْدُ أَنْتَ الْحَقُّ وَوَعْدُكَ حَقٌّ",
+              "transliteration": "Allahumma lakal-hamd, anta nurus-samawati wal-ardi wa man fihinn. Wa lakal-hamd, anta qayyimus-samawati wal-ardi wa man fihinn. Wa lakal-hamd, antal-Haqqu wa wa'dukal-haqq",
+              "translation": "O Allah, a Toi la louange. Tu es la Lumiere des cieux et de la terre et de ceux qui s'y trouvent. A Toi la louange, Tu es le Soutien des cieux et de la terre et de ceux qui s'y trouvent. A Toi la louange, Tu es la Verite et Ta promesse est verite.",
+              "reference": "Sahih al-Bukhari 1120, Sahih Muslim 769",
+              "context": "Invocation d'ouverture de la priere de nuit (tahajjud)",
+              "repeat": 1
+            },
+            {
+              "id": "night-prayer-2",
+              "arabic": "اللَّهُمَّ اهْدِنِي فِيمَنْ هَدَيْتَ، وَعَافِنِي فِيمَنْ عَافَيْتَ، وَتَوَلَّنِي فِيمَنْ تَوَلَّيْتَ، وَبَارِكْ لِي فِيمَا أَعْطَيْتَ، وَقِنِي شَرَّ مَا قَضَيْتَ، فَإِنَّكَ تَقْضِي وَلَا يُقْضَى عَلَيْكَ",
+              "transliteration": "Allahummahdini fiman hadayt, wa 'afini fiman 'afayt, wa tawallani fiman tawallayt, wa barik li fima a'tayt, wa qini sharra ma qadayt, fa innaka taqdi wa la yuqda 'alayk",
+              "translation": "O Allah, guide-moi parmi ceux que Tu as guides, accorde-moi le bien-etre parmi ceux a qui Tu l'as accorde, prends-moi en charge parmi ceux que Tu as pris en charge, benis ce que Tu m'as donne, et protege-moi du mal de ce que Tu as decrete. Car c'est Toi qui decrete et nul ne decrete contre Toi.",
+              "reference": "Sunan Abi Dawud 1425, Sunan at-Tirmidhi 464",
+              "context": "Invocation du Qunut, recitee dans le Witr",
+              "repeat": 1
+            },
+            {
+              "id": "night-prayer-3",
+              "arabic": "رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِنْ لَدُنْكَ رَحْمَةً إِنَّكَ أَنْتَ الْوَهَّابُ",
+              "transliteration": "Rabbana la tuzigh qulubana ba'da idh hadaytana wa hab lana min ladunka rahmah, innaka antal-Wahhab",
+              "translation": "Notre Seigneur, ne devie pas nos coeurs apres nous avoir guides, et accorde-nous de Ta part une misericorde. C'est Toi le Donateur par excellence.",
+              "reference": "Coran 3:8",
+              "context": "Doua coranique frequemment recitee la nuit",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "istikhara",
+          "name": "Priere de consultation (Istikhara)",
+          "parentId": "prayer",
+          "duas": [
+            {
+              "id": "istikhara-1",
+              "arabic": "اللَّهُمَّ إِنِّي أَسْتَخِيرُكَ بِعِلْمِكَ، وَأَسْتَقْدِرُكَ بِقُدْرَتِكَ، وَأَسْأَلُكَ مِنْ فَضْلِكَ الْعَظِيمِ، فَإِنَّكَ تَقْدِرُ وَلَا أَقْدِرُ، وَتَعْلَمُ وَلَا أَعْلَمُ، وَأَنْتَ عَلَّامُ الْغُيُوبِ. اللَّهُمَّ إِنْ كُنْتَ تَعْلَمُ أَنَّ هَذَا الْأَمْرَ خَيْرٌ لِي فِي دِينِي وَمَعَاشِي وَعَاقِبَةِ أَمْرِي فَاقْدُرْهُ لِي وَيَسِّرْهُ لِي ثُمَّ بَارِكْ لِي فِيهِ، وَإِنْ كُنْتَ تَعْلَمُ أَنَّ هَذَا الْأَمْرَ شَرٌّ لِي فِي دِينِي وَمَعَاشِي وَعَاقِبَةِ أَمْرِي فَاصْرِفْهُ عَنِّي وَاصْرِفْنِي عَنْهُ وَاقْدُرْ لِيَ الْخَيْرَ حَيْثُ كَانَ ثُمَّ أَرْضِنِي بِهِ",
+              "transliteration": "Allahumma inni astakhiruka bi 'ilmik, wa astaqdiruka bi qudratik, wa as'aluka min fadlikal-'adhim, fa innaka taqdiru wa la aqdir, wa ta'lamu wa la a'lam, wa anta 'allamul-ghuyub. Allahumma in kunta ta'lamu anna hadhal-amra khayrun li fi dini wa ma'ashi wa 'aqibati amri faqdurhu li wa yassirhu li thumma barik li fih, wa in kunta ta'lamu anna hadhal-amra sharrun li fi dini wa ma'ashi wa 'aqibati amri fasrifhu 'anni wasrifni 'anhu waqdur liyal-khayra haythu kana thumma ardini bih",
+              "translation": "O Allah, je Te demande de me guider par Ta science, de m'accorder le pouvoir par Ta puissance, et je Te demande de Ta grace immense. Car Tu es capable et je ne le suis pas, Tu sais et je ne sais pas, et Tu es le Grand Connaisseur de l'invisible. O Allah, si Tu sais que cette affaire est un bien pour ma religion, ma vie et ma destinee, alors decrete-la pour moi et facilite-la, puis benis-la pour moi. Et si Tu sais que cette affaire est un mal pour ma religion, ma vie et ma destinee, alors ecarte-la de moi et ecarte-moi d'elle, et decrete pour moi le bien ou qu'il se trouve, puis rends-moi satisfait.",
+              "reference": "Sahih al-Bukhari 1162",
+              "context": "Se dit apres deux raka'at de priere volontaire. On mentionne son besoin a la place de 'cette affaire'.",
+              "repeat": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ramadan",
+      "name": "Ramadan et jeune",
+      "icon": "fa-moon",
+      "subcategories": [
+        {
+          "id": "iftar",
+          "name": "Rupture du jeune",
+          "parentId": "ramadan",
+          "duas": [
+            {
+              "id": "iftar-1",
+              "arabic": "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الْأَجْرُ إِنْ شَاءَ اللَّهُ",
+              "transliteration": "Dhahaba-ddhama'u wabtallatil-'uruqu wa thabatal-ajru in sha'Allah",
+              "translation": "La soif est partie, les veines se sont humidifiees et la recompense est confirmee, si Allah le veut.",
+              "reference": "Sunan Abi Dawud 2357",
+              "context": "Se dit au moment de rompre le jeune (iftar)",
+              "repeat": 1
+            },
+            {
+              "id": "iftar-2",
+              "arabic": "اللَّهُمَّ إِنِّي لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ",
+              "transliteration": "Allahumma inni laka sumtu wa bika amantu wa 'ala rizqika aftart",
+              "translation": "O Allah, c'est pour Toi que j'ai jeune, en Toi que j'ai cru, et c'est avec Ta subsistance que je romps mon jeune.",
+              "reference": "Sunan Abi Dawud 2358 (faible, mais largement pratique)",
+              "context": "Se dit au moment de rompre le jeune",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "laylat-qadr",
+          "name": "Nuit du Destin (Laylat al-Qadr)",
+          "parentId": "ramadan",
+          "duas": [
+            {
+              "id": "laylat-qadr-1",
+              "arabic": "اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",
+              "transliteration": "Allahumma innaka 'afuwwun tuhibbul-'afwa fa'fu 'anni",
+              "translation": "O Allah, Tu es Celui qui pardonne, Tu aimes le pardon, alors pardonne-moi.",
+              "reference": "Sunan at-Tirmidhi 3513, Sunan Ibn Majah 3850",
+              "context": "Le Prophete (saws) a enseigne cette doua a Aicha pour Laylat al-Qadr. La meilleure invocation des 10 dernieres nuits.",
+              "repeat": 1
+            },
+            {
+              "id": "laylat-qadr-2",
+              "arabic": "رَبَّنَا تَقَبَّلْ مِنَّا إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ، وَتُبْ عَلَيْنَا إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ",
+              "transliteration": "Rabbana taqabbal minna innaka antas-Sami'ul-'Alim, wa tub 'alayna innaka antat-Tawwabur-Rahim",
+              "translation": "Notre Seigneur, accepte [cela] de nous. Tu es certes Celui qui entend et qui sait tout. Et accepte notre repentir. Tu es certes Celui qui accueille le repentir, le Misericordieux.",
+              "reference": "Coran 2:127-128",
+              "context": "Doua coranique d'Ibrahim (paix sur lui), recommandee durant Laylat al-Qadr",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "ramadan-specific",
+          "name": "Douas specifiques au Ramadan",
+          "parentId": "ramadan",
+          "duas": [
+            {
+              "id": "ramadan-1",
+              "arabic": "رَبِّ اغْفِرْ لِي وَارْحَمْنِي وَاهْدِنِي وَعَافِنِي وَارْزُقْنِي",
+              "transliteration": "Rabbighfir li warhamni wahdini wa 'afini warzuqni",
+              "translation": "Seigneur, pardonne-moi, accorde-moi Ta misericorde, guide-moi, accorde-moi le bien-etre et accorde-moi ma subsistance.",
+              "reference": "Sahih Muslim 2697",
+              "context": "Doua complete entre les deux prosternations, recommandee durant Ramadan",
+              "repeat": 1
+            },
+            {
+              "id": "ramadan-2",
+              "arabic": "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
+              "transliteration": "Allahumma a'inni 'ala dhikrika wa shukrika wa husni 'ibadatik",
+              "translation": "O Allah, aide-moi a T'invoquer, a Te remercier et a T'adorer de la meilleure facon.",
+              "reference": "Sunan Abi Dawud 1522, Sunan an-Nasa'i 1303",
+              "context": "Le Prophete (saws) conseilla a Mu'adh ibn Jabal de ne jamais delaisser cette doua apres chaque priere.",
+              "repeat": 1
+            },
+            {
+              "id": "ramadan-3",
+              "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ وَأَعُوذُ بِكَ مِنَ النَّارِ",
+              "transliteration": "Allahumma inni as'alukal-jannah wa a'udhu bika minan-nar",
+              "translation": "O Allah, je Te demande le Paradis et je cherche refuge aupres de Toi contre le Feu.",
+              "reference": "Sunan Abi Dawud 792",
+              "context": "Doua recommandee tout au long du Ramadan, particulierement dans les 10 dernieres nuits.",
+              "repeat": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "life-situations",
+      "name": "Situations de vie",
+      "icon": "fa-heart",
+      "subcategories": [
+        {
+          "id": "travel",
+          "name": "Voyage",
+          "parentId": "life-situations",
+          "duas": [
+            {
+              "id": "travel-1",
+              "arabic": "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ، وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ",
+              "transliteration": "Subhanal-ladhi sakhkhara lana hadha wa ma kunna lahu muqrinin, wa inna ila Rabbina lamunqalibun",
+              "translation": "Gloire a Celui qui a mis ceci a notre service, alors que nous n'etions pas capables de le maitriser. Et c'est vers notre Seigneur que nous retournerons.",
+              "reference": "Coran 43:13-14, Sahih Muslim 1342",
+              "context": "Se dit en montant dans un vehicule ou moyen de transport",
+              "repeat": 1
+            },
+            {
+              "id": "travel-2",
+              "arabic": "اللَّهُمَّ إِنَّا نَسْأَلُكَ فِي سَفَرِنَا هَذَا الْبِرَّ وَالتَّقْوَى، وَمِنَ الْعَمَلِ مَا تَرْضَى. اللَّهُمَّ هَوِّنْ عَلَيْنَا سَفَرَنَا هَذَا وَاطْوِ عَنَّا بُعْدَهُ. اللَّهُمَّ أَنْتَ الصَّاحِبُ فِي السَّفَرِ وَالْخَلِيفَةُ فِي الْأَهْلِ",
+              "transliteration": "Allahumma inna nas'aluka fi safarina hadha-l-birra wat-taqwa, wa minal-'amali ma tarda. Allahumma hawwin 'alayna safarana hadha watwi 'anna bu'dah. Allahumma antas-sahibu fis-safari wal-khalifatu fil-ahl",
+              "translation": "O Allah, nous Te demandons dans ce voyage la piete et la crainte, et parmi les oeuvres ce qui Te satisfait. O Allah, facilite-nous ce voyage et rapproche-nous-en la distance. O Allah, Tu es le Compagnon de voyage et le Protecteur de la famille.",
+              "reference": "Sahih Muslim 1342",
+              "context": "Doua complete du voyageur, se dit au depart",
+              "repeat": 1
+            },
+            {
+              "id": "travel-3",
+              "arabic": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ وَعْثَاءِ السَّفَرِ، وَكَآبَةِ الْمَنْظَرِ، وَسُوءِ الْمُنْقَلَبِ فِي الْمَالِ وَالْأَهْلِ",
+              "transliteration": "Allahumma inni a'udhu bika min wa'tha'is-safar, wa ka'abatil-mandhar, wa su'il-munqalabi fil-mali wal-ahl",
+              "translation": "O Allah, je cherche refuge aupres de Toi contre les difficultes du voyage, la vue desolante et le mauvais retour dans les biens et la famille.",
+              "reference": "Sahih Muslim 1342",
+              "context": "Se dit egalement au depart du voyage",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "illness",
+          "name": "Maladie et guerison",
+          "parentId": "life-situations",
+          "duas": [
+            {
+              "id": "illness-1",
+              "arabic": "اللَّهُمَّ رَبَّ النَّاسِ أَذْهِبِ الْبَأْسَ، اشْفِ أَنْتَ الشَّافِي لَا شِفَاءَ إِلَّا شِفَاؤُكَ، شِفَاءً لَا يُغَادِرُ سَقَمًا",
+              "transliteration": "Allahumma Rabban-nas, adh-hibil-ba's, ishfi antas-Shafi, la shifa'a illa shifa'uk, shifa'an la yughadiru saqama",
+              "translation": "O Allah, Seigneur des hommes, ote le mal. Gueris, car Tu es le Guerisseur. Il n'y a de guerison que Ta guerison, une guerison qui ne laisse aucune maladie.",
+              "reference": "Sahih al-Bukhari 5675, Sahih Muslim 2191",
+              "context": "Se dit en posant la main sur l'endroit douloureux du malade (ruqya)",
+              "repeat": 1
+            },
+            {
+              "id": "illness-2",
+              "arabic": "أَسْأَلُ اللَّهَ الْعَظِيمَ رَبَّ الْعَرْشِ الْعَظِيمِ أَنْ يَشْفِيَكَ",
+              "transliteration": "As'alullaha-l-'Adhima Rabbal-'arshil-'adhimi an yashfiyak",
+              "translation": "Je demande a Allah, le Magnifique, Seigneur du Trone magnifique, de te guerir.",
+              "reference": "Sunan Abi Dawud 3106, Sunan at-Tirmidhi 2083",
+              "context": "Se dit 7 fois en visitant un malade. S'il n'est pas ecrit qu'il meurt de cette maladie, il guerira.",
+              "repeat": 7
+            },
+            {
+              "id": "illness-3",
+              "arabic": "لَا بَأْسَ طَهُورٌ إِنْ شَاءَ اللَّهُ",
+              "transliteration": "La ba'sa, tahurun in sha'Allah",
+              "translation": "Pas de mal, c'est une purification si Allah le veut.",
+              "reference": "Sahih al-Bukhari 3616",
+              "context": "Se dit en visitant un malade pour le reconforter",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "distress",
+          "name": "Detresse et anxiete",
+          "parentId": "life-situations",
+          "duas": [
+            {
+              "id": "distress-1",
+              "arabic": "لَا إِلَهَ إِلَّا اللَّهُ الْعَظِيمُ الْحَلِيمُ، لَا إِلَهَ إِلَّا اللَّهُ رَبُّ الْعَرْشِ الْعَظِيمِ، لَا إِلَهَ إِلَّا اللَّهُ رَبُّ السَّمَاوَاتِ وَرَبُّ الْأَرْضِ وَرَبُّ الْعَرْشِ الْكَرِيمِ",
+              "transliteration": "La ilaha illallahul-'Adhimul-Halim, la ilaha illallahu Rabbul-'arshil-'adhim, la ilaha illallahu Rabbus-samawati wa Rabbul-ardi wa Rabbul-'arshil-karim",
+              "translation": "Nul ne merite d'etre adore sauf Allah, le Magnifique, le Clement. Nul ne merite d'etre adore sauf Allah, le Seigneur du Trone magnifique. Nul ne merite d'etre adore sauf Allah, le Seigneur des cieux, le Seigneur de la terre et le Seigneur du Trone noble.",
+              "reference": "Sahih al-Bukhari 6346, Sahih Muslim 2730",
+              "context": "Le Prophete (saws) disait cette invocation dans les moments de detresse",
+              "repeat": 1
+            },
+            {
+              "id": "distress-2",
+              "arabic": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَالْعَجْزِ وَالْكَسَلِ، وَالْبُخْلِ وَالْجُبْنِ، وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ",
+              "transliteration": "Allahumma inni a'udhu bika minal-hammi wal-hazan, wal-'ajzi wal-kasal, wal-bukhli wal-jubn, wa dala'id-dayni wa ghalabatir-rijal",
+              "translation": "O Allah, je cherche refuge aupres de Toi contre le souci et la tristesse, l'incapacite et la paresse, l'avarice et la lachete, le fardeau de la dette et la domination des hommes.",
+              "reference": "Sahih al-Bukhari 6369",
+              "context": "Le Prophete (saws) faisait souvent cette invocation",
+              "repeat": 1
+            },
+            {
+              "id": "distress-3",
+              "arabic": "لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ",
+              "transliteration": "La ilaha illa anta subhanaka inni kuntu minadh-dhalimin",
+              "translation": "Nul ne merite d'etre adore sauf Toi. Gloire a Toi ! J'etais certes parmi les injustes.",
+              "reference": "Coran 21:87, Sunan at-Tirmidhi 3505",
+              "context": "Invocation de Yunus (Jonas) dans le ventre de la baleine. Le Prophete (saws) a dit : aucun musulman n'invoque par cette doua sans qu'Allah ne lui reponde.",
+              "repeat": 1
+            },
+            {
+              "id": "distress-4",
+              "arabic": "حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ",
+              "transliteration": "Hasbunallahu wa ni'mal-wakil",
+              "translation": "Allah nous suffit et Il est le meilleur Garant.",
+              "reference": "Coran 3:173, Sahih al-Bukhari 4563",
+              "context": "Dite par Ibrahim lorsqu'il fut jete dans le feu, et par les compagnons face a l'ennemi. Se dit dans toute situation difficile.",
+              "repeat": 1
+            },
+            {
+              "id": "distress-5",
+              "arabic": "اللَّهُمَّ رَحْمَتَكَ أَرْجُو فَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ، وَأَصْلِحْ لِي شَأْنِي كُلَّهُ لَا إِلَهَ إِلَّا أَنْتَ",
+              "transliteration": "Allahumma rahmataka arju fala takilni ila nafsi tarfata 'ayn, wa aslih li sha'ni kullahu, la ilaha illa ant",
+              "translation": "O Allah, c'est Ta misericorde que j'espere. Ne me laisse pas a moi-meme le temps d'un clin d'oeil. Ameliore toute ma situation. Il n'y a pas de divinite sauf Toi.",
+              "reference": "Sunan Abi Dawud 5090",
+              "context": "Se dit dans les moments d'anxiete et de difficulte",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "weather",
+          "name": "Pluie et tonnerre",
+          "parentId": "life-situations",
+          "duas": [
+            {
+              "id": "weather-1",
+              "arabic": "اللَّهُمَّ صَيِّبًا نَافِعًا",
+              "transliteration": "Allahumma sayyiban nafi'a",
+              "translation": "O Allah, fais qu'elle soit une pluie benefique.",
+              "reference": "Sahih al-Bukhari 1032",
+              "context": "Se dit quand il commence a pleuvoir",
+              "repeat": 1
+            },
+            {
+              "id": "weather-2",
+              "arabic": "سُبْحَانَ الَّذِي يُسَبِّحُ الرَّعْدُ بِحَمْدِهِ وَالْمَلَائِكَةُ مِنْ خِيفَتِهِ",
+              "transliteration": "Subhanal-ladhi yusabbihur-ra'du bi hamdihi wal-mala'ikatu min khifatih",
+              "translation": "Gloire a Celui que le tonnerre glorifie par Sa louange, ainsi que les anges par crainte de Lui.",
+              "reference": "Muwatta Malik 3/2, al-Adab al-Mufrad 723",
+              "context": "Se dit en entendant le tonnerre",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "marriage",
+          "name": "Mariage",
+          "parentId": "life-situations",
+          "duas": [
+            {
+              "id": "marriage-1",
+              "arabic": "بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ",
+              "transliteration": "Barakallahu laka wa baraka 'alayk, wa jama'a baynakuma fi khayr",
+              "translation": "Qu'Allah te benisse, repande Ses benedictions sur toi et vous unisse dans le bien.",
+              "reference": "Sunan Abi Dawud 2130, Sunan at-Tirmidhi 1091",
+              "context": "Felicitation adressee au marie",
+              "repeat": 1
+            },
+            {
+              "id": "marriage-2",
+              "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ خَيْرَهَا وَخَيْرَ مَا جَبَلْتَهَا عَلَيْهِ، وَأَعُوذُ بِكَ مِنْ شَرِّهَا وَشَرِّ مَا جَبَلْتَهَا عَلَيْهِ",
+              "transliteration": "Allahumma inni as'aluka khayraha wa khayra ma jabaltaha 'alayh, wa a'udhu bika min sharriha wa sharri ma jabaltaha 'alayh",
+              "translation": "O Allah, je Te demande le bien d'elle et le bien de ce sur quoi Tu l'as creee, et je cherche refuge aupres de Toi contre son mal et le mal de ce sur quoi Tu l'as creee.",
+              "reference": "Sunan Abi Dawud 2160",
+              "context": "Se dit lors de la nuit de noces",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "family",
+          "name": "Parents et famille",
+          "parentId": "life-situations",
+          "duas": [
+            {
+              "id": "family-1",
+              "arabic": "رَبِّ اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ",
+              "transliteration": "Rabbighfir li wa liwalidayya wa lil-mu'minina yawma yaqumul-hisab",
+              "translation": "Seigneur, pardonne-moi, ainsi qu'a mes parents et aux croyants, le jour ou se dressera le compte.",
+              "reference": "Coran 14:41",
+              "context": "Doua d'Ibrahim (paix sur lui) pour ses parents et les croyants",
+              "repeat": 1
+            },
+            {
+              "id": "family-2",
+              "arabic": "رَبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا",
+              "transliteration": "Rabbi irhamhuma kama rabbayani saghira",
+              "translation": "Seigneur, fais-leur misericorde comme ils m'ont eleve quand j'etais petit.",
+              "reference": "Coran 17:24",
+              "context": "Doua pour les parents, a reciter regulierement",
+              "repeat": 1
+            },
+            {
+              "id": "family-3",
+              "arabic": "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا",
+              "transliteration": "Rabbana hab lana min azwajina wa dhurriyyatina qurrata a'yunin waj'alna lil-muttaqina imama",
+              "translation": "Notre Seigneur, accorde-nous en nos epouses et nos descendants la joie de nos yeux, et fais de nous un guide pour les pieux.",
+              "reference": "Coran 25:74",
+              "context": "Doua coranique pour la famille et la descendance",
+              "repeat": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "protection",
+      "name": "Protection",
+      "icon": "fa-shield-halved",
+      "subcategories": [
+        {
+          "id": "evil",
+          "name": "Contre le mal",
+          "parentId": "protection",
+          "duas": [
+            {
+              "id": "evil-1",
+              "arabic": "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ",
+              "transliteration": "A'udhu bi kalimatillahit-tammati min sharri ma khalaq",
+              "translation": "Je cherche refuge dans les paroles parfaites d'Allah contre le mal de ce qu'Il a cree.",
+              "reference": "Sahih Muslim 2708",
+              "context": "Se dit en arrivant dans un lieu de sejour. Rien ne lui nuira jusqu'a ce qu'il parte de cet endroit.",
+              "repeat": 1
+            },
+            {
+              "id": "evil-2",
+              "arabic": "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّةِ مِنْ كُلِّ شَيْطَانٍ وَهَامَّةٍ، وَمِنْ كُلِّ عَيْنٍ لَامَّةٍ",
+              "transliteration": "A'udhu bi kalimatillahit-tammati min kulli shaytanin wa hammah, wa min kulli 'aynin lammah",
+              "translation": "Je cherche refuge dans les paroles parfaites d'Allah contre tout demon et toute bete venimeuse, et contre tout mauvais oeil.",
+              "reference": "Sahih al-Bukhari 3371",
+              "context": "Le Prophete (saws) protegeait Hassan et Husayn avec cette invocation. Se dit aussi pour proteger les enfants.",
+              "repeat": 1
+            },
+            {
+              "id": "evil-3",
+              "arabic": "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+              "transliteration": "Bismillahil-ladhi la yadurru ma'asmihi shay'un fil-ardi wa la fis-sama'i wa huwas-Sami'ul-'Alim",
+              "translation": "Au nom d'Allah, Celui dont le nom protege de tout mal sur terre et dans le ciel, et Il est l'Audient, l'Omniscient.",
+              "reference": "Sunan Abi Dawud 5088, Sunan at-Tirmidhi 3388",
+              "context": "Se dit 3 fois le matin et le soir. Rien ne lui nuira.",
+              "repeat": 3
+            }
+          ]
+        },
+        {
+          "id": "quran-protection",
+          "name": "Ayat al-Kursi et Mu'awwidhat",
+          "parentId": "protection",
+          "duas": [
+            {
+              "id": "quran-protection-1",
+              "arabic": "اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ لَّهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ وَلَا يَئُودُهُ حِفْظُهُمَا وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+              "transliteration": "Allahu la ilaha illa huwal-Hayyul-Qayyum, la ta'khudhuhu sinatun wa la nawm, lahu ma fis-samawati wa ma fil-ard, man dhal-ladhi yashfa'u 'indahu illa bi idhnih, ya'lamu ma bayna aydihim wa ma khalfahum, wa la yuhituna bi shay'in min 'ilmihi illa bima sha', wasi'a kursiyyuhus-samawati wal-ard, wa la ya'uduhu hifdhuhuma, wa huwal-'Aliyyul-'Adhim",
+              "translation": "Allah ! Point de divinite a part Lui, le Vivant, Celui qui subsiste par Lui-meme. Ni somnolence ni sommeil ne Le saisissent. A Lui appartient tout ce qui est dans les cieux et sur la terre. Qui peut interceder aupres de Lui sans Sa permission ? Il connait leur passe et leur futur. Et de Sa science, ils n'embrassent que ce qu'Il veut. Son Trone deborde les cieux et la terre, dont la garde ne Lui coute aucune peine. Et Il est le Tres Haut, le Tres Grand.",
+              "reference": "Coran 2:255",
+              "context": "Le plus grand verset du Coran. Se dit apres chaque priere obligatoire et avant de dormir. Celui qui la recite le soir, un ange le protege toute la nuit.",
+              "repeat": 1
+            },
+            {
+              "id": "quran-protection-2",
+              "arabic": "قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ",
+              "transliteration": "Qul huwallahu ahad. Allahus-samad. Lam yalid wa lam yulad. Wa lam yakun lahu kufuwan ahad",
+              "translation": "Dis : Il est Allah, Unique. Allah, le Seul a etre implore pour ce que nous desirons. Il n'a jamais engendre, n'a pas ete engendre non plus. Et nul n'est egal a Lui.",
+              "reference": "Coran 112:1-4",
+              "context": "Sourate al-Ikhlas. Se dit 3 fois le matin et le soir pour une protection complete.",
+              "repeat": 3
+            },
+            {
+              "id": "quran-protection-3",
+              "arabic": "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۝ مِن شَرِّ مَا خَلَقَ ۝ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ۝ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۝ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ",
+              "transliteration": "Qul a'udhu bi Rabbil-falaq. Min sharri ma khalaq. Wa min sharri ghasiqin idha waqab. Wa min sharrin-naffathati fil-'uqad. Wa min sharri hasidin idha hasad",
+              "translation": "Dis : Je cherche refuge aupres du Seigneur de l'aube naissante, contre le mal de ce qu'Il a cree, contre le mal de l'obscurite quand elle s'approfondit, contre le mal de celles qui soufflent sur les noeuds, et contre le mal de l'envieux quand il envie.",
+              "reference": "Coran 113:1-5",
+              "context": "Sourate al-Falaq. Se dit 3 fois le matin et le soir.",
+              "repeat": 3
+            },
+            {
+              "id": "quran-protection-4",
+              "arabic": "قُلْ أَعُوذُ بِرَبِّ النَّاسِ ۝ مَلِكِ النَّاسِ ۝ إِلَهِ النَّاسِ ۝ مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۝ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۝ مِنَ الْجِنَّةِ وَالنَّاسِ",
+              "transliteration": "Qul a'udhu bi Rabbin-nas. Malikin-nas. Ilahin-nas. Min sharril-waswasil-khannas. Alladhi yuwaswisu fi sudurin-nas. Minal-jinnati wan-nas",
+              "translation": "Dis : Je cherche refuge aupres du Seigneur des hommes, le Souverain des hommes, le Dieu des hommes, contre le mal du tentateur furtif, qui souffle le mal dans les poitrines des hommes, qu'il soit parmi les djinns ou les hommes.",
+              "reference": "Coran 114:1-6",
+              "context": "Sourate an-Nas. Se dit 3 fois le matin et le soir.",
+              "repeat": 3
+            }
+          ]
+        },
+        {
+          "id": "general-protection",
+          "name": "Invocations de protection",
+          "parentId": "protection",
+          "duas": [
+            {
+              "id": "general-protection-1",
+              "arabic": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ جَهْدِ الْبَلَاءِ، وَدَرَكِ الشَّقَاءِ، وَسُوءِ الْقَضَاءِ، وَشَمَاتَةِ الْأَعْدَاءِ",
+              "transliteration": "Allahumma inni a'udhu bika min jahdil-bala', wa darakish-shaqa', wa su'il-qada', wa shamatitil-a'da'",
+              "translation": "O Allah, je cherche refuge aupres de Toi contre la rigueur de l'epreuve, contre le malheur, contre la mauvaise destinee et contre la joie malveillante des ennemis.",
+              "reference": "Sahih al-Bukhari 6347",
+              "context": "Protection generale contre les epreuves de la vie",
+              "repeat": 1
+            },
+            {
+              "id": "general-protection-2",
+              "arabic": "اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي",
+              "transliteration": "Allahummahfadhni min bayni yadayya wa min khalfi wa 'an yamini wa 'an shimali wa min fawqi, wa a'udhu bi 'adhamatika an ughtala min tahti",
+              "translation": "O Allah, protege-moi par devant et par derriere, sur ma droite et sur ma gauche et par-dessus moi. Et je cherche refuge dans Ta grandeur contre le fait d'etre englouti par-dessous.",
+              "reference": "Sunan Abi Dawud 5074, Sunan Ibn Majah 3871",
+              "context": "Protection dans toutes les directions",
+              "repeat": 1
+            },
+            {
+              "id": "general-protection-3",
+              "arabic": "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ",
+              "transliteration": "La hawla wa la quwwata illa billah",
+              "translation": "Il n'y a de force ni de puissance qu'en Allah.",
+              "reference": "Sahih al-Bukhari 4205, Sahih Muslim 2704",
+              "context": "Un tresor parmi les tresors du Paradis. Se dit frequemment pour la protection et la force spirituelle.",
+              "repeat": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "repentance",
+      "name": "Repentir et pardon",
+      "icon": "fa-hands-praying",
+      "subcategories": [
+        {
+          "id": "istighfar",
+          "name": "Istighfar (demande de pardon)",
+          "parentId": "repentance",
+          "duas": [
+            {
+              "id": "istighfar-1",
+              "arabic": "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِذَنْبِي، فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+              "transliteration": "Allahumma anta Rabbi la ilaha illa ant, khalaqtani wa ana 'abduk, wa ana 'ala 'ahdika wa wa'dika mastata't, a'udhu bika min sharri ma sana't, abu'u laka bi ni'matika 'alayya wa abu'u laka bi dhanbi, faghfir li fa innahu la yaghfirudh-dhunuba illa ant",
+              "translation": "O Allah, Tu es mon Seigneur. Il n'y a de divinite digne d'adoration que Toi. Tu m'as cree et je suis Ton serviteur. Je tiens a Ton pacte et a Ta promesse autant que je le peux. Je cherche refuge aupres de Toi contre le mal de ce que j'ai fait. Je reconnais devant Toi Tes bienfaits a mon egard et je reconnais mon peche. Pardonne-moi car nul ne pardonne les peches sauf Toi.",
+              "reference": "Sahih al-Bukhari 6306",
+              "context": "Sayyid al-Istighfar (la meilleure formule de demande de pardon). Celui qui la dit le matin avec conviction et meurt ce jour-la entrera au Paradis.",
+              "repeat": 1
+            },
+            {
+              "id": "istighfar-2",
+              "arabic": "أَسْتَغْفِرُ اللَّهَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ",
+              "transliteration": "Astaghfirullaha-lladhi la ilaha illa huwal-Hayyul-Qayyumu wa atubu ilayh",
+              "translation": "Je demande pardon a Allah, Celui qui il n'y a pas de divinite sauf Lui, le Vivant, Celui qui subsiste par Lui-meme, et je me repens a Lui.",
+              "reference": "Sunan Abi Dawud 1517, Sunan at-Tirmidhi 3577",
+              "context": "Celui qui dit cela, Allah lui pardonnera meme s'il a fui le champ de bataille.",
+              "repeat": 1
+            },
+            {
+              "id": "istighfar-3",
+              "arabic": "أَسْتَغْفِرُ اللَّهَ",
+              "transliteration": "Astaghfirullah",
+              "translation": "Je demande pardon a Allah.",
+              "reference": "Sahih Muslim 591",
+              "context": "La forme la plus simple de l'istighfar. Le Prophete (saws) demandait pardon a Allah plus de 70 fois par jour.",
+              "repeat": 100
+            }
+          ]
+        },
+        {
+          "id": "tawbah",
+          "name": "Tawbah (repentir)",
+          "parentId": "repentance",
+          "duas": [
+            {
+              "id": "tawbah-1",
+              "arabic": "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ إِنَّكَ أَنْتَ التَّوَّابُ الرَّحِيمُ",
+              "transliteration": "Rabbighfir li wa tub 'alayya innaka antat-Tawwabur-Rahim",
+              "translation": "Seigneur, pardonne-moi et accepte mon repentir. Tu es certes Celui qui accepte le repentir, le Misericordieux.",
+              "reference": "Sunan Abi Dawud 1516, Sunan at-Tirmidhi 3434",
+              "context": "Le Prophete (saws) la repetait dans une meme assise plus de 100 fois.",
+              "repeat": 1
+            },
+            {
+              "id": "tawbah-2",
+              "arabic": "اللَّهُمَّ إِنِّي ظَلَمْتُ نَفْسِي ظُلْمًا كَثِيرًا وَلَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ، فَاغْفِرْ لِي مَغْفِرَةً مِنْ عِنْدِكَ وَارْحَمْنِي، إِنَّكَ أَنْتَ الْغَفُورُ الرَّحِيمُ",
+              "transliteration": "Allahumma inni dhalamtu nafsi dhulman kathiran wa la yaghfirudh-dhunuba illa ant, faghfir li maghfiratan min 'indika warhamni, innaka antal-Ghafurur-Rahim",
+              "translation": "O Allah, je me suis fait beaucoup de tort a moi-meme et nul ne pardonne les peches sauf Toi. Accorde-moi Ton pardon et fais-moi misericorde. Tu es certes le Pardonneur, le Misericordieux.",
+              "reference": "Sahih al-Bukhari 834, Sahih Muslim 2705",
+              "context": "Le Prophete (saws) enseigna cette doua a Abu Bakr pour qu'il la dise dans sa priere.",
+              "repeat": 1
+            },
+            {
+              "id": "tawbah-3",
+              "arabic": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، سُبْحَانَ اللَّهِ الْعَظِيمِ",
+              "transliteration": "SubhanAllahi wa bihamdih, SubhanAllahil-'Adhim",
+              "translation": "Gloire et louange a Allah. Gloire a Allah le Magnifique.",
+              "reference": "Sahih al-Bukhari 6682, Sahih Muslim 2694",
+              "context": "Deux paroles legeres sur la langue, lourdes sur la balance et aimees du Tout Misericordieux.",
+              "repeat": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "knowledge",
+      "name": "Science et sagesse",
+      "icon": "fa-book-open",
+      "subcategories": [
+        {
+          "id": "seeking-knowledge",
+          "name": "Recherche de science",
+          "parentId": "knowledge",
+          "duas": [
+            {
+              "id": "knowledge-1",
+              "arabic": "رَبِّ زِدْنِي عِلْمًا",
+              "transliteration": "Rabbi zidni 'ilma",
+              "translation": "Seigneur, accrois ma science.",
+              "reference": "Coran 20:114",
+              "context": "Doua coranique courte pour demander l'augmentation du savoir",
+              "repeat": 1
+            },
+            {
+              "id": "knowledge-2",
+              "arabic": "اللَّهُمَّ انْفَعْنِي بِمَا عَلَّمْتَنِي، وَعَلِّمْنِي مَا يَنْفَعُنِي، وَزِدْنِي عِلْمًا",
+              "transliteration": "Allahumma-nfa'ni bima 'allamtani, wa 'allimni ma yanfa'uni, wa zidni 'ilma",
+              "translation": "O Allah, fais-moi profiter de ce que Tu m'as enseigne, enseigne-moi ce qui me sera utile, et accrois ma science.",
+              "reference": "Sunan Ibn Majah 251, Sunan at-Tirmidhi 3599",
+              "context": "A dire regulierement pour la science benefique",
+              "repeat": 1
+            },
+            {
+              "id": "knowledge-3",
+              "arabic": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ عِلْمٍ لَا يَنْفَعُ، وَمِنْ قَلْبٍ لَا يَخْشَعُ، وَمِنْ نَفْسٍ لَا تَشْبَعُ، وَمِنْ دَعْوَةٍ لَا يُسْتَجَابُ لَهَا",
+              "transliteration": "Allahumma inni a'udhu bika min 'ilmin la yanfa', wa min qalbin la yakhsha', wa min nafsin la tashba', wa min da'watin la yustajabu laha",
+              "translation": "O Allah, je cherche refuge aupres de Toi contre une science inutile, un coeur qui ne craint pas, une ame insatiable et une invocation non exaucee.",
+              "reference": "Sahih Muslim 2722",
+              "context": "Le Prophete (saws) cherchait refuge contre ces quatre choses",
+              "repeat": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gratitude",
+      "name": "Gratitude et louange",
+      "icon": "fa-star",
+      "subcategories": [
+        {
+          "id": "praise",
+          "name": "Louange a Allah",
+          "parentId": "gratitude",
+          "duas": [
+            {
+              "id": "praise-1",
+              "arabic": "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+              "transliteration": "Alhamdulillahi Rabbil-'alamin",
+              "translation": "Louange a Allah, Seigneur de l'univers.",
+              "reference": "Coran 1:2",
+              "context": "La forme essentielle de la louange, premier verset de la Fatiha",
+              "repeat": 1
+            },
+            {
+              "id": "praise-2",
+              "arabic": "الْحَمْدُ لِلَّهِ الَّذِي بِنِعْمَتِهِ تَتِمُّ الصَّالِحَاتُ",
+              "transliteration": "Alhamdulillahil-ladhi bi ni'matihi tatimmus-salihat",
+              "translation": "Louange a Allah par la grace de qui les bonnes choses se realisent.",
+              "reference": "Sunan Ibn Majah 3803, Sahih Ibn Hibban 846",
+              "context": "Se dit quand quelque chose de bien se produit",
+              "repeat": 1
+            },
+            {
+              "id": "praise-3",
+              "arabic": "الْحَمْدُ لِلَّهِ عَلَى كُلِّ حَالٍ",
+              "transliteration": "Alhamdulillahi 'ala kulli hal",
+              "translation": "Louange a Allah en toute circonstance.",
+              "reference": "Sunan Ibn Majah 3803",
+              "context": "Se dit dans toutes les situations, bonnes ou difficiles",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "thanking",
+          "name": "Remerciement",
+          "parentId": "gratitude",
+          "duas": [
+            {
+              "id": "thanking-1",
+              "arabic": "اللَّهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+              "transliteration": "Allahumma ma asbaha bi min ni'matin aw bi ahadin min khalqika faminka wahdaka la sharika lak, falakal hamdu wa lakash-shukr",
+              "translation": "O Allah, tout bienfait dont je jouis ce matin, ou dont jouit l'une de Tes creatures, provient de Toi seul, sans associe. A Toi la louange et la reconnaissance.",
+              "reference": "Sunan Abi Dawud 5073",
+              "context": "Celui qui dit cela le matin a accompli le remerciement de cette journee.",
+              "repeat": 1
+            },
+            {
+              "id": "thanking-2",
+              "arabic": "رَضِيتُ بِاللَّهِ رَبًّا وَبِالْإِسْلَامِ دِينًا وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيًّا",
+              "transliteration": "Raditu billahi Rabba, wa bil-Islami dina, wa bi Muhammadin sallallahu 'alayhi wa sallama nabiyya",
+              "translation": "J'accepte Allah comme Seigneur, l'Islam comme religion et Muhammad (paix et salut sur lui) comme prophete.",
+              "reference": "Sunan Abi Dawud 5072, Sunan at-Tirmidhi 3389",
+              "context": "Se dit 3 fois le matin et le soir. Le Prophete (saws) a dit qu'Allah s'est engage a satisfaire celui qui dit cela.",
+              "repeat": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "death",
+      "name": "Mort et au-dela",
+      "icon": "fa-dove",
+      "subcategories": [
+        {
+          "id": "deceased",
+          "name": "Pour les defunts",
+          "parentId": "death",
+          "duas": [
+            {
+              "id": "deceased-1",
+              "arabic": "اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ، وَعَافِهِ وَاعْفُ عَنْهُ، وَأَكْرِمْ نُزُلَهُ وَوَسِّعْ مُدْخَلَهُ، وَاغْسِلْهُ بِالْمَاءِ وَالثَّلْجِ وَالْبَرَدِ، وَنَقِّهِ مِنَ الْخَطَايَا كَمَا يُنَقَّى الثَّوْبُ الْأَبْيَضُ مِنَ الدَّنَسِ",
+              "transliteration": "Allahummaghfir lahu warhamh, wa 'afihi wa'fu 'anh, wa akrim nuzulahu wa wassi' mudkhalah, waghsilhu bil-ma'i wath-thalji wal-barad, wa naqqihi minal-khataya kama yunaqqath-thawbul-abyadu minad-danas",
+              "translation": "O Allah, pardonne-lui et fais-lui misericorde. Accorde-lui le bien-etre et le pardon. Fais-lui un accueil genereux et elargis sa tombe. Lave-le avec l'eau, la neige et la grele. Purifie-le de ses peches comme on purifie le vetement blanc de la souillure.",
+              "reference": "Sahih Muslim 963",
+              "context": "Doua de la priere funeraire (salat al-janaza)",
+              "repeat": 1
+            },
+            {
+              "id": "deceased-2",
+              "arabic": "اللَّهُمَّ اغْفِرْ لِحَيِّنَا وَمَيِّتِنَا، وَشَاهِدِنَا وَغَائِبِنَا، وَصَغِيرِنَا وَكَبِيرِنَا، وَذَكَرِنَا وَأُنْثَانَا",
+              "transliteration": "Allahummaghfir li hayyina wa mayyitina, wa shahidina wa gha'ibina, wa saghirina wa kabirina, wa dhakarina wa unthana",
+              "translation": "O Allah, pardonne a nos vivants et a nos morts, a ceux d'entre nous qui sont presents et ceux qui sont absents, a nos jeunes et a nos vieux, a nos hommes et a nos femmes.",
+              "reference": "Sunan Abi Dawud 3201, Sunan at-Tirmidhi 1024",
+              "context": "Doua de la priere funeraire",
+              "repeat": 1
+            }
+          ]
+        },
+        {
+          "id": "afterlife",
+          "name": "Demande du Paradis",
+          "parentId": "death",
+          "duas": [
+            {
+              "id": "afterlife-1",
+              "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ وَمَا قَرَّبَ إِلَيْهَا مِنْ قَوْلٍ أَوْ عَمَلٍ، وَأَعُوذُ بِكَ مِنَ النَّارِ وَمَا قَرَّبَ إِلَيْهَا مِنْ قَوْلٍ أَوْ عَمَلٍ",
+              "transliteration": "Allahumma inni as'alukal-jannata wa ma qarraba ilayha min qawlin aw 'amal, wa a'udhu bika minan-nari wa ma qarraba ilayha min qawlin aw 'amal",
+              "translation": "O Allah, je Te demande le Paradis et toute parole ou action qui en rapproche. Et je cherche refuge aupres de Toi contre le Feu et toute parole ou action qui en rapproche.",
+              "reference": "Sunan Ibn Majah 3846, Sahih Ibn Hibban 869",
+              "context": "Doua complete pour demander le Paradis et se proteger du Feu",
+              "repeat": 1
+            },
+            {
+              "id": "afterlife-2",
+              "arabic": "اللَّهُمَّ أَجِرْنِي مِنَ النَّارِ",
+              "transliteration": "Allahumma ajirni minan-nar",
+              "translation": "O Allah, protege-moi du Feu.",
+              "reference": "Sunan Abi Dawud 5079",
+              "context": "Celui qui dit cela 7 fois apres le Fajr et le Maghrib, si le Feu lui est destine il en sera protege.",
+              "repeat": 7
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

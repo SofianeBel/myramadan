@@ -92,48 +92,7 @@ jobs:
         with:
           tagName: v__VERSION__
           releaseName: GuideME Ramadan v__VERSION__
-          releaseBody: |
-            ## GuideME Ramadan v__VERSION__
-
-            ### Téléchargements
-
-            | Plateforme | Fichier |
-            |-----------|---------|
-            | **Windows** | `.msi` ou `.exe` (NSIS) |
-            | **macOS** | `.dmg` (Universal: Intel + Apple Silicon) |
-            | **Linux** | `.deb` ou `.AppImage` |
-
-            ---
-
-            ### 🍎 macOS — Premier lancement
-
-            L'app n'est pas signée avec un certificat Apple. macOS affichera un avertissement au premier lancement.
-
-            **Méthode 1 — Terminal (recommandé) :**
-            ```bash
-            xattr -cr /Applications/GuideME\ -\ Ramadan.app
-            ```
-            Puis ouvrir l'app normalement.
-
-            **Méthode 2 — Réglages Système :**
-            1. Ouvrir **Réglages Système** → **Confidentialité et sécurité**
-            2. Descendre jusqu'au message *"GuideME - Ramadan a été bloqué"*
-            3. Cliquer **Ouvrir quand même** → entrer le mot de passe
-
-            ---
-
-            ### 🐧 Linux — Installation
-
-            **AppImage :**
-            ```bash
-            chmod +x GuideME-Ramadan_*.AppImage
-            ./GuideME-Ramadan_*.AppImage
-            ```
-
-            **Debian/Ubuntu (.deb) :**
-            ```bash
-            sudo dpkg -i guideme-ramadan_*.deb
-            ```
+          releaseBody: 'Release en cours de construction...'
           releaseDraft: false
           prerelease: false
 
@@ -244,3 +203,83 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
           releaseId: ${{ needs.build-windows.outputs.releaseId }}
+
+  organize-release:
+    needs: [check-version, build-windows, build-macos, build-linux]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Update release with organized download links
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ needs.check-version.outputs.version }}
+          RELEASE_ID: ${{ needs.build-windows.outputs.releaseId }}
+        run: |
+          REPO="${GITHUB_REPOSITORY}"
+          TAG="v${VERSION}"
+          BASE="https://github.com/${REPO}/releases/download/${TAG}"
+
+          # Fetch asset names
+          ASSETS=$(gh api "repos/${REPO}/releases/${RELEASE_ID}/assets" --jq '.[].name')
+
+          # Find main installer files
+          WIN_EXE=$(echo "$ASSETS" | grep '\.exe$' | head -1)
+          WIN_MSI=$(echo "$ASSETS" | grep '\.msi$' | head -1)
+          MAC_DMG=$(echo "$ASSETS" | grep '\.dmg$' | head -1)
+          LINUX_DEB=$(echo "$ASSETS" | grep '\.deb$' | head -1)
+          LINUX_APPIMAGE=$(echo "$ASSETS" | grep '\.AppImage$' | head -1)
+          LINUX_RPM=$(echo "$ASSETS" | grep '\.rpm$' | head -1)
+
+          # Build release body
+          {
+            echo "## Téléchargements"
+            echo ""
+            echo "### 🪟 Windows"
+            [ -n "$WIN_EXE" ] && echo "- **[Installateur (.exe)](${BASE}/${WIN_EXE})** — recommandé"
+            [ -n "$WIN_MSI" ] && echo "- [Installateur MSI](${BASE}/${WIN_MSI})"
+            echo ""
+            echo "### 🍎 macOS"
+            [ -n "$MAC_DMG" ] && echo "- **[Installateur (.dmg)](${BASE}/${MAC_DMG})** — Universal (Intel + Apple Silicon)"
+            echo ""
+            echo "### 🐧 Linux"
+            [ -n "$LINUX_DEB" ] && echo "- **[Debian/Ubuntu (.deb)](${BASE}/${LINUX_DEB})**"
+            [ -n "$LINUX_APPIMAGE" ] && echo "- [AppImage](${BASE}/${LINUX_APPIMAGE})"
+            [ -n "$LINUX_RPM" ] && echo "- [RPM](${BASE}/${LINUX_RPM})"
+            echo ""
+            echo "---"
+            echo ""
+            echo "### 🍎 macOS — Premier lancement"
+            echo ""
+            echo "L'app n'est pas signée avec un certificat Apple. Au premier lancement :"
+            echo ""
+            echo '**Terminal (recommandé) :**'
+            echo '```bash'
+            echo 'xattr -cr /Applications/GuideME\ -\ Ramadan.app'
+            echo '```'
+            echo ""
+            echo "**Ou via** Réglages Système → Confidentialité et sécurité → Ouvrir quand même"
+            echo ""
+            echo "---"
+            echo ""
+            echo "<details>"
+            echo "<summary>📦 Fichiers techniques (auto-update, signatures)</summary>"
+            echo ""
+            echo "Ces fichiers sont utilisés par le système de mise à jour automatique."
+            echo "Vous n'avez pas besoin de les télécharger manuellement."
+            echo ""
+            echo "| Fichier | Usage |"
+            echo "|---------|-------|"
+            for ASSET in $ASSETS; do
+              case "$ASSET" in
+                *.sig) echo "| \`${ASSET}\` | Signature de vérification |" ;;
+                *.zip) echo "| \`${ASSET}\` | Archive auto-updater |" ;;
+                *.tar.gz) echo "| \`${ASSET}\` | Archive auto-updater |" ;;
+                latest.json) echo "| \`latest.json\` | Manifeste de mise à jour |" ;;
+              esac
+            done
+            echo ""
+            echo "</details>"
+          } > /tmp/release-body.md
+
+          gh release edit "$TAG" --repo "$REPO" --notes-file /tmp/release-body.md
