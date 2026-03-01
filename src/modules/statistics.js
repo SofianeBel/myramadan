@@ -85,8 +85,10 @@ function renderHeatmap(container) {
   svg.setAttribute('viewBox', `0 0 ${width} ${height}`)
   svg.setAttribute('class', 'heatmap-svg')
 
-  // Day labels (L, M, M, J, V, S, D)
-  const dayLabels = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
+  // Day labels — rotated so bottom row (d=6) always matches today's day
+  const allDayLabels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'] // Mon=0 … Sun=6
+  const todayDow = (new Date().getDay() + 6) % 7 // JS Sun=0 → Mon=0 based
+  const dayLabels = [...allDayLabels.slice(todayDow + 1), ...allDayLabels.slice(0, todayDow + 1)]
   dayLabels.forEach((label, i) => {
     if (i % 2 === 0) {
       const t = document.createElementNS(ns, 'text')
