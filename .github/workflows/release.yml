@@ -83,7 +83,7 @@ jobs:
 
       - name: Build and release
         id: tauri
-        uses: tauri-apps/tauri-action@v0.6.1
+        uses: tauri-apps/tauri-action@v0.6.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BUG_REPORT_TOKEN: ${{ secrets.BUG_REPORT_TOKEN }}
@@ -139,7 +139,7 @@ jobs:
         run: npm install
 
       - name: Build and attach to release
-        uses: tauri-apps/tauri-action@v0.6.1
+        uses: tauri-apps/tauri-action@v0.6.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BUG_REPORT_TOKEN: ${{ secrets.BUG_REPORT_TOKEN }}
@@ -195,7 +195,7 @@ jobs:
         run: npm install
 
       - name: Build and attach to release
-        uses: tauri-apps/tauri-action@v0.6.1
+        uses: tauri-apps/tauri-action@v0.6.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BUG_REPORT_TOKEN: ${{ secrets.BUG_REPORT_TOKEN }}
