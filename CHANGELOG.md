@@ -5,6 +5,17 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.8.1] - 2026-05-22
+
+### Corrigé
+
+- **Dépendances de sécurité** — mise à jour de Tauri, Vite, Undici, rustls-webpki, tar, quinn-proto et rand pour résoudre les alertes Dependabot applicables
+
+### Amélioré
+
+- **CI GitHub** — suppression du workflow de review Claude automatique qui bloquait les PR Dependabot
+- **Release** — mise à jour de `tauri-action` et des schémas Tauri générés
+
 ## [1.8.0] - 2026-02-27
 
 ### Ajouté

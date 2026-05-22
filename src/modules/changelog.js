@@ -5,9 +5,18 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.8.0'
+const APP_VERSION = '1.8.1'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.8.1',
+    date: '22 mai 2026',
+    changes: [
+      { type: 'fix', text: 'Dépendances de sécurité — mise à jour de Tauri, Vite, Undici, rustls-webpki, tar, quinn-proto et rand' },
+      { type: 'improvement', text: 'CI GitHub — suppression du workflow de review Claude automatique qui bloquait les PR Dependabot' },
+      { type: 'improvement', text: 'Release — mise à jour de tauri-action et des schémas Tauri générés' },
+    ],
+  },
   {
     version: '1.8.0',
     date: '27 février 2026',
