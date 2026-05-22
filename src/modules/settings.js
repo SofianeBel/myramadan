@@ -62,7 +62,7 @@ let debounceTimer = null
 /**
  * Search cities via Nominatim (OpenStreetMap) for autocomplete.
  * @param {string} query
- * @returns {Promise<Array<{ name: string, display: string, lat: number, lon: number }>>}
+ * @returns {Promise<Array<{ name: string, country: string, display: string, lat: number, lon: number }>>}
  */
 async function searchCities(query) {
   try {
@@ -79,6 +79,7 @@ async function searchCities(query) {
       const parts = [city, state, country].filter(Boolean)
       return {
         name: city || item.display_name.split(',')[0],
+        country,
         display: parts.join(', ') || item.display_name,
         lat: parseFloat(item.lat),
         lon: parseFloat(item.lon),
@@ -110,12 +111,12 @@ export function getMosqueName() {
 
 /** Get saved city (fallback for Aladhan) */
 export function getCity() {
-  return storage.get(CITY_KEY) || 'Paris'
+  return storage.get(CITY_KEY)
 }
 
 /** Get saved country (fallback for Aladhan) */
 export function getCountry() {
-  return storage.get(COUNTRY_KEY) || 'France'
+  return storage.get(COUNTRY_KEY)
 }
 
 /** Get saved calculation method (default: UOIF = 12) */
@@ -140,11 +141,28 @@ export function getMethodAngles() {
   return entry?.angles || null
 }
 
+function getMosqueCoords(mosque) {
+  const rawLat = mosque?.latitude
+  const rawLon = mosque?.longitude
+  if (rawLat === null || rawLat === undefined || rawLon === null || rawLon === undefined) return null
+  if (typeof rawLat === 'string' && rawLat.trim() === '') return null
+  if (typeof rawLon === 'string' && rawLon.trim() === '') return null
+
+  const lat = Number(rawLat)
+  const lon = Number(rawLon)
+  if (Number.isFinite(lat) && Number.isFinite(lon)) return { lat, lon }
+  return null
+}
+
 /** Get saved GPS coordinates or null */
 export function getUserCoords() {
   const lat = storage.get(LAT_KEY)
   const lon = storage.get(LON_KEY)
-  if (lat !== null && lon !== null) return { lat, lon }
+  const numericLat = Number(lat)
+  const numericLon = Number(lon)
+  if (Number.isFinite(numericLat) && Number.isFinite(numericLon)) {
+    return { lat: numericLat, lon: numericLon }
+  }
   return null
 }
 
@@ -201,13 +219,13 @@ export function requestGeolocation() {
   if (saved) {
     userCoords = saved
     // N'afficher le warning que si aucune mosquée n'est configurée
-    if (!getMosqueSlug()) showLocationWarning('approximate')
+    if (!getMosqueSlug() && !(getCity() && getCountry())) showLocationWarning('approximate')
     return Promise.resolve(saved)
   }
 
   if (!navigator.geolocation) {
     console.warn('[settings] Geolocation not available')
-    if (!getMosqueSlug()) showLocationWarning('missing')
+    if (!getMosqueSlug() && !(getCity() && getCountry())) showLocationWarning('missing')
     return Promise.resolve(null)
   }
 
@@ -223,7 +241,7 @@ export function requestGeolocation() {
       (error) => {
         console.warn('[settings] Geolocation denied:', error.message)
         // Scenario 3 — pas de coords sauvegardées et pas de mosquée
-        if (!getMosqueSlug()) showLocationWarning('missing')
+        if (!getMosqueSlug() && !(getCity() && getCountry())) showLocationWarning('missing')
         resolve(null)
       },
       { enableHighAccuracy: true, timeout: 10000 }
@@ -253,10 +271,14 @@ export function updateLocationDisplay() {
   if (!locationSpan) return
 
   const mosqueName = getMosqueName()
+  const city = getCity()
+  const country = getCountry()
   if (mosqueName) {
     locationSpan.textContent = mosqueName
+  } else if (city && country) {
+    locationSpan.textContent = `${city}, ${country}`
   } else {
-    locationSpan.textContent = `${getCity()}, ${getCountry()}`
+    locationSpan.textContent = 'Position non détectée'
   }
 }
 
@@ -326,6 +348,9 @@ export function initSettings(onSave) {
 
   let pendingSlug = getMosqueSlug()
   let pendingName = getMosqueName()
+  let pendingCity = getCity()
+  let pendingCountry = getCountry()
+  let pendingCoords = getUserCoords()
 
   // Helper to update selection label (shared between list & map)
   function updateSelectionLabel(name) {
@@ -334,6 +359,32 @@ export function initSettings(onSave) {
       selectedLabel.style.opacity = '1'
       selectedLabel.style.color = 'var(--clr-emerald, #2ecc71)'
     }
+  }
+
+  function updateCitySelectionLabel(city, country) {
+    if (selectedLabel) {
+      selectedLabel.textContent = `✓ Horaires calculés — ${city}, ${country}`
+      selectedLabel.style.opacity = '1'
+      selectedLabel.style.color = 'var(--clr-emerald, #2ecc71)'
+    }
+  }
+
+  function selectCityForCalculatedTimes(city) {
+    pendingSlug = null
+    pendingName = null
+    pendingCity = city.name
+    pendingCountry = city.country
+    pendingCoords = { lat: city.lat, lon: city.lon }
+    updateCitySelectionLabel(pendingCity, pendingCountry)
+  }
+
+  function selectMosqueForPrayerTimes(mosque) {
+    pendingSlug = mosque.slug
+    pendingName = mosque.name
+    pendingCity = null
+    pendingCountry = null
+    pendingCoords = getMosqueCoords(mosque)
+    updateSelectionLabel(mosque.name)
   }
 
   // ── Tab Switching ──
@@ -368,6 +419,9 @@ export function initSettings(onSave) {
     e.preventDefault()
     pendingSlug = getMosqueSlug()
     pendingName = getMosqueName()
+    pendingCity = getCity()
+    pendingCountry = getCountry()
+    pendingCoords = getUserCoords()
 
     // Reset to list tab
     tabButtons.forEach((b) => b.classList.remove('active'))
@@ -381,8 +435,16 @@ export function initSettings(onSave) {
     if (searchInput) searchInput.value = ''
     if (resultsContainer) resultsContainer.innerHTML = ''
     if (selectedLabel) {
-      selectedLabel.textContent = pendingName || 'Aucune mosquée sélectionnée'
-      selectedLabel.style.opacity = pendingName ? '1' : '0.5'
+      if (pendingName) {
+        selectedLabel.textContent = pendingName
+        selectedLabel.style.opacity = '1'
+      } else if (pendingCity && pendingCountry) {
+        selectedLabel.textContent = `Horaires calculés — ${pendingCity}, ${pendingCountry}`
+        selectedLabel.style.opacity = '1'
+      } else {
+        selectedLabel.textContent = 'Aucune mosquée ou ville sélectionnée'
+        selectedLabel.style.opacity = '0.5'
+      }
       selectedLabel.style.color = ''
     }
 
@@ -433,9 +495,7 @@ export function initSettings(onSave) {
       })
 
       item.addEventListener('click', () => {
-        pendingSlug = mosque.slug
-        pendingName = mosque.name
-        updateSelectionLabel(mosque.name)
+        selectMosqueForPrayerTimes(mosque)
         container.textContent = ''
         if (searchInput) searchInput.value = ''
       })
@@ -488,6 +548,8 @@ export function initSettings(onSave) {
       })
 
       item.addEventListener('click', async () => {
+        selectCityForCalculatedTimes(city)
+
         // Chercher les mosquées proches de cette ville
         container.textContent = ''
         const loading = document.createElement('p')
@@ -500,6 +562,16 @@ export function initSettings(onSave) {
         container.textContent = ''
 
         if (nearby.length > 0) {
+          const cityChoice = document.createElement('button')
+          cityChoice.type = 'button'
+          cityChoice.className = 'city-select-btn'
+          cityChoice.textContent = `Utiliser ${city.name} pour les horaires calculés`
+          cityChoice.addEventListener('click', () => {
+            selectCityForCalculatedTimes(city)
+            container.textContent = ''
+          })
+          container.appendChild(cityChoice)
+
           const hint = document.createElement('p')
           hint.style.cssText = 'padding: 8px 8px 4px; font-size: 0.82rem; color: var(--text-muted);'
           hint.textContent = `Mosquées proches de ${city.name} :`
@@ -508,7 +580,7 @@ export function initSettings(onSave) {
         } else {
           const noResult = document.createElement('p')
           noResult.style.cssText = 'padding: 8px; opacity: 0.5; font-size: 0.85rem;'
-          noResult.textContent = `Aucune mosquée trouvée près de ${city.name}`
+          noResult.textContent = `${city.name} sera utilisée pour les horaires calculés.`
           container.appendChild(noResult)
         }
       })
@@ -597,9 +669,17 @@ export function initSettings(onSave) {
     clearMosqueBtn.addEventListener('click', () => {
       pendingSlug = null
       pendingName = null
+      pendingCity = getCity()
+      pendingCountry = getCountry()
+      pendingCoords = getUserCoords()
       if (selectedLabel) {
-        selectedLabel.textContent = 'Horaires calcules (aucune mosquee)'
-        selectedLabel.style.opacity = '0.5'
+        if (pendingCity && pendingCountry) {
+          selectedLabel.textContent = `Horaires calculés — ${pendingCity}, ${pendingCountry}`
+          selectedLabel.style.opacity = '1'
+        } else {
+          selectedLabel.textContent = 'Sélectionnez une ville pour les horaires calculés'
+          selectedLabel.style.opacity = '0.5'
+        }
         selectedLabel.style.color = ''
       }
       clearMosqueBtn.style.display = 'none'
@@ -611,12 +691,26 @@ export function initSettings(onSave) {
     saveBtn.addEventListener('click', () => {
       if (pendingSlug && pendingName) {
         saveMosque(pendingSlug, pendingName)
+        storage.remove(CITY_KEY)
+        storage.remove(COUNTRY_KEY)
+        if (pendingCoords) saveUserCoords(pendingCoords.lat, pendingCoords.lon)
       } else if (!pendingSlug) {
         storage.remove(MOSQUE_SLUG_KEY)
         storage.remove(MOSQUE_NAME_KEY)
+        if (pendingCity && pendingCountry) {
+          saveLocation(pendingCity, pendingCountry)
+          if (pendingCoords) saveUserCoords(pendingCoords.lat, pendingCoords.lon)
+        } else {
+          storage.remove(CITY_KEY)
+          storage.remove(COUNTRY_KEY)
+        }
       }
 
-      hideLocationWarning()
+      if (pendingSlug || (pendingCity && pendingCountry) || getUserCoords()) {
+        hideLocationWarning()
+      } else {
+        showLocationWarning('missing')
+      }
       updateLocationDisplay()
       modal.classList.add('hidden')
 
@@ -752,7 +846,8 @@ export function initSettings(onSave) {
     if (mosques.length === 0) return
 
     mosques.forEach((mosque) => {
-      if (!mosque.latitude || !mosque.longitude) return
+      const coords = getMosqueCoords(mosque)
+      if (!coords) return
 
       // Skip si déjà affiché
       if (mosquesCache.has(mosque.slug)) return
@@ -766,7 +861,7 @@ export function initSettings(onSave) {
         popupAnchor: [0, -16],
       })
 
-      const marker = L.marker([mosque.latitude, mosque.longitude], { icon: mosqueIcon })
+      const marker = L.marker([coords.lat, coords.lon], { icon: mosqueIcon })
         .addTo(markersLayer)
 
       // Ajouter au cache
@@ -813,9 +908,7 @@ export function initSettings(onSave) {
       popupEl.appendChild(selectBtn)
 
       selectBtn.addEventListener('click', () => {
-        pendingSlug = mosque.slug
-        pendingName = mosque.name
-        updateSelectionLabel(mosque.name)
+        selectMosqueForPrayerTimes(mosque)
         marker.closePopup()
       })
 

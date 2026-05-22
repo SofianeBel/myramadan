@@ -143,8 +143,8 @@ Pour les mentions légales, référez-vous aux [Conditions Générales d'Utilisa
 | Frontend | Vanilla JavaScript (ES modules) | Interface sans framework |
 | Build | [Vite 7](https://vite.dev/) | Bundler ultra-rapide |
 | Cartes | [Leaflet.js](https://leafletjs.com/) + OpenStreetMap | Carte interactive |
-| Icones | [Font Awesome 6](https://fontawesome.com/) | Icones UI |
-| Police | [Outfit](https://fonts.google.com/specimen/Outfit) (Google Fonts) | Typographie principale |
+| Icones | [Font Awesome 6](https://fontawesome.com/) local | Icones UI |
+| Polices | Outfit + Amiri locales | Typographie principale et arabe |
 
 ---
 
@@ -204,8 +204,8 @@ Ce projet existe grace a ces services et librairies :
 - **[OpenStreetMap](https://www.openstreetmap.org/copyright)** contributors — Donnees cartographiques (ODbL)
 - **[Leaflet](https://leafletjs.com)** — Bibliotheque de cartes interactives (BSD-2)
 - **[Tauri](https://tauri.app)** — Framework desktop (MIT + Apache 2.0)
-- **[Font Awesome](https://fontawesome.com)** — Icones (CC BY 4.0 / OFL / MIT)
-- **[Google Fonts](https://fonts.google.com)** — Police Outfit (OFL 1.1)
+- **[Font Awesome](https://fontawesome.com)** — Icones embarquees localement (CC BY 4.0 / OFL / MIT)
+- **[Outfit](https://fonts.google.com/specimen/Outfit)** et **[Amiri](https://fonts.google.com/specimen/Amiri)** — Polices embarquees localement (OFL 1.1)
 
 ---
 

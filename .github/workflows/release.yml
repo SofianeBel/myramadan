@@ -219,6 +219,8 @@ jobs:
           REPO="${GITHUB_REPOSITORY}"
           TAG="v${VERSION}"
           BASE="https://github.com/${REPO}/releases/download/${TAG}"
+          ASSET_DIR="/tmp/release-assets"
+          CHECKSUM_FILE="/tmp/SHA256SUMS.txt"
 
           # Fetch asset names
           ASSETS=$(gh api "repos/${REPO}/releases/${RELEASE_ID}/assets" --jq '.[].name')
@@ -231,6 +233,28 @@ jobs:
           LINUX_APPIMAGE=$(echo "$ASSETS" | grep '\.AppImage$' | head -1)
           LINUX_RPM=$(echo "$ASSETS" | grep '\.rpm$' | head -1)
 
+          # Publish checksums for the user-facing installers.
+          rm -rf "$ASSET_DIR"
+          mkdir -p "$ASSET_DIR"
+          : > "$CHECKSUM_FILE"
+
+          for ASSET in "$WIN_EXE" "$WIN_MSI" "$MAC_DMG" "$LINUX_DEB" "$LINUX_APPIMAGE" "$LINUX_RPM"; do
+            [ -z "$ASSET" ] && continue
+
+            gh release download "$TAG" \
+              --repo "$REPO" \
+              --pattern "$ASSET" \
+              --dir "$ASSET_DIR" \
+              --clobber
+
+            HASH=$(sha256sum "$ASSET_DIR/$ASSET" | awk '{print $1}')
+            printf '%s  %s\n' "$HASH" "$ASSET" >> "$CHECKSUM_FILE"
+          done
+
+          if [ -s "$CHECKSUM_FILE" ]; then
+            gh release upload "$TAG" "$CHECKSUM_FILE" --repo "$REPO" --clobber
+          fi
+
           # Build release body
           {
             echo "## Téléchargements"
@@ -239,6 +263,11 @@ jobs:
             [ -n "$WIN_EXE" ] && echo "- **[Installateur (.exe)](${BASE}/${WIN_EXE})** — recommandé"
             [ -n "$WIN_MSI" ] && echo "- [Installateur MSI](${BASE}/${WIN_MSI})"
             echo ""
+            echo "> **Note Windows SmartScreen**"
+            echo ">"
+            echo "> Windows peut afficher un message indiquant que l'application n'est pas reconnue, car l'installateur n'est pas encore signé par un éditeur Windows reconnu et la réputation SmartScreen se construit avec le temps."
+            echo "> Téléchargez GuideME uniquement depuis cette page officielle. Pour vérifier le fichier, comparez son empreinte SHA256 avec \`SHA256SUMS.txt\` ci-dessous."
+            echo ""
             echo "### 🍎 macOS"
             [ -n "$MAC_DMG" ] && echo "- **[Installateur (.dmg)](${BASE}/${MAC_DMG})** — Universal (Intel + Apple Silicon)"
             echo ""
@@ -246,6 +275,28 @@ jobs:
             [ -n "$LINUX_DEB" ] && echo "- **[Debian/Ubuntu (.deb)](${BASE}/${LINUX_DEB})**"
             [ -n "$LINUX_APPIMAGE" ] && echo "- [AppImage](${BASE}/${LINUX_APPIMAGE})"
             [ -n "$LINUX_RPM" ] && echo "- [RPM](${BASE}/${LINUX_RPM})"
+            echo ""
+            echo "---"
+            echo ""
+            if [ -s "$CHECKSUM_FILE" ]; then
+              echo "### 🔐 Vérification SHA256"
+              echo ""
+              echo "- [SHA256SUMS.txt](${BASE}/SHA256SUMS.txt)"
+              echo ""
+              echo '```text'
+              cat "$CHECKSUM_FILE"
+              echo '```'
+              echo ""
+              echo "---"
+              echo ""
+            fi
+            echo "### 🪟 Windows — Premier lancement"
+            echo ""
+            echo "Si Windows affiche **Microsoft Defender SmartScreen a empêché le démarrage d'une application non reconnue** :"
+            echo ""
+            echo "1. Vérifiez que le fichier vient bien de cette release officielle."
+            echo "2. Comparez son SHA256 avec \`SHA256SUMS.txt\`."
+            echo "3. Cliquez sur **Informations complémentaires**, puis **Exécuter quand même** si vous faites confiance à la source."
             echo ""
             echo "---"
             echo ""

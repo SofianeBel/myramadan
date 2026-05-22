@@ -5,6 +5,32 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.8.3] - 2026-05-22
+
+### Corrigé
+
+- **Démarrage Windows** — les étapes de cold boot sont isolées avec timeouts pour éviter que l'app reste masquée si la géolocalisation, l'auto-détection de mosquée ou le premier chargement des horaires bloque
+- **Mises à jour automatiques** — détection Tauri v2 plus robuste, check de démarrage plus rapide, badge, toast et notification système quand une version est prête à installer
+
+### Amélioré
+
+- **Tests de régression** — couverture ajoutée pour les garde-fous de démarrage et le comportement de l'updater automatique
+
+## [1.8.2] - 2026-05-22
+
+### Corrigé
+
+- **Horaires de prière** — parsing robuste des horaires Aladhan avec suffixe timezone et normalisation correcte des minutes autour de minuit
+- **Cache Mawaqit** — le cache quotidien ne peut plus réutiliser les horaires d'une autre mosquée, et la recherche refuse les résultats dont le slug ne correspond pas à la mosquée sélectionnée
+- **Calendrier Mawaqit** — cache annuel par mosquée et fallback Aladhan pour les années qui ne correspondent pas à la page Mawaqit courante
+- **Coordonnées GPS** — distinction correcte entre coordonnées absentes (`null`, chaîne vide) et coordonnées valides à `0`
+- **Statistiques** — l'objectif "jeûner lundi/jeudi" compte désormais les semaines complètes lundi + jeudi, pas le nombre brut de jours jeûnés
+
+### Amélioré
+
+- **Build frontend** — suppression de l'import dynamique inutile de `storage.js` dans la sidebar pour éviter l'avertissement de chunk Vite
+- **Tests de régression** — couverture ajoutée pour les conversions horaires, caches Mawaqit, coordonnées nulles/vides et progression des objectifs
+
 ## [1.8.1] - 2026-05-22
 
 ### Corrigé

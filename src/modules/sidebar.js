@@ -1,4 +1,5 @@
 import { isMobile } from './platform.js'
+import storage from './storage.js'
 
 let drawerInitialized = false
 
@@ -22,14 +23,12 @@ export function initSidebar() {
 
 function initDesktopSidebar(sidebar, toggleBtn) {
     if (!toggleBtn) return
-    import('./storage.js').then(({ default: storage }) => {
-        const isMinimized = storage.get('sidebar_minimized') === true
-        if (isMinimized) sidebar.classList.add('minimized')
+    const isMinimized = storage.get('sidebar_minimized') === true
+    if (isMinimized) sidebar.classList.add('minimized')
 
-        toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('minimized')
-            storage.set('sidebar_minimized', sidebar.classList.contains('minimized'))
-        })
+    toggleBtn.addEventListener('click', () => {
+        sidebar.classList.toggle('minimized')
+        storage.set('sidebar_minimized', sidebar.classList.contains('minimized'))
     })
 }
 
