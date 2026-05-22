@@ -275,6 +275,9 @@ export function initQibla() {
   if (directionEl) directionEl.textContent = cardinal
 
   // City name from storage
-  const city = storage.get('city') || storage.get('mosqueName') || ''
-  if (cityEl) cityEl.textContent = city
+  const mosqueName = storage.get('mosqueName')
+  const userCity = storage.get('userCity')
+  const userCountry = storage.get('userCountry')
+  const locationLabel = mosqueName || [userCity, userCountry].filter(Boolean).join(', ')
+  if (cityEl) cityEl.textContent = locationLabel
 }

@@ -1,5 +1,14 @@
-import { describe, it, expect } from 'vitest'
-import { calculateQiblaDirection, getCardinalDirection } from './qibla.js'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+vi.mock('./storage.js')
+
+import { calculateQiblaDirection, getCardinalDirection, initQibla } from './qibla.js'
+import storage from './storage.js'
+
+beforeEach(() => {
+  storage._reset()
+  document.body.innerHTML = ''
+})
 
 // ─── calculateQiblaDirection ───
 
@@ -106,5 +115,31 @@ describe('getCardinalDirection', () => {
     expect(getCardinalDirection(60)).toBe('NE')
     // 80° is closer to E (90°) than to NE (45°)
     expect(getCardinalDirection(80)).toBe('E')
+  })
+})
+
+// ─── initQibla location label ───
+
+describe('initQibla', () => {
+  it('uses the persisted userCity/userCountry keys for the location label', () => {
+    storage.set('userLat', 48.8566)
+    storage.set('userLon', 2.3522)
+    storage.set('userCity', 'Lyon')
+    storage.set('userCountry', 'France')
+
+    document.body.innerHTML = `
+      <div id="qibla-card">
+        <div id="qibla-compass-container"></div>
+        <svg id="qibla-compass"></svg>
+        <span id="qibla-angle"></span>
+        <span id="qibla-direction"></span>
+        <span id="qibla-city"></span>
+        <div id="qibla-no-location" class="hidden"></div>
+      </div>
+    `
+
+    initQibla()
+
+    expect(document.getElementById('qibla-city').textContent).toBe('Lyon, France')
   })
 })

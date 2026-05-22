@@ -15,6 +15,7 @@ import {
 } from '@tauri-apps/plugin-notification'
 import { timeToMinutes } from './prayer-times.js'
 import storage from './storage.js'
+import { formatLocalDate } from './local-date.js'
 
 // ─── Constants ──────────────────────────────────────────────────
 
@@ -174,7 +175,7 @@ function checkNotifications() {
   if (!prefs.enabled) return
 
   const now = new Date()
-  const todayStr = now.toISOString().slice(0, 10)
+  const todayStr = formatLocalDate(now)
 
   // Reset fired set on day change
   if (todayStr !== lastDateStr) {

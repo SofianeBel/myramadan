@@ -8,6 +8,7 @@
 import { fetch as tauriFetch } from '@tauri-apps/plugin-http'
 import storage from './storage.js'
 import { isValidSlug } from './sanitize.js'
+import { formatLocalDate } from './local-date.js'
 
 const ALADHAN_BY_CITY = 'https://api.aladhan.com/v1/timingsByCity'
 const ALADHAN_BY_COORDS = 'https://api.aladhan.com/v1/timings'
@@ -123,7 +124,7 @@ export async function fetchMawaqitTimes(mosqueSlug) {
 
   // Check cache
   const cached = loadCache(MAWAQIT_CACHE_KEY)
-  const today = new Date().toISOString().slice(0, 10)
+  const today = formatLocalDate()
 
   if (cached && cached.date === today && cached.mosqueSlug === mosqueSlug) {
     return cached.data
@@ -239,17 +240,25 @@ export async function fetchMawaqitCalendar(mosqueSlug) {
  */
 const DATE_FORMAT_RE = /^\d{2}-\d{2}-\d{4}$/
 
-function buildAladhanUrl({ lat, lon, city = 'Paris', country = 'France', method = 12, angles = null, dateStr = null }) {
+export function buildAladhanUrl({ lat, lon, city = null, country = null, method = 12, angles = null, dateStr = null }) {
   // Validate dateStr format before using in URL path
   const safeDate = (dateStr && DATE_FORMAT_RE.test(dateStr)) ? dateStr : null
 
   let base
-  if (lat != null && lon != null) {
+  const numericLat = Number(lat)
+  const numericLon = Number(lon)
+  const hasCoords = Number.isFinite(numericLat) && Number.isFinite(numericLon)
+  const safeCity = typeof city === 'string' ? city.trim() : ''
+  const safeCountry = typeof country === 'string' ? country.trim() : ''
+
+  if (hasCoords) {
     const path = safeDate ? `${ALADHAN_BY_COORDS}/${safeDate}` : ALADHAN_BY_COORDS
-    base = `${path}?latitude=${lat}&longitude=${lon}`
-  } else {
+    base = `${path}?latitude=${numericLat}&longitude=${numericLon}`
+  } else if (safeCity && safeCountry) {
     const path = safeDate ? `${ALADHAN_BY_CITY}/${safeDate}` : ALADHAN_BY_CITY
-    base = `${path}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}`
+    base = `${path}?city=${encodeURIComponent(safeCity)}&country=${encodeURIComponent(safeCountry)}`
+  } else {
+    return null
   }
 
   if (angles && typeof angles.fajr === 'number' && typeof angles.isha === 'number') {
@@ -263,7 +272,10 @@ function buildAladhanUrl({ lat, lon, city = 'Paris', country = 'France', method 
 /** Build a cache fingerprint string for location params */
 function locationCacheKey({ lat, lon, city, country, method, angles }) {
   const angleSuffix = angles ? `,${angles.fajr}/${angles.isha}` : ''
-  if (lat != null && lon != null) return `${lat},${lon},${method}${angleSuffix}`
+  const numericLat = Number(lat)
+  const numericLon = Number(lon)
+  if (Number.isFinite(numericLat) && Number.isFinite(numericLon)) return `${numericLat},${numericLon},${method}${angleSuffix}`
+  if (!city || !country) return null
   return `${city},${country},${method}${angleSuffix}`
 }
 
@@ -275,6 +287,7 @@ function locationCacheKey({ lat, lon, city, country, method, angles }) {
 export async function fetchHijriDate(params = {}, dateStr = null) {
   try {
     const url = buildAladhanUrl({ ...params, dateStr })
+    if (!url) return null
     const response = await fetch(url)
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
@@ -304,13 +317,10 @@ export async function fetchPrayerTimes(params = {}, dateStr = null) {
     const [dd, mm, yyyy] = dateStr.split('-')
     targetDate = `${yyyy}-${mm}-${dd}` // DD-MM-YYYY → YYYY-MM-DD
   } else {
-    const now = new Date()
-    const y = now.getFullYear()
-    const m = String(now.getMonth() + 1).padStart(2, '0')
-    const d = String(now.getDate()).padStart(2, '0')
-    targetDate = `${y}-${m}-${d}`
+    targetDate = formatLocalDate()
   }
   const locKey = locationCacheKey(params)
+  if (!locKey) return null
 
   // Multi-date cache: Record<YYYY-MM-DD, { locationKey, data }>
   const allCached = loadCache(ALADHAN_CACHE_KEY) || {}
@@ -325,6 +335,7 @@ export async function fetchPrayerTimes(params = {}, dateStr = null) {
 
   try {
     const url = buildAladhanUrl({ ...params, dateStr })
+    if (!url) return null
     const response = await fetch(url)
 
     if (!response.ok) throw new Error(`HTTP ${response.status}`)
@@ -369,13 +380,21 @@ export async function fetchPrayerTimes(params = {}, dateStr = null) {
  * @param {{ lat?, lon?, city?, country?, method?, angles? }} params 
  */
 export async function fetchMonthCalendar(year, month, params = {}) {
-  const { lat, lon, city = 'Paris', country = 'France', method = 12, angles = null } = params;
+  const { lat, lon, city = null, country = null, method = 12, angles = null } = params;
 
   let base;
-  if (lat != null && lon != null) {
-    base = `https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${lat}&longitude=${lon}`;
+  const numericLat = Number(lat)
+  const numericLon = Number(lon)
+  const hasCoords = Number.isFinite(numericLat) && Number.isFinite(numericLon)
+  const safeCity = typeof city === 'string' ? city.trim() : ''
+  const safeCountry = typeof country === 'string' ? country.trim() : ''
+
+  if (hasCoords) {
+    base = `https://api.aladhan.com/v1/calendar/${year}/${month}?latitude=${numericLat}&longitude=${numericLon}`;
+  } else if (safeCity && safeCountry) {
+    base = `https://api.aladhan.com/v1/calendarByCity/${year}/${month}?city=${encodeURIComponent(safeCity)}&country=${encodeURIComponent(safeCountry)}`;
   } else {
-    base = `https://api.aladhan.com/v1/calendarByCity/${year}/${month}?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}`;
+    return null
   }
 
   let url;

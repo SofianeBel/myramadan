@@ -2109,6 +2109,25 @@ body {
     color: white;
 }
 
+.city-select-btn {
+    width: calc(100% - 16px);
+    margin: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--clr-glass-border);
+    border-radius: 8px;
+    background: var(--clr-glass-bg);
+    color: var(--text-main);
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.city-select-btn:hover {
+    background: var(--clr-sand-dark, rgba(255, 255, 255, 0.1));
+    border-color: var(--clr-gold);
+}
+
 /* Classes popup mosquée — couleurs via variables CSS */
 .popup-mosque-name {
     color: var(--clr-green);
