@@ -5,9 +5,18 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.8.2'
+const APP_VERSION = '1.8.3'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.8.3',
+    date: '22 mai 2026',
+    changes: [
+      { type: 'fix', text: 'Démarrage Windows — garde-fous avec timeouts pour éviter que l\'app reste masquée si une étape de cold boot bloque' },
+      { type: 'fix', text: 'Mises à jour automatiques — check plus rapide au démarrage, badge, toast et notification système quand une version est prête' },
+      { type: 'improvement', text: 'Qualité — ajout de tests de régression pour le démarrage résilient et l\'updater automatique' },
+    ],
+  },
   {
     version: '1.8.2',
     date: '22 mai 2026',

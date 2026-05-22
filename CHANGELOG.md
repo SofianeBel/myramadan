@@ -5,6 +5,17 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.8.3] - 2026-05-22
+
+### Corrigé
+
+- **Démarrage Windows** — les étapes de cold boot sont isolées avec timeouts pour éviter que l'app reste masquée si la géolocalisation, l'auto-détection de mosquée ou le premier chargement des horaires bloque
+- **Mises à jour automatiques** — détection Tauri v2 plus robuste, check de démarrage plus rapide, badge, toast et notification système quand une version est prête à installer
+
+### Amélioré
+
+- **Tests de régression** — couverture ajoutée pour les garde-fous de démarrage et le comportement de l'updater automatique
+
 ## [1.8.2] - 2026-05-22
 
 ### Corrigé
