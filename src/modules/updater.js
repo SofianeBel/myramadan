@@ -5,17 +5,29 @@
  */
 
 import { check } from '@tauri-apps/plugin-updater'
+import {
+  isPermissionGranted,
+  requestPermission,
+  sendNotification,
+} from '@tauri-apps/plugin-notification'
 import { relaunch } from '@tauri-apps/plugin-process'
 import storage from './storage.js'
 import { isMobile } from './platform.js'
 
 // Intervalle de vérification automatique (4 heures en ms)
 const AUTO_CHECK_INTERVAL = 4 * 60 * 60 * 1000
-// Délai initial avant le premier check au démarrage (30 secondes)
-const STARTUP_DELAY = 30 * 1000
+// Délai court pour laisser l'interface se stabiliser avant le check au démarrage
+const STARTUP_DELAY = 3 * 1000
+const LAST_CHECK_KEY = 'updater_lastCheck'
+const DISMISSED_VERSION_KEY = 'updater_dismissedVersion'
+const NOTIFIED_VERSION_KEY = 'updater_notifiedVersion'
 
 // Mise à jour courante (objet retourné par check())
 let pendingUpdate = null
+let automaticCheckRunning = false
+let startupTimer = null
+let periodicTimer = null
+let toastVersionShown = null
 
 // --- Utilitaires DOM ---
 
@@ -75,6 +87,111 @@ function displayError(msg) {
   if (el) el.textContent = msg || 'Une erreur inattendue est survenue.'
 }
 
+function isUpdateAvailable(update) {
+  return Boolean(update && update.available !== false)
+}
+
+function displayReady(update) {
+  displayVersion(update?.version ? `v${update.version}` : '')
+  displayNotes(update?.body || null)
+  showState('ready')
+}
+
+function showUpdateToast(update) {
+  if (!update?.version || toastVersionShown === update.version) return
+
+  toastVersionShown = update.version
+
+  const existing = document.getElementById('updater-toast')
+  if (existing) existing.remove()
+
+  const toast = document.createElement('div')
+  toast.id = 'updater-toast'
+  toast.className = 'auto-select-toast updater-toast'
+
+  const icon = document.createElement('i')
+  icon.className = 'fa-solid fa-download'
+  toast.appendChild(icon)
+
+  const textContainer = document.createElement('div')
+  textContainer.className = 'auto-select-toast-text'
+
+  const title = document.createElement('div')
+  title.className = 'auto-select-toast-title'
+  title.textContent = 'Mise à jour disponible'
+  textContainer.appendChild(title)
+
+  const subtitle = document.createElement('div')
+  subtitle.className = 'auto-select-toast-subtitle'
+  subtitle.textContent = `GuideME v${update.version} est prêt à installer`
+  textContainer.appendChild(subtitle)
+
+  toast.appendChild(textContainer)
+
+  const openBtn = document.createElement('button')
+  openBtn.className = 'auto-select-toast-btn'
+  openBtn.textContent = 'Voir'
+  openBtn.addEventListener('click', () => {
+    toast.remove()
+    openModal()
+    displayReady(update)
+  })
+  toast.appendChild(openBtn)
+
+  const closeBtn = document.createElement('button')
+  closeBtn.className = 'auto-select-toast-close'
+  const closeIcon = document.createElement('i')
+  closeIcon.className = 'fa-solid fa-xmark'
+  closeBtn.appendChild(closeIcon)
+  closeBtn.addEventListener('click', () => {
+    toast.classList.add('toast-exit')
+    setTimeout(() => toast.remove(), 300)
+  })
+  toast.appendChild(closeBtn)
+
+  document.body.appendChild(toast)
+  requestAnimationFrame(() => toast.classList.add('toast-visible'))
+
+  setTimeout(() => {
+    if (toast.parentNode) {
+      toast.classList.add('toast-exit')
+      setTimeout(() => toast.remove(), 300)
+    }
+  }, 10000)
+}
+
+async function ensureNotificationPermission() {
+  try {
+    let granted = await isPermissionGranted()
+    if (!granted) {
+      const result = await requestPermission()
+      granted = result === 'granted'
+    }
+    return granted
+  } catch (err) {
+    console.warn('[updater] Permission notification indisponible :', err)
+    return false
+  }
+}
+
+async function notifyUpdateReady(update) {
+  if (!update?.version) return
+  if (storage.get(NOTIFIED_VERSION_KEY) === update.version) return
+
+  const granted = await ensureNotificationPermission()
+  if (!granted) return
+
+  try {
+    sendNotification({
+      title: 'Mise à jour GuideME disponible',
+      body: `La version ${update.version} est prête à installer.`,
+    })
+    storage.set(NOTIFIED_VERSION_KEY, update.version)
+  } catch (err) {
+    console.warn('[updater] Notification de mise à jour échouée :', err)
+  }
+}
+
 // --- Logique principale ---
 
 /**
@@ -83,27 +200,29 @@ function displayError(msg) {
  * Respecte la version ignorée par l'utilisateur.
  */
 async function silentCheck() {
+  if (automaticCheckRunning) return
+  automaticCheckRunning = true
+
   try {
-    storage.set('updater_lastCheck', Date.now())
+    storage.set(LAST_CHECK_KEY, Date.now())
     const update = await check()
 
-    if (!update || !update.available) {
+    if (!isUpdateAvailable(update)) {
       // Pas de mise à jour disponible
       pendingUpdate = null
+      hideBadge()
       return
     }
 
     // Vérifier si l'utilisateur a ignoré cette version
-    const dismissed = storage.get('updater_dismissedVersion')
+    const dismissed = storage.get(DISMISSED_VERSION_KEY)
     if (dismissed && dismissed === update.version) {
+      pendingUpdate = null
+      hideBadge()
       return
     }
 
-    // Téléchargement en arrière-plan avec suivi de progression
-    pendingUpdate = update
-    showBadge()
-
-    // Pré-téléchargement silencieux
+    // Pré-téléchargement silencieux : la mise à jour devient actionnable seulement après.
     await update.download((event) => {
       // Les événements de progression sont optionnels — on les ignore en mode silencieux
       if (event.event === 'Started') {
@@ -111,10 +230,17 @@ async function silentCheck() {
       }
     })
 
+    pendingUpdate = update
+    showBadge()
     console.log('[updater] Mise à jour', update.version, 'prête à installer')
+    displayReady(update)
+    showUpdateToast(update)
+    await notifyUpdateReady(update)
   } catch (err) {
     // En mode dev le plugin updater peut ne pas être disponible — on ignore silencieusement
     console.warn('[updater] Check silencieux échoué :', err)
+  } finally {
+    automaticCheckRunning = false
   }
 }
 
@@ -128,15 +254,16 @@ async function manualCheck() {
   setProgress(0, '0%')
 
   try {
-    storage.set('updater_lastCheck', Date.now())
+    storage.set(LAST_CHECK_KEY, Date.now())
 
     // Petite pause visuelle pour que l'état "checking" soit perçu
     await new Promise(resolve => setTimeout(resolve, 600))
 
     const update = await check()
 
-    if (!update || !update.available) {
+    if (!isUpdateAvailable(update)) {
       pendingUpdate = null
+      hideBadge()
       showState('uptodate')
       return
     }
@@ -145,7 +272,7 @@ async function manualCheck() {
 
     // Si déjà pré-téléchargé en mode silencieux, afficher directement "ready"
     // Sinon, télécharger maintenant avec progression visible
-    const dismissed = storage.get('updater_dismissedVersion')
+    const dismissed = storage.get(DISMISSED_VERSION_KEY)
     if (dismissed && dismissed === update.version) {
       // L'utilisateur a ignoré cette version mais a relancé un check manuel — on la propose quand même
     }
@@ -171,9 +298,7 @@ async function manualCheck() {
 
     // Prêt à installer
     showBadge()
-    displayVersion(`v${update.version}`)
-    displayNotes(update.body || null)
-    showState('ready')
+    displayReady(update)
   } catch (err) {
     console.error('[updater] Check manuel échoué :', err)
     displayError(err?.message || String(err))
@@ -195,6 +320,11 @@ export async function initUpdater() {
   if (btn) {
     btn.addEventListener('click', (e) => {
       e.preventDefault()
+      if (pendingUpdate) {
+        openModal()
+        displayReady(pendingUpdate)
+        return
+      }
       manualCheck()
     })
   }
@@ -229,8 +359,10 @@ export async function initUpdater() {
   if (laterBtn) {
     laterBtn.addEventListener('click', async () => {
       if (pendingUpdate) {
-        storage.set('updater_dismissedVersion', pendingUpdate.version)
+        storage.set(DISMISSED_VERSION_KEY, pendingUpdate.version)
       }
+      pendingUpdate = null
+      document.getElementById('updater-toast')?.remove()
       hideBadge()
       closeModal()
     })
@@ -252,11 +384,13 @@ export async function initUpdater() {
   const closeUptodateBtn = document.getElementById('updater-close-uptodate')
   if (closeUptodateBtn) closeUptodateBtn.addEventListener('click', closeModal)
 
-  // Check automatique au démarrage (délai 30s)
-  setTimeout(async () => {
-    await silentCheck()
+  // Check automatique au démarrage, puis toutes les 4 heures.
+  if (startupTimer) clearTimeout(startupTimer)
+  if (periodicTimer) clearInterval(periodicTimer)
 
-    // Puis toutes les 4 heures
-    setInterval(silentCheck, AUTO_CHECK_INTERVAL)
+  startupTimer = setTimeout(() => {
+    silentCheck()
   }, STARTUP_DELAY)
+
+  periodicTimer = setInterval(silentCheck, AUTO_CHECK_INTERVAL)
 }

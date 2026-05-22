@@ -2774,6 +2774,15 @@ body {
     font-size: 1.2rem;
 }
 
+.auto-select-toast.updater-toast {
+    border-color: var(--clr-gold);
+}
+
+.auto-select-toast.updater-toast .fa-download {
+    color: var(--clr-gold);
+    font-size: 1.2rem;
+}
+
 .auto-select-toast.toast-visible {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
