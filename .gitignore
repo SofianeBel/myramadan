@@ -1,6 +1,32 @@
 # AI coding agent context
+AGENT.md
+AGENTS.md
+agent.md
+agents.md
 CLAUDE.md
 GEMINI.md
+.agent/
+.agents/
+.claude/
+.claude.local.md
+.gemini/
+.codex/
+.omc/
+.aider*
+aider.conf.yml
+aider.conf.yaml
+.continue/
+.cursor/
+.windsurf/
+.roo/
+.kilocode/
+.github/workflows/claude*.yml
+.github/workflows/claude*.yaml
+.github/workflows/gemini*.yml
+.github/workflows/gemini*.yaml
+.github/workflows/codex*.yml
+.github/workflows/codex*.yaml
+.github/copilot-instructions.md
 
 # Logs temporaires
 build_log.txt
