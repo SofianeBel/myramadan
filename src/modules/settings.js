@@ -142,8 +142,14 @@ export function getMethodAngles() {
 }
 
 function getMosqueCoords(mosque) {
-  const lat = Number(mosque?.latitude)
-  const lon = Number(mosque?.longitude)
+  const rawLat = mosque?.latitude
+  const rawLon = mosque?.longitude
+  if (rawLat === null || rawLat === undefined || rawLon === null || rawLon === undefined) return null
+  if (typeof rawLat === 'string' && rawLat.trim() === '') return null
+  if (typeof rawLon === 'string' && rawLon.trim() === '') return null
+
+  const lat = Number(rawLat)
+  const lon = Number(rawLon)
   if (Number.isFinite(lat) && Number.isFinite(lon)) return { lat, lon }
   return null
 }
@@ -840,7 +846,8 @@ export function initSettings(onSave) {
     if (mosques.length === 0) return
 
     mosques.forEach((mosque) => {
-      if (!mosque.latitude || !mosque.longitude) return
+      const coords = getMosqueCoords(mosque)
+      if (!coords) return
 
       // Skip si déjà affiché
       if (mosquesCache.has(mosque.slug)) return
@@ -854,7 +861,7 @@ export function initSettings(onSave) {
         popupAnchor: [0, -16],
       })
 
-      const marker = L.marker([mosque.latitude, mosque.longitude], { icon: mosqueIcon })
+      const marker = L.marker([coords.lat, coords.lon], { icon: mosqueIcon })
         .addTo(markersLayer)
 
       // Ajouter au cache

@@ -148,6 +148,19 @@ function renderCompass(svgEl, angle) {
 // Active compass cleanup function (null when no compass is running)
 let compassCleanup = null
 
+function getStoredCoords() {
+  const rawLat = storage.get('userLat')
+  const rawLon = storage.get('userLon')
+  if (rawLat === null || rawLon === null) return null
+  if (typeof rawLat === 'string' && rawLat.trim() === '') return null
+  if (typeof rawLon === 'string' && rawLon.trim() === '') return null
+
+  const lat = Number(rawLat)
+  const lon = Number(rawLon)
+  if (Number.isFinite(lat) && Number.isFinite(lon)) return { lat, lon }
+  return null
+}
+
 /**
  * Start live compass on mobile — rotates SVG based on device heading.
  * The compass rotates so Qibla arrow always points to the real-world Qibla.
@@ -240,10 +253,9 @@ export function initQibla() {
 
   if (!card) return
 
-  const lat = storage.get('userLat')
-  const lon = storage.get('userLon')
+  const coords = getStoredCoords()
 
-  if (!lat || !lon) {
+  if (!coords) {
     // No coordinates — show message
     if (compassContainer) compassContainer.classList.add('hidden')
     if (noLocationEl) {
@@ -259,7 +271,7 @@ export function initQibla() {
   }
 
   // Calculate bearing
-  const bearing = calculateQiblaDirection(lat, lon)
+  const bearing = calculateQiblaDirection(coords.lat, coords.lon)
   const cardinal = getCardinalDirection(bearing)
 
   // Show compass

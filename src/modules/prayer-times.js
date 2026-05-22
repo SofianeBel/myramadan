@@ -14,19 +14,30 @@ const ALADHAN_BY_CITY = 'https://api.aladhan.com/v1/timingsByCity'
 const ALADHAN_BY_COORDS = 'https://api.aladhan.com/v1/timings'
 const MAWAQIT_SEARCH = 'https://mawaqit.net/api/2.0/mosque/search'
 const MAWAQIT_CACHE_KEY = 'mawaqitCache'
+const MAWAQIT_CALENDAR_CACHE_KEY = 'mawaqitCalendarCache'
 const ALADHAN_CACHE_KEY = 'prayerTimesCache'
 
 // ─── Utility functions ───────────────────────────────────────────
 
+function toOptionalCoordinate(value) {
+  if (value === null || value === undefined) return null
+  if (typeof value === 'string' && value.trim() === '') return null
+  const numeric = Number(value)
+  return Number.isFinite(numeric) ? numeric : null
+}
+
 /** Parse "HH:MM" → { hours, minutes } */
 export function parseTime(str) {
-  const [h, m] = str.split(':').map(Number)
-  return { hours: h, minutes: m }
+  if (typeof str !== 'string') return { hours: NaN, minutes: NaN }
+  const match = str.trim().match(/^(\d{1,2}):(\d{2})/)
+  if (!match) return { hours: NaN, minutes: NaN }
+  return { hours: Number(match[1]), minutes: Number(match[2]) }
 }
 
 /** Convert "HH:MM" string to total minutes since midnight */
 export function timeToMinutes(str) {
   const { hours, minutes } = parseTime(str)
+  if (!Number.isFinite(hours) || !Number.isFinite(minutes)) return NaN
   return hours * 60 + minutes
 }
 
@@ -38,8 +49,11 @@ export function getCurrentMinutes() {
 
 /** Format minutes to "HH:MM" */
 export function minutesToTime(totalMinutes) {
-  const h = Math.floor(totalMinutes / 60) % 24
-  const m = totalMinutes % 60
+  if (!Number.isFinite(totalMinutes)) return '--:--'
+  const minutesInDay = 24 * 60
+  const normalized = ((Math.trunc(totalMinutes) % minutesInDay) + minutesInDay) % minutesInDay
+  const h = Math.floor(normalized / 60)
+  const m = normalized % 60
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
 }
 
@@ -69,8 +83,8 @@ export async function searchMosques(query) {
       slug: m.slug || '',
       localisation: m.localisation || '',
       uuid: m.uuid || '',
-      latitude: m.latitude || null,
-      longitude: m.longitude || null,
+      latitude: toOptionalCoordinate(m.latitude),
+      longitude: toOptionalCoordinate(m.longitude),
       proximity: m.proximity || null,
       times: m.times || null,
     }))
@@ -102,8 +116,8 @@ export async function searchMosquesByLocation(lat, lon) {
       slug: m.slug || '',
       localisation: m.localisation || '',
       uuid: m.uuid || '',
-      latitude: m.latitude || null,
-      longitude: m.longitude || null,
+      latitude: toOptionalCoordinate(m.latitude),
+      longitude: toOptionalCoordinate(m.longitude),
       proximity: m.proximity || null,
       times: m.times || null,
     }))
@@ -125,9 +139,12 @@ export async function fetchMawaqitTimes(mosqueSlug) {
   // Check cache
   const cached = loadCache(MAWAQIT_CACHE_KEY)
   const today = formatLocalDate()
+  const cachedForRequest = cached && cached.date === today && cached.mosqueSlug === mosqueSlug
+    ? cached.data
+    : null
 
-  if (cached && cached.date === today && cached.mosqueSlug === mosqueSlug) {
-    return cached.data
+  if (cachedForRequest) {
+    return cachedForRequest
   }
 
   try {
@@ -143,8 +160,12 @@ export async function fetchMawaqitTimes(mosqueSlug) {
       throw new Error('No results from Mawaqit')
     }
 
-    // Find exact match or take first result
-    const mosque = results.find((m) => m.slug === mosqueSlug) || results[0]
+    // The selected slug is authoritative. Falling back to the first search
+    // result can silently show another mosque's timetable.
+    const mosque = results.find((m) => m.slug === mosqueSlug)
+    if (!mosque) {
+      throw new Error('Selected mosque slug not found in Mawaqit results')
+    }
 
     if (!mosque.times || mosque.times.length < 6) {
       throw new Error('Invalid times array from Mawaqit')
@@ -175,9 +196,9 @@ export async function fetchMawaqitTimes(mosqueSlug) {
     console.error('[prayer-times] Mawaqit fetch error:', err)
 
     // Fallback to cache
-    if (cached && cached.data) {
+    if (cachedForRequest) {
       console.warn('[prayer-times] Using cached Mawaqit data')
-      return cached.data
+      return cachedForRequest
     }
 
     return null
@@ -192,9 +213,18 @@ export async function fetchMawaqitTimes(mosqueSlug) {
  * @param {string} mosqueSlug
  * @returns {Promise<Array<Object> | null>} 12-month calendar or null
  */
-export async function fetchMawaqitCalendar(mosqueSlug) {
+export async function fetchMawaqitCalendar(mosqueSlug, year = new Date().getFullYear()) {
   if (!mosqueSlug) return null
   if (!isValidSlug(mosqueSlug)) return null
+  const currentYear = new Date().getFullYear()
+  if (year !== currentYear) return null
+
+  const cached = loadCache(MAWAQIT_CALENDAR_CACHE_KEY)
+  const cacheStore = cached && typeof cached === 'object' && !Array.isArray(cached) ? cached : {}
+  const cachedEntry = cacheStore[mosqueSlug]
+  if (cachedEntry?.year === year && Array.isArray(cachedEntry.calendar) && cachedEntry.calendar.length === 12) {
+    return cachedEntry.calendar
+  }
 
   try {
     const url = `https://mawaqit.net/fr/${mosqueSlug}`
@@ -223,6 +253,10 @@ export async function fetchMawaqitCalendar(mosqueSlug) {
     const confData = JSON.parse(text.slice(braceStart, braceEnd + 1))
     if (confData.calendar && Array.isArray(confData.calendar) && confData.calendar.length === 12) {
       console.log(`[prayer-times] Mawaqit calendar scraped for ${mosqueSlug}`)
+      saveCache(MAWAQIT_CALENDAR_CACHE_KEY, {
+        ...cacheStore,
+        [mosqueSlug]: { year, calendar: confData.calendar },
+      })
       return confData.calendar
     }
   } catch (err) {

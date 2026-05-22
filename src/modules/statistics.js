@@ -28,6 +28,40 @@ function formatDate(date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 }
 
+function parseDateKey(dateStr) {
+  const [y, m, d] = dateStr.split('-').map(Number)
+  if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d)) return null
+  return new Date(y, m - 1, d)
+}
+
+function getWeekStartKey(date) {
+  const mondayBasedDow = (date.getDay() + 6) % 7
+  const start = new Date(date)
+  start.setDate(start.getDate() - mondayBasedDow)
+  return formatDate(start)
+}
+
+function countMondayThursdayFastingWeeks(log) {
+  const weeks = new Map()
+
+  Object.entries(log).forEach(([dateStr, entry]) => {
+    if (!entry?.fasting) return
+    const date = parseDateKey(dateStr)
+    if (!date) return
+
+    const day = date.getDay()
+    if (day !== 1 && day !== 4) return
+
+    const weekKey = getWeekStartKey(date)
+    const week = weeks.get(weekKey) || { monday: false, thursday: false }
+    if (day === 1) week.monday = true
+    if (day === 4) week.thursday = true
+    weeks.set(weekKey, week)
+  })
+
+  return Array.from(weeks.values()).filter(week => week.monday && week.thursday).length
+}
+
 // ─── Stats computation ───
 
 function computeStats(period) {
@@ -272,7 +306,7 @@ function saveGoals(goals) {
   storage.set(GOALS_KEY, goals)
 }
 
-function calculateGoalProgress(goal) {
+export function calculateGoalProgress(goal) {
   const log = getPracticeLog()
 
   if (goal.type === 'prayer-streak') {
@@ -307,7 +341,7 @@ function calculateGoalProgress(goal) {
   }
 
   if (goal.type === 'fasting-weeks') {
-    return Object.values(log).filter(e => e.fasting).length
+    return countMondayThursdayFastingWeeks(log)
   }
 
   return 0

@@ -11,6 +11,7 @@ GEMINI.md
 .claude.local.md
 .gemini/
 .codex/
+.omx/
 .omc/
 .aider*
 aider.conf.yml

@@ -121,6 +121,45 @@ describe('getCardinalDirection', () => {
 // ─── initQibla location label ───
 
 describe('initQibla', () => {
+  it('shows the missing-location state when coordinates are absent', () => {
+    document.body.innerHTML = `
+      <div id="qibla-card">
+        <div id="qibla-compass-container"></div>
+        <svg id="qibla-compass"></svg>
+        <span id="qibla-angle"></span>
+        <span id="qibla-direction"></span>
+        <span id="qibla-city"></span>
+        <div id="qibla-no-location" class="hidden"></div>
+      </div>
+    `
+
+    initQibla()
+
+    expect(document.getElementById('qibla-compass-container').classList.contains('hidden')).toBe(true)
+    expect(document.getElementById('qibla-no-location').classList.contains('hidden')).toBe(false)
+  })
+
+  it('shows the missing-location state when stored coordinates are empty strings', () => {
+    storage.set('userLat', '')
+    storage.set('userLon', '')
+
+    document.body.innerHTML = `
+      <div id="qibla-card">
+        <div id="qibla-compass-container"></div>
+        <svg id="qibla-compass"></svg>
+        <span id="qibla-angle"></span>
+        <span id="qibla-direction"></span>
+        <span id="qibla-city"></span>
+        <div id="qibla-no-location" class="hidden"></div>
+      </div>
+    `
+
+    initQibla()
+
+    expect(document.getElementById('qibla-compass-container').classList.contains('hidden')).toBe(true)
+    expect(document.getElementById('qibla-no-location').classList.contains('hidden')).toBe(false)
+  })
+
   it('uses the persisted userCity/userCountry keys for the location label', () => {
     storage.set('userLat', 48.8566)
     storage.set('userLon', 2.3522)
@@ -141,5 +180,29 @@ describe('initQibla', () => {
     initQibla()
 
     expect(document.getElementById('qibla-city').textContent).toBe('Lyon, France')
+  })
+
+  it('accepts zero-valued coordinates as a valid location', () => {
+    storage.set('userLat', 0)
+    storage.set('userLon', 0)
+    storage.set('userCity', 'Null Island')
+    storage.set('userCountry', 'Ocean')
+
+    document.body.innerHTML = `
+      <div id="qibla-card">
+        <div id="qibla-compass-container" class="hidden"></div>
+        <svg id="qibla-compass"></svg>
+        <span id="qibla-angle"></span>
+        <span id="qibla-direction"></span>
+        <span id="qibla-city"></span>
+        <div id="qibla-no-location" class="hidden"></div>
+      </div>
+    `
+
+    initQibla()
+
+    expect(document.getElementById('qibla-compass-container').classList.contains('hidden')).toBe(false)
+    expect(document.getElementById('qibla-no-location').classList.contains('hidden')).toBe(true)
+    expect(document.getElementById('qibla-angle').textContent).toMatch(/\d+°/)
   })
 })

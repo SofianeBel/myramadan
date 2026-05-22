@@ -70,7 +70,7 @@ async function renderCalendar(year, month) {
     let calendarData = null
 
     if (mosqueSlug) {
-        const mawaqitCalendar = await fetchMawaqitCalendar(mosqueSlug)
+        const mawaqitCalendar = await fetchMawaqitCalendar(mosqueSlug, year)
         if (mawaqitCalendar && Array.isArray(mawaqitCalendar) && mawaqitCalendar.length === 12) {
             const monthData = mawaqitCalendar[month - 1]
             const daysInMonth = new Date(year, month, 0).getDate()
