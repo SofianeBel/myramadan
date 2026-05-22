@@ -35,9 +35,13 @@ import { initDuas } from './modules/duas.js'
 import { initJournal } from './modules/journal.js'
 import { initStatistics } from './modules/statistics.js'
 import { applyPlatformClass, isMobile } from './modules/platform.js'
+import { revealApp, runStartupStep, runStartupStepWithTimeout } from './modules/startup.js'
 
 // Intervals
 let fastingInterval = null
+const STARTUP_GEOLOCATION_TIMEOUT_MS = 3500
+const STARTUP_AUTO_SELECT_TIMEOUT_MS = 4500
+const STARTUP_PRAYER_DATA_TIMEOUT_MS = 8000
 
 /**
  * Initialize Sakura petal animations in the titlebar
@@ -288,157 +292,198 @@ function setupNavigation() {
  * Main initialization sequence.
  */
 document.addEventListener('DOMContentLoaded', async () => {
-  // 0. Initialize persistent storage (loads from disk into memory cache)
-  await storage.init()
+  const splashReady = runStartupStep('splash', initSplash)
 
-  // 0.5. Platform detection (adds CSS class before any rendering)
-  applyPlatformClass()
+  try {
+    // 0. Initialize persistent storage (loads from disk into memory cache)
+    await runStartupStep('storage.init', () => storage.init())
 
-  // Window controls
-  if (!isMobile) initWindowControls()
+    // 0.5. Platform detection (adds CSS class before any rendering)
+    applyPlatformClass()
 
-  // 1. Theme (restore before anything visual)
-  initTheme()
+    // Window controls
+    if (!isMobile) runStartupStep('window controls', initWindowControls)
 
-  // 1.5. Request geolocation (must complete before loading prayer data)
-  await requestGeolocation()
+    // 1. Theme (restore before anything visual)
+    runStartupStep('theme', initTheme)
 
-  // 2. Splash + auto-détection mosquée en parallèle (zéro délai perçu)
-  let autoDetectResult = null
-  await Promise.all([
-    initSplash(),
-    autoSelectNearestMosque().then(result => { autoDetectResult = result })
-  ])
+    // 1.5. Request geolocation, but do not let Windows cold-start services block boot.
+    const geolocationResult = await runStartupStepWithTimeout(
+      'geolocation',
+      requestGeolocation,
+      STARTUP_GEOLOCATION_TIMEOUT_MS
+    )
 
-  // 3. Display location in header
-  updateLocationDisplay()
+    // 2. Splash + auto-détection mosquée en parallèle (zéro délai perçu)
+    let autoDetectResult = null
+    const canAutoSelectMosque = geolocationResult || getUserCoords()
+    if (canAutoSelectMosque) {
+      await Promise.all([
+        splashReady,
+        runStartupStepWithTimeout(
+          'nearest mosque auto-select',
+          async () => {
+            autoDetectResult = await autoSelectNearestMosque()
+            return autoDetectResult
+          },
+          STARTUP_AUTO_SELECT_TIMEOUT_MS
+        )
+      ])
+    } else {
+      await splashReady
+    }
 
-  // 3.5. Setup navigation
-  setupNavigation()
+    // 3. Display location in header
+    updateLocationDisplay()
 
-  // 3.5.1 Android back button handling
-  // Custom 'backbutton' event dispatched by MainActivity.kt via onBackPressedDispatcher
-  if (isMobile) {
-    document.addEventListener('backbutton', (e) => {
-      // 1. Close drawer if open
-      const sidebar = document.querySelector('.sidebar')
-      if (sidebar?.classList.contains('drawer-open')) {
-        sidebar.classList.remove('drawer-open')
-        document.getElementById('sidebar-backdrop')?.classList.remove('visible')
-        e.preventDefault()
-        return
-      }
+    // 3.5. Setup navigation
+    setupNavigation()
 
-      // 2. Close any open modal
-      const openModal = document.querySelector('.modal.show, .modal-overlay.active, .settings-modal.show')
-      if (openModal) {
-        openModal.classList.remove('show', 'active')
-        e.preventDefault()
-        return
-      }
+    // 3.5.1 Android back button handling
+    // Custom 'backbutton' event dispatched by MainActivity.kt via onBackPressedDispatcher
+    if (isMobile) {
+      document.addEventListener('backbutton', (e) => {
+        // 1. Close drawer if open
+        const sidebar = document.querySelector('.sidebar')
+        if (sidebar?.classList.contains('drawer-open')) {
+          sidebar.classList.remove('drawer-open')
+          document.getElementById('sidebar-backdrop')?.classList.remove('visible')
+          e.preventDefault()
+          return
+        }
 
-      // 3. On dashboard → don't preventDefault → OS handles (minimize app)
+        // 2. Close any open modal
+        const openModal = document.querySelector('.modal.show, .modal-overlay.active, .settings-modal.show')
+        if (openModal) {
+          openModal.classList.remove('show', 'active')
+          e.preventDefault()
+          return
+        }
+
+        // 3. On dashboard → don't preventDefault → OS handles (minimize app)
+      })
+    }
+
+    // 3.6 Setup sidebar
+    runStartupStep('sidebar', initSidebar)
+
+    // 3.7 Setup bug report modal
+    runStartupStep('bug report', initBugReport)
+
+    // 3.8 Initialize Sakura Titlebar Effects
+    if (!isMobile) runStartupStep('sakura', initSakura)
+
+    // 3.9 Initialize Support / Ads Feature
+    await runStartupStep('support', initSupport)
+
+    // 3.10 Initialize Changelog / Quoi de neuf
+    await runStartupStep('changelog', initChangelog)
+
+    // 3.11 Initialize Auto-updater
+    if (!isMobile) await runStartupStep('updater', initUpdater)
+
+    // Baseline mode before network data arrives.
+    applyMode(resolveMode(null))
+    updateRamadanProgress(null)
+
+    // 4. Load prayer data (Mawaqit or Aladhan)
+    const mosqueSlug = getMosqueSlug()
+    await runStartupStepWithTimeout(
+      'initial prayer data',
+      () => loadPrayerData(mosqueSlug),
+      STARTUP_PRAYER_DATA_TIMEOUT_MS
+    )
+
+    // 5. Date navigation (arrows to browse past/future prayer times)
+    initDateNavigation(async (offset) => {
+      const slug = getMosqueSlug()
+      await runStartupStepWithTimeout(
+        'date navigation prayer data',
+        () => loadPrayerData(slug, offset),
+        STARTUP_PRAYER_DATA_TIMEOUT_MS
+      )
     })
-  }
 
-  // 3.6 Setup sidebar
-  initSidebar()
+    // 6. Daily verse/hadith (Ramadan mode detected via body class set by applyMode)
+    const isRamadanMode = document.body.classList.contains('mode-ramadan')
+    updateDailyContent(isRamadanMode)
+    initDailyContentActions()
 
-  // 3.7 Setup bug report modal
-  initBugReport()
+    // 6.5. Practice tracker (dashboard card)
+    initTracker()
 
-  // 3.8 Initialize Sakura Titlebar Effects
-  if (!isMobile) initSakura()
+    // 6.6. Dhikr counter (dashboard card)
+    initDhikr()
 
-  // 3.9 Initialize Support / Ads Feature
-  await initSupport()
+    // 6.7. Qibla compass (dashboard card)
+    initQibla()
 
-  // 3.10 Initialize Changelog / Quoi de neuf
-  await initChangelog()
+    // 7. Interactive effects
+    setupInteractiveEffects()
 
-  // 3.11 Initialize Auto-updater
-  if (!isMobile) await initUpdater()
+    // 8. Onboarding tour (first visit only)
+    setTimeout(() => initOnboarding(), 500)
 
-  // 4. Load prayer data (Mawaqit or Aladhan)
-  const mosqueSlug = getMosqueSlug()
-  await loadPrayerData(mosqueSlug)
-
-  // 5. Date navigation (arrows to browse past/future prayer times)
-  initDateNavigation(async (offset) => {
-    const slug = getMosqueSlug()
-    await loadPrayerData(slug, offset)
-  })
-
-  // 6. Daily verse/hadith (Ramadan mode detected via body class set by applyMode)
-  const isRamadanMode = document.body.classList.contains('mode-ramadan')
-  updateDailyContent(isRamadanMode)
-  initDailyContentActions()
-
-  // 6.5. Practice tracker (dashboard card)
-  initTracker()
-
-  // 6.6. Dhikr counter (dashboard card)
-  initDhikr()
-
-  // 6.7. Qibla compass (dashboard card)
-  initQibla()
-
-  // 7. Interactive effects
-  setupInteractiveEffects()
-
-  // 8. Onboarding tour (first visit only)
-  setTimeout(() => initOnboarding(), 500)
-
-  // Dev util: Expose resetTour explicitement pour tester
-  if (import.meta.env.DEV) {
-    window.resetTour = async () => {
-      await storage.set('tourCompleted', false)
-      await storage.flush()
-      window.location.reload()
-    }
-  }
-
-  // 9. Settings modal (re-fetches data on mosque change, preserves date offset)
-  initSettings(async (newMosqueSlug) => {
-    await loadPrayerData(newMosqueSlug, getOffset())
-    await refreshCalendar()
-  })
-
-  // 9.5. Toast auto-détection (après que l'app soit entièrement chargée)
-  if (autoDetectResult) {
-    showAutoSelectToast(autoDetectResult.name, autoDetectResult.distance)
-  }
-
-  // 10. Quick-toggle reminder button
-  const reminderBtn = document.getElementById('reminder-btn')
-  if (reminderBtn) {
-    function updateReminderBtn() {
-      if (isNotificationsEnabled()) {
-        reminderBtn.classList.add('reminder-active')
-        reminderBtn.innerHTML = '<i class="fa-solid fa-bell bell-icon"></i> Rappel active'
-      } else {
-        reminderBtn.classList.remove('reminder-active')
-        reminderBtn.innerHTML = '<i class="fa-solid fa-bell bell-icon"></i> Activer le rappel'
+    // Dev util: Expose resetTour explicitement pour tester
+    if (import.meta.env.DEV) {
+      window.resetTour = async () => {
+        await storage.set('tourCompleted', false)
+        await storage.flush()
+        window.location.reload()
       }
     }
 
-    updateReminderBtn()
+    // 9. Settings modal (re-fetches data on mosque change, preserves date offset)
+    initSettings(async (newMosqueSlug) => {
+      await runStartupStepWithTimeout(
+        'settings prayer data',
+        () => loadPrayerData(newMosqueSlug, getOffset()),
+        STARTUP_PRAYER_DATA_TIMEOUT_MS
+      )
+      await refreshCalendar()
+    })
 
-    reminderBtn.addEventListener('click', () => {
-      const prefs = loadPrefs()
-      prefs.enabled = !prefs.enabled
-      if (prefs.enabled) {
-        prefs.perPrayer = {
-          Fajr: true,
-          Dhuhr: true,
-          Asr: true,
-          Maghrib: true,
-          Isha: true,
+    // 9.5. Toast auto-détection (après que l'app soit entièrement chargée)
+    if (autoDetectResult) {
+      showAutoSelectToast(autoDetectResult.name, autoDetectResult.distance)
+    }
+
+    // 10. Quick-toggle reminder button
+    const reminderBtn = document.getElementById('reminder-btn')
+    if (reminderBtn) {
+      function updateReminderBtn() {
+        if (isNotificationsEnabled()) {
+          reminderBtn.classList.add('reminder-active')
+          reminderBtn.innerHTML = '<i class="fa-solid fa-bell bell-icon"></i> Rappel active'
+        } else {
+          reminderBtn.classList.remove('reminder-active')
+          reminderBtn.innerHTML = '<i class="fa-solid fa-bell bell-icon"></i> Activer le rappel'
         }
       }
-      savePrefs(prefs)
+
       updateReminderBtn()
-    })
+
+      reminderBtn.addEventListener('click', () => {
+        const prefs = loadPrefs()
+        prefs.enabled = !prefs.enabled
+        if (prefs.enabled) {
+          prefs.perPrayer = {
+            Fajr: true,
+            Dhuhr: true,
+            Asr: true,
+            Maghrib: true,
+            Isha: true,
+          }
+        }
+        savePrefs(prefs)
+        updateReminderBtn()
+      })
+    }
+  } catch (err) {
+    console.error('[main] Startup failed:', err)
+  } finally {
+    await splashReady
+    revealApp()
   }
 })
 
