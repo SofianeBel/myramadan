@@ -5,9 +5,18 @@
 
 import storage from './storage.js'
 
-export const APP_VERSION = '1.8.3'
+export const APP_VERSION = '1.9.0'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.9.0',
+    date: '10 juin 2026',
+    changes: [
+      { type: 'feature', text: 'Mini-widget bureau — fenêtre flottante toujours visible avec la prochaine prière, le compte à rebours et la progression du jeûne' },
+      { type: 'feature', text: 'Planificateur de Khatm — objectif quotidien automatique, suivi par Juz’ et indicateur de rythme (en avance / en retard)' },
+      { type: 'feature', text: 'Export / import des données — sauvegarde JSON complète du suivi, du journal et des paramètres (onglet Données)' },
+    ],
+  },
   {
     version: '1.8.3',
     date: '22 mai 2026',
