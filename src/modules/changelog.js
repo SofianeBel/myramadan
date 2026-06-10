@@ -15,6 +15,8 @@ const CHANGELOG_ENTRIES = [
       { type: 'feature', text: 'Mini-widget bureau — fenêtre flottante toujours visible avec la prochaine prière, le compte à rebours et la progression du jeûne' },
       { type: 'feature', text: 'Planificateur de Khatm — objectif quotidien automatique, suivi par Juz’ et indicateur de rythme (en avance / en retard)' },
       { type: 'feature', text: 'Export / import des données — sauvegarde JSON complète du suivi, du journal et des paramètres (onglet Données)' },
+      { type: 'improvement', text: 'Statistiques — rafraîchies à chaque visite de l’onglet (données du jour toujours à jour)' },
+      { type: 'fix', text: 'Mode sombre — lisibilité du badge de prochaine prière et de la tuile Maghrib (rupture du jeûne)' },
     ],
   },
   {

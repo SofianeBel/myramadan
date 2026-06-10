@@ -140,6 +140,17 @@ export async function initWidgetBridge() {
       syncCheckbox(false)
     })
 
+    // Synchronise le thème du widget en direct (le widget lit le thème au boot uniquement)
+    const themeObserver = new MutationObserver(() => {
+      const theme = document.documentElement.dataset.theme || 'dark'
+      try {
+        emitTo('widget', 'guideme://theme', theme)
+      } catch (err) {
+        console.warn('[widget-bridge] sync thème échec:', err)
+      }
+    })
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+
     // Auto-show déterministe : ne dépend pas du ready du widget.
     // Le cache storage est chargé et le widget a restauré sa position avant ce point.
     if (storage.get('widgetEnabled')) {

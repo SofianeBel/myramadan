@@ -204,6 +204,15 @@ async function boot() {
     console.warn('[widget] listen timings échec:', err)
   }
 
+  // 5b. Écoute les changements de thème en direct depuis le main
+  try {
+    await listen('guideme://theme', (event) => {
+      document.documentElement.dataset.theme = event.payload || 'dark'
+    })
+  } catch (err) {
+    console.warn('[widget] listen thème échec:', err)
+  }
+
   // 6. Rollover minuit
   armMidnightRollover()
 

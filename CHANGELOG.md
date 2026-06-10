@@ -13,6 +13,16 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - **Planificateur de Khatm** — objectif de lecture quotidien calculé automatiquement selon la date cible, suivi de la progression par Juz', et indicateur de rythme signalant si l'on est en avance ou en retard
 - **Export / import des données** — sauvegarde et restauration JSON complètes du suivi de pratique, du journal de gratitude et des paramètres depuis le nouvel onglet Données
 
+### Amélioré
+
+- **Statistiques** — la vue se rafraîchit à chaque visite de l'onglet (auparavant figée après la première ouverture)
+- **Mini-widget** — suit le changement de thème clair/sombre en direct
+
+### Corrigé
+
+- **Mode sombre** — le badge de prochaine prière et la tuile Maghrib (rupture du jeûne) sont à nouveau lisibles
+- **Import** — accord singulier/pluriel dans le message de confirmation
+
 ## [1.8.3] - 2026-05-22
 
 ### Corrigé

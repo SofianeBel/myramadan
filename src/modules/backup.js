@@ -315,8 +315,10 @@ export async function importData() {
     }
 
     const summary = summarizeImport(result.data)
+    const practiceDays = summary.practiceDays
+    const journalEntries = summary.journalEntries
     const confirmed = await ask(
-      `${summary.practiceDays} jours de suivi et ${summary.journalEntries} entrées de journal seront remplacés. Continuer ?`,
+      `${practiceDays} jour${practiceDays > 1 ? 's' : ''} de suivi et ${journalEntries} entrée${journalEntries > 1 ? 's' : ''} de journal seront remplacés. Continuer ?`,
       { title: 'Importer la sauvegarde', kind: 'warning' }
     )
 

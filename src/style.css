@@ -914,6 +914,12 @@ body {
     font-size: 0.9rem;
 }
 
+/* En mode sombre, --clr-green (vert foncé) sur le gold translucide est illisible :
+   on bascule le texte sur le gold plein, qui contraste bien. */
+[data-theme="dark"] .badge {
+    color: var(--clr-gold);
+}
+
 .breathing-badge {
     animation: breathe 3s ease-in-out infinite;
 }
@@ -1277,6 +1283,12 @@ body {
 .prayer-item.highlight-iftar:not(.selected) {
     border-color: var(--clr-gold);
     background: linear-gradient(to bottom, var(--clr-sand-panel), var(--clr-sand-light));
+}
+
+/* En mode sombre, --clr-sand-light n'est jamais redéfini (il alimente --bg-main
+   en clair) : on remplace le bas du dégradé par le panel sombre pour rester lisible. */
+[data-theme="dark"] .prayer-item.highlight-iftar:not(.selected) {
+    background: linear-gradient(to bottom, var(--clr-sand-panel), var(--clr-sand-panel-dark));
 }
 
 .prayer-item.highlight-iftar:not(.selected) .prayer-name span {

@@ -482,7 +482,11 @@ function refreshStats() {
 // ─── Init ───
 
 export function initStatistics() {
-  if (initialized) return
+  if (initialized) {
+    // Re-rendu à chaque visite : les données (tracker, khatm, journal) ont pu changer
+    refreshStats()
+    return
+  }
   initialized = true
 
   setupPeriodButtons()
