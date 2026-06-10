@@ -8,6 +8,7 @@
 
 import { getPracticeLog, getStreak } from './practice-tracker.js'
 import { getJournalEntryCount } from './journal.js'
+import { renderKhatmStats } from './khatm.js'
 import storage from './storage.js'
 
 let initialized = false
@@ -474,6 +475,7 @@ function refreshStats() {
   renderHeatmap(document.getElementById('stats-heatmap'))
   renderStreaks()
   renderJournalCount()
+  renderKhatmStats()
   renderGoals()
 }
 
