@@ -93,3 +93,6 @@ coverage/
 
 # Git worktrees
 .worktrees/
+
+# Artefacts Playwright MCP (sessions de test navigateur)
+.playwright-mcp/
