@@ -36,6 +36,7 @@ import { initDuas } from './modules/duas.js'
 import { initJournal } from './modules/journal.js'
 import { initStatistics } from './modules/statistics.js'
 import { initBackup } from './modules/backup.js'
+import { publishTimings, initWidgetBridge } from './modules/widget-bridge.js'
 import { applyPlatformClass, isMobile } from './modules/platform.js'
 import { revealApp, runStartupStep, runStartupStepWithTimeout } from './modules/startup.js'
 
@@ -204,6 +205,11 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
 
   // Fournit le contexte Hijri au planificateur de khatm (date cible par défaut)
   setHijriContext(currentHijriDate)
+
+  // Pousse les horaires du jour vers le mini-widget bureau (no-op si navigateur/mobile)
+  if (isToday) {
+    publishTimings(timings, mode)
+  }
 }
 
 /**
@@ -386,6 +392,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 3.11 Initialize Auto-updater
     if (!isMobile) await runStartupStep('updater', initUpdater)
+
+    // 3.12 Initialize mini-widget bridge.
+    // Appelé inconditionnellement : self-guard interne (init complet sur bureau,
+    // masquage de la ligne de réglage sur mobile).
+    await runStartupStep('widget bridge', initWidgetBridge)
 
     // Baseline mode before network data arrives.
     applyMode(resolveMode(null))

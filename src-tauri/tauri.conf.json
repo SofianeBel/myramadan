@@ -45,6 +45,7 @@
     },
     "windows": [
       {
+        "label": "main",
         "title": "GuideME - Ramadan Edition",
         "width": 1200,
         "height": 800,
@@ -52,6 +53,20 @@
         "minHeight": 600,
         "decorations": false,
         "resizable": true
+      },
+      {
+        "label": "widget",
+        "title": "GuideME Widget",
+        "url": "widget.html",
+        "width": 280,
+        "height": 130,
+        "resizable": false,
+        "decorations": false,
+        "alwaysOnTop": true,
+        "skipTaskbar": true,
+        "visible": false,
+        "shadow": false,
+        "transparent": true
       }
     ]
   }

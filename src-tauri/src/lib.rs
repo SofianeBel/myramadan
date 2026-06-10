@@ -9,6 +9,9 @@ use tauri::{
 #[cfg(desktop)]
 use tauri::Manager;
 
+#[cfg(desktop)]
+use tauri::Emitter;
+
 // ── Bug Report → GitHub Issues (server-side, token never reaches the frontend) ──
 
 #[derive(Deserialize)]
@@ -119,8 +122,10 @@ pub fn run() {
             {
                 let show_item =
                     MenuItem::with_id(app, "show", "Ouvrir GuideME", true, None::<&str>)?;
+                let widget_item =
+                    MenuItem::with_id(app, "widget", "Mini-widget", true, None::<&str>)?;
                 let quit_item = MenuItem::with_id(app, "quit", "Quitter", true, None::<&str>)?;
-                let menu = Menu::with_items(app, &[&show_item, &quit_item])?;
+                let menu = Menu::with_items(app, &[&show_item, &widget_item, &quit_item])?;
 
                 TrayIconBuilder::new()
                     .icon(
@@ -137,6 +142,11 @@ pub fn run() {
                                 let _ = window.show();
                                 let _ = window.set_focus();
                             }
+                        }
+                        "widget" => {
+                            // Route via la fenêtre principale : c'est le JS du main qui
+                            // possède la clé `widgetEnabled` (source de vérité unique).
+                            let _ = app.emit_to("main", "guideme://toggle-widget", ());
                         }
                         "quit" => {
                             app.exit(0);
@@ -163,10 +173,12 @@ pub fn run() {
 
             Ok(())
         })
-        // ── Hide main window on close instead of quitting (close-to-tray) ──
+        // ── Hide window on close instead of quitting (close-to-tray) ──
+        // Le main se cache dans le tray ; le widget se cache aussi (fenêtre statique
+        // détruite par close = irrécupérable sans redémarrage de l'app).
         .on_window_event(|_window, _event| {
             #[cfg(desktop)]
-            if _window.label() == "main" {
+            if _window.label() == "main" || _window.label() == "widget" {
                 if let tauri::WindowEvent::CloseRequested { api, .. } = _event {
                     api.prevent_close();
                     let _ = _window.hide();
