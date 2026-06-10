@@ -65,6 +65,13 @@
     --clr-khatm-pace-behind-text: #F44336;
     --clr-khatm-warning: #FF9800;
 
+    /* Données — bouton d'import (danger outline) + statut (light) */
+    --clr-danger: #D9534F;
+    --clr-danger-hover-bg: rgba(217, 83, 79, 0.1);
+    --clr-danger-border: rgba(217, 83, 79, 0.5);
+    --clr-backup-status-error: #F44336;
+    --clr-backup-status-ok: #4CAF50;
+
     /* Light mode glassmorphism */
     --bg-modal: rgba(255, 255, 255, 0.70);
     /* More transparent to let the blur show through */
@@ -119,6 +126,13 @@
     --clr-khatm-pace-behind-bg: rgba(244, 67, 54, 0.22);
     --clr-khatm-pace-behind-text: #F77;
     --clr-khatm-warning: #FFB74D;
+
+    /* Données — bouton d'import (danger outline) + statut (dark) */
+    --clr-danger: #F77;
+    --clr-danger-hover-bg: rgba(255, 119, 119, 0.12);
+    --clr-danger-border: rgba(255, 119, 119, 0.45);
+    --clr-backup-status-error: #F77;
+    --clr-backup-status-ok: #6FCF77;
 }
 
 * {
@@ -1022,6 +1036,60 @@ body {
 
 .btn-primary:hover .bell-icon {
     animation: ringBell 0.4s ease-in-out;
+}
+
+/* Bouton d'import (danger outline) — onglet Données */
+.btn-danger-outline {
+    width: 100%;
+    background-color: transparent;
+    color: var(--clr-danger);
+    border: 1px solid var(--clr-danger-border);
+    padding: 14px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-danger-outline:hover {
+    background-color: var(--clr-danger-hover-bg);
+    border-color: var(--clr-danger);
+}
+
+.btn-danger-outline:active {
+    transform: scale(0.97);
+}
+
+/* Avertissement et zone de statut — onglet Données */
+.backup-warning {
+    color: var(--clr-danger);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.backup-status {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--clr-glass-bg);
+    border: 1px solid var(--clr-glass-border);
+}
+
+.backup-status-error {
+    color: var(--clr-backup-status-error);
+}
+
+.backup-status-ok {
+    color: var(--clr-backup-status-ok);
 }
 
 @keyframes ringBell {

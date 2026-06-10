@@ -5,7 +5,7 @@
 
 import storage from './storage.js'
 
-const APP_VERSION = '1.8.3'
+export const APP_VERSION = '1.8.3'
 
 const CHANGELOG_ENTRIES = [
   {

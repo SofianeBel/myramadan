@@ -37,6 +37,11 @@
     },
     "updater:default",
     "process:allow-restart",
-    "process:allow-exit"
+    "process:allow-exit",
+    "dialog:allow-save",
+    "dialog:allow-open",
+    "dialog:allow-ask",
+    "fs:allow-read-text-file",
+    "fs:allow-write-text-file"
   ]
 }

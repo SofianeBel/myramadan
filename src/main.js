@@ -35,6 +35,7 @@ import { initQibla } from './modules/qibla.js'
 import { initDuas } from './modules/duas.js'
 import { initJournal } from './modules/journal.js'
 import { initStatistics } from './modules/statistics.js'
+import { initBackup } from './modules/backup.js'
 import { applyPlatformClass, isMobile } from './modules/platform.js'
 import { revealApp, runStartupStep, runStartupStepWithTimeout } from './modules/startup.js'
 
@@ -454,6 +455,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       )
       await refreshCalendar()
     })
+
+    // 9.1. Onglet Données — export / import des données utilisateur
+    initBackup()
 
     // 9.5. Toast auto-détection (après que l'app soit entièrement chargée)
     if (autoDetectResult) {
