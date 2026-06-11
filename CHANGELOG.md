@@ -5,6 +5,23 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.10.0] - 2026-06-11
+
+### Ajouté
+
+- **Panneau « Prochaine prière »** — nouvelle illustration nocturne de mosquée (SVG) avec compte à rebours repensé, en remplacement de l'ancien badge et des pétales de sakura de la barre de titre
+- **Accessibilité des modales** — nouveau module `modal-a11y.js` : fermeture par Échap, piège à focus (Tab) et retour du focus à l'élément déclencheur sur toutes les modales
+
+### Amélioré
+
+- **Navigation clavier et lecteurs d'écran** — les cloches de rappel par prière, les pastilles du suivi de pratique et les boutons de la barre de titre sont de vrais `<button>` avec `aria-label` / `aria-pressed` ; le toggle de thème est annoncé comme interrupteur
+- **États d'erreur** — l'accueil et le calendrier affichent un message explicite avec bouton « Réessayer » au lieu de tirets muets ; chaîne de repli position GPS → coordonnées sauvegardées → ville/pays → Paris
+- **Interface** — refonte visuelle générale (sidebar avec carte de motivation, cartes, espacement, états de la liste des prières) et correction des accents manquants dans les textes français (prière, jeûne, entrée…)
+
+### Corrigé
+
+- **Coordonnées GPS** — les positions invalides (`0,0`, clés absentes ou chaînes vides) sont rejetées au lieu d'être envoyées à l'API Aladhan (HTTP 400)
+
 ## [1.9.0] - 2026-06-10
 
 ### Ajouté
