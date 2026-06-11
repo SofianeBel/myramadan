@@ -23,6 +23,8 @@ function getLog() {
 
 function saveLog(log) {
   storage.set(PRACTICE_LOG_KEY, log)
+  // Notifie le planificateur de khatm pour un re-rendu en direct
+  document.dispatchEvent(new CustomEvent('khatm-refresh'))
 }
 
 function createEmptyEntry() {

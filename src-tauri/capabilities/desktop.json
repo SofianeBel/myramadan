@@ -2,7 +2,7 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "desktop-capability",
   "description": "Capabilities for desktop (Windows, macOS, Linux)",
-  "windows": ["main"],
+  "windows": ["main", "widget"],
   "platforms": ["windows", "macOS", "linux"],
   "permissions": [
     "core:default",
@@ -10,6 +10,10 @@
     "core:window:allow-minimize",
     "core:window:allow-toggle-maximize",
     "core:window:allow-close",
+    "core:window:allow-show",
+    "core:window:allow-hide",
+    "core:window:allow-set-position",
+    "core:window:allow-is-visible",
     {
       "identifier": "http:default",
       "allow": [
@@ -37,6 +41,11 @@
     },
     "updater:default",
     "process:allow-restart",
-    "process:allow-exit"
+    "process:allow-exit",
+    "dialog:allow-save",
+    "dialog:allow-open",
+    "dialog:allow-ask",
+    "fs:allow-read-text-file",
+    "fs:allow-write-text-file"
   ]
 }

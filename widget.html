@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GuideME Widget</title>
+    <link rel="stylesheet" href="/src/widget.css" />
+  </head>
+  <body>
+    <!-- Tout le fond de la carte est zone de drag ; chaque enfant affichable doit
+         porter data-tauri-drag-region (le drag n'est pas hérité). Le bouton × ne
+         doit JAMAIS être une zone de drag (il serait inactif). -->
+    <div id="widget-root" class="widget-card" data-tauri-drag-region>
+      <button id="w-close" class="widget-close" title="Masquer le widget">&times;</button>
+
+      <div class="widget-prayer" id="w-prayer" data-tauri-drag-region>—</div>
+
+      <div class="widget-countdown" data-tauri-drag-region>
+        <span id="w-h" data-tauri-drag-region>00</span><span class="widget-sep" data-tauri-drag-region>:</span><span id="w-m" data-tauri-drag-region>00</span><span class="widget-sep" data-tauri-drag-region>:</span><span id="w-s" data-tauri-drag-region>00</span>
+      </div>
+
+      <div class="widget-fasting hidden" id="w-fasting" data-tauri-drag-region>
+        <div class="widget-fasting-fill" id="w-fasting-fill" data-tauri-drag-region></div>
+      </div>
+    </div>
+
+    <script type="module" src="/src/widget.js"></script>
+  </body>
+</html>

@@ -1,0 +1,146 @@
+/**
+ * widget.css — Styles autonomes du mini-widget bureau
+ *
+ * Ne PAS importer style.css ni FontAwesome. Seules les variables réellement
+ * utilisées sont copiées depuis style.css (light = :root, dark = [data-theme="dark"]).
+ * Police : 'Outfit' indisponible ici (pas de CDN Google → éviterait une modif CSP),
+ * fallback propre vers system-ui.
+ */
+
+:root {
+  /* Light — valeurs reprises de style.css */
+  --clr-gold: #D4AF37;
+  --clr-gold-light: #E5B83B;
+  --clr-glass-bg: rgba(255, 255, 255, 0.55);
+  --clr-glass-border: rgba(255, 255, 255, 0.7);
+  --w-text: #0B2B1B;
+  --w-text-muted: #7A8B80;
+  --w-fasting-track: rgba(11, 43, 27, 0.12);
+  --w-fasting-fill: var(--clr-gold);
+}
+
+[data-theme="dark"] {
+  /* Dark (Sahara Night) — valeurs reprises de style.css */
+  --clr-glass-bg: rgba(20, 35, 58, 0.78);
+  --clr-glass-border: rgba(255, 255, 255, 0.08);
+  --w-text: #E8DFC6;
+  --w-text-muted: #8CA0BE;
+  --w-fasting-track: rgba(255, 255, 255, 0.1);
+  --w-fasting-fill: var(--clr-gold-light);
+}
+
+html,
+body {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+  cursor: default;
+}
+
+.widget-card {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 18px 16px;
+  border-radius: 14px;
+  background: var(--clr-glass-bg);
+  border: 1px solid var(--clr-glass-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--w-text);
+  font-family: 'Outfit', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+
+/* Nom de la prochaine prière */
+.widget-prayer {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--clr-gold);
+}
+
+/* Compte à rebours — chiffres proéminents */
+.widget-countdown {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.widget-sep {
+  opacity: 0.55;
+  font-weight: 500;
+  padding: 0 1px;
+}
+
+/* Barre de jeûne — fine, en bas */
+.widget-fasting {
+  width: 100%;
+  height: 4px;
+  margin-top: 4px;
+  border-radius: 9999px;
+  background: var(--w-fasting-track);
+  overflow: hidden;
+}
+
+.widget-fasting-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--clr-gold), var(--clr-gold-light));
+  transition: width 0.4s ease;
+}
+
+.widget-fasting.hidden {
+  display: none;
+}
+
+/* Bouton de fermeture — apparaît au survol */
+.widget-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--w-text-muted);
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.widget-card:hover .widget-close {
+  opacity: 1;
+}
+
+.widget-close:hover {
+  background: rgba(244, 67, 54, 0.18);
+  color: #F44336;
+}

@@ -54,6 +54,24 @@
     --clr-brand-kofi: #FF5E5B;
     --clr-brand-bmc: #FFDD00;
 
+    /* Planificateur de khatm (light) */
+    --clr-khatm-track: rgba(255, 255, 255, 0.18);
+    --clr-khatm-fill: var(--clr-gold);
+    --clr-khatm-pace-ahead-bg: rgba(76, 175, 80, 0.18);
+    --clr-khatm-pace-ahead-text: #4CAF50;
+    --clr-khatm-pace-ontrack-bg: rgba(212, 175, 55, 0.18);
+    --clr-khatm-pace-ontrack-text: var(--clr-gold);
+    --clr-khatm-pace-behind-bg: rgba(244, 67, 54, 0.18);
+    --clr-khatm-pace-behind-text: #F44336;
+    --clr-khatm-warning: #FF9800;
+
+    /* Données — bouton d'import (danger outline) + statut (light) */
+    --clr-danger: #D9534F;
+    --clr-danger-hover-bg: rgba(217, 83, 79, 0.1);
+    --clr-danger-border: rgba(217, 83, 79, 0.5);
+    --clr-backup-status-error: #F44336;
+    --clr-backup-status-ok: #4CAF50;
+
     /* Light mode glassmorphism */
     --bg-modal: rgba(255, 255, 255, 0.70);
     /* More transparent to let the blur show through */
@@ -98,6 +116,23 @@
     --clr-suhoor-bg-top: rgba(45, 85, 115, 0.3);
     --clr-suhoor-bg-bottom: rgba(30, 55, 80, 0.1);
     --clr-badge-coming-soon-text: #A5B8D1;
+
+    /* Planificateur de khatm (dark) */
+    --clr-khatm-track: rgba(255, 255, 255, 0.1);
+    --clr-khatm-pace-ahead-bg: rgba(76, 175, 80, 0.22);
+    --clr-khatm-pace-ahead-text: #6FCF77;
+    --clr-khatm-pace-ontrack-bg: rgba(212, 175, 55, 0.22);
+    --clr-khatm-pace-ontrack-text: var(--clr-gold-light);
+    --clr-khatm-pace-behind-bg: rgba(244, 67, 54, 0.22);
+    --clr-khatm-pace-behind-text: #F77;
+    --clr-khatm-warning: #FFB74D;
+
+    /* Données — bouton d'import (danger outline) + statut (dark) */
+    --clr-danger: #F77;
+    --clr-danger-hover-bg: rgba(255, 119, 119, 0.12);
+    --clr-danger-border: rgba(255, 119, 119, 0.45);
+    --clr-backup-status-error: #F77;
+    --clr-backup-status-ok: #6FCF77;
 }
 
 * {
@@ -879,6 +914,12 @@ body {
     font-size: 0.9rem;
 }
 
+/* En mode sombre, --clr-green (vert foncé) sur le gold translucide est illisible :
+   on bascule le texte sur le gold plein, qui contraste bien. */
+[data-theme="dark"] .badge {
+    color: var(--clr-gold);
+}
+
 .breathing-badge {
     animation: breathe 3s ease-in-out infinite;
 }
@@ -1001,6 +1042,60 @@ body {
 
 .btn-primary:hover .bell-icon {
     animation: ringBell 0.4s ease-in-out;
+}
+
+/* Bouton d'import (danger outline) — onglet Données */
+.btn-danger-outline {
+    width: 100%;
+    background-color: transparent;
+    color: var(--clr-danger);
+    border: 1px solid var(--clr-danger-border);
+    padding: 14px;
+    border-radius: 12px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-danger-outline:hover {
+    background-color: var(--clr-danger-hover-bg);
+    border-color: var(--clr-danger);
+}
+
+.btn-danger-outline:active {
+    transform: scale(0.97);
+}
+
+/* Avertissement et zone de statut — onglet Données */
+.backup-warning {
+    color: var(--clr-danger);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.backup-status {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: var(--clr-glass-bg);
+    border: 1px solid var(--clr-glass-border);
+}
+
+.backup-status-error {
+    color: var(--clr-backup-status-error);
+}
+
+.backup-status-ok {
+    color: var(--clr-backup-status-ok);
 }
 
 @keyframes ringBell {
@@ -1188,6 +1283,12 @@ body {
 .prayer-item.highlight-iftar:not(.selected) {
     border-color: var(--clr-gold);
     background: linear-gradient(to bottom, var(--clr-sand-panel), var(--clr-sand-light));
+}
+
+/* En mode sombre, --clr-sand-light n'est jamais redéfini (il alimente --bg-main
+   en clair) : on remplace le bas du dégradé par le panel sombre pour rester lisible. */
+[data-theme="dark"] .prayer-item.highlight-iftar:not(.selected) {
+    background: linear-gradient(to bottom, var(--clr-sand-panel), var(--clr-sand-panel-dark));
 }
 
 .prayer-item.highlight-iftar:not(.selected) .prayer-name span {
@@ -2224,6 +2325,7 @@ body {
 .notif-label {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
     font-size: 0.88rem;
     font-weight: 500;
@@ -2234,6 +2336,15 @@ body {
     color: var(--clr-gold);
     width: 18px;
     text-align: center;
+}
+
+/* Sous-texte d'aide sous un libellé de réglage (ex: mini-widget) */
+.notif-label-hint {
+    flex-basis: 100%;
+    margin-left: 26px;
+    font-size: 0.74rem;
+    font-weight: 400;
+    color: var(--text-muted);
 }
 
 /* Toggle switch (iOS style) */
@@ -3091,6 +3202,234 @@ body.mode-normal .ramadan-progress {
 .tracker-quran-input:focus {
     outline: none;
     border-color: var(--clr-gold);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PLANIFICATEUR DE KHATM
+   ═══════════════════════════════════════════════════════════════════ */
+
+.khatm-card .card-header h2 i {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    margin-right: 6px;
+}
+
+.khatm-body {
+    padding: 0 4px;
+}
+
+.khatm-intro {
+    font-size: 0.9rem;
+    color: var(--clr-sand);
+    opacity: 0.85;
+    margin-bottom: 14px;
+}
+
+/* ─── Formulaire (état vide) ─── */
+
+.khatm-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.khatm-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--clr-sand);
+}
+
+.khatm-input {
+    width: 130px;
+    padding: 6px 10px;
+    border: 1px solid var(--clr-glass-border);
+    border-radius: var(--radius-md);
+    background: var(--clr-glass-bg);
+    color: var(--clr-sand);
+    font-size: 0.9rem;
+    font-family: var(--font-main);
+}
+
+.khatm-input:focus {
+    outline: none;
+    border-color: var(--clr-gold);
+}
+
+.khatm-btn-primary {
+    margin-top: 4px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: linear-gradient(90deg, var(--clr-gold) 0%, var(--clr-gold-light) 100%);
+    color: var(--clr-dark-green);
+    font-size: 0.95rem;
+    font-weight: 700;
+    font-family: var(--font-main);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.khatm-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-gold);
+}
+
+/* ─── État actif ─── */
+
+.khatm-progress-bar {
+    height: 8px;
+    background: var(--clr-khatm-track);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.khatm-progress-fill {
+    height: 100%;
+    background: var(--clr-khatm-fill);
+    border-radius: var(--radius-full);
+    transition: width 0.3s ease;
+    width: 0;
+}
+
+.khatm-pages-line {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--clr-sand);
+    margin-bottom: 12px;
+}
+
+.khatm-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.khatm-juz {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--clr-gold);
+}
+
+.khatm-pace {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+}
+
+.khatm-pace.ahead {
+    background: var(--clr-khatm-pace-ahead-bg);
+    color: var(--clr-khatm-pace-ahead-text);
+}
+
+.khatm-pace.ontrack {
+    background: var(--clr-khatm-pace-ontrack-bg);
+    color: var(--clr-khatm-pace-ontrack-text);
+}
+
+.khatm-pace.behind {
+    background: var(--clr-khatm-pace-behind-bg);
+    color: var(--clr-khatm-pace-behind-text);
+}
+
+.khatm-daily-target {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--clr-sand);
+    margin-bottom: 4px;
+}
+
+.khatm-today {
+    font-size: 0.85rem;
+    color: var(--clr-sand);
+    opacity: 0.85;
+    margin-bottom: 10px;
+}
+
+.khatm-hint {
+    opacity: 0.7;
+    font-style: italic;
+}
+
+.khatm-warning {
+    font-size: 0.8rem;
+    color: var(--clr-khatm-warning);
+    margin-bottom: 10px;
+}
+
+.khatm-date-cible {
+    font-size: 0.85rem;
+    color: var(--clr-sand);
+    opacity: 0.75;
+    margin-bottom: 12px;
+}
+
+.khatm-btn-text {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-family: var(--font-main);
+    cursor: pointer;
+    padding: 4px 0;
+    transition: color 0.2s ease;
+}
+
+.khatm-btn-text:hover {
+    color: var(--clr-khatm-pace-behind-text);
+}
+
+/* ─── État complété ─── */
+
+.khatm-done-icon {
+    text-align: center;
+    font-size: 2.4rem;
+    color: var(--clr-status-success);
+    margin-bottom: 10px;
+}
+
+.khatm-done-msg {
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--clr-sand);
+    margin-bottom: 16px;
+}
+
+.khatm-card .khatm-done-icon + .khatm-done-msg + .khatm-btn-primary,
+.khatm-done-msg ~ .khatm-btn-primary {
+    width: 100%;
+}
+
+/* ─── Ligne Stats ─── */
+
+.stats-khatm {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.khatm-stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.khatm-stat-label {
+    font-size: 0.95rem;
+    color: var(--clr-sand);
+}
+
+.khatm-stat-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--clr-gold);
 }
 
 /* ═══════════════════════════════════════════════════════════════════

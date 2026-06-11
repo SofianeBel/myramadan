@@ -427,6 +427,14 @@
                     <div id="tracker-expanded" class="tracker-expanded hidden"></div>
                 </div>
 
+                <!-- Planificateur de Khatm -->
+                <div id="khatm-card" class="card premium-card khatm-card animate-entry" style="--anim-delay: 0.38s;">
+                    <div class="card-header">
+                        <h2><i class="fa-solid fa-book-quran"></i> Khatm</h2>
+                    </div>
+                    <div id="khatm-body" class="khatm-body"></div>
+                </div>
+
                 <!-- Dhikr Counter -->
                 <div id="dhikr-card" class="card premium-card dhikr-card animate-entry" style="--anim-delay: 0.4s;">
                     <div class="card-header">
@@ -648,6 +656,12 @@
                                 style="font-size: 1.5rem; font-weight: 700; color: var(--clr-gold);"></p>
                         </div>
 
+                        <!-- Khatm -->
+                        <div class="stats-section" style="margin-top: 24px;">
+                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Khatm</h3>
+                            <div id="stats-khatm" class="stats-khatm"></div>
+                        </div>
+
                         <!-- Goals -->
                         <div class="stats-section" style="margin-top: 24px;">
                             <h3 class="stats-section-title" style="color: var(--clr-sand);">Objectifs</h3>
@@ -696,6 +710,9 @@
                 </button>
                 <button class="settings-tab" data-tab="calc">
                     <i class="fa-solid fa-calculator"></i> Calcul
+                </button>
+                <button class="settings-tab" data-tab="data">
+                    <i class="fa-solid fa-database"></i> Données
                 </button>
             </div>
 
@@ -803,6 +820,17 @@
                     </label>
                 </div>
 
+                <div class="notif-setting-row" id="widget-enabled-row">
+                    <label class="notif-label">
+                        <i class="fa-solid fa-window-restore"></i> Mini-widget horaires
+                        <span class="notif-label-hint">Fenêtre flottante toujours visible</span>
+                    </label>
+                    <label class="notif-toggle">
+                        <input type="checkbox" id="widget-enabled">
+                        <span class="notif-toggle-slider"></span>
+                    </label>
+                </div>
+
                 <div class="notif-setting-row">
                     <label class="notif-label">
                         <i class="fa-solid fa-circle-question"></i> Tutoriel de bienvenue
@@ -874,6 +902,39 @@
                     La methode determine les angles utilises pour calculer Fajr et Isha. En France, la methode UOIF est
                     recommandee.
                 </p>
+            </div>
+
+            <!-- Tab: Data (export / import) -->
+            <div class="settings-tab-content hidden" id="tab-data">
+                <div class="settings-group" style="margin-bottom: 16px;">
+                    <label class="settings-label" style="font-weight: 600; margin-bottom: 8px; display: block;">
+                        <i class="fa-solid fa-cloud-arrow-down"></i> Sauvegarde
+                    </label>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin: 0 0 12px 0;">
+                        Exporte vos données (suivi, journal, objectifs, mosquée…) dans un fichier JSON.
+                    </p>
+                    <button id="backup-export-btn" class="btn-primary btn-small" style="width: 100%;">
+                        <i class="fa-solid fa-file-export"></i> Exporter mes données
+                    </button>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;">
+                        Dernier export : <span id="backup-last-export">jamais</span>
+                    </p>
+                </div>
+
+                <div class="notif-divider"></div>
+
+                <div class="settings-group" style="margin-bottom: 8px;">
+                    <label class="settings-label" style="font-weight: 600; margin-bottom: 8px; display: block;">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Restauration
+                    </label>
+                    <button id="backup-import-btn" class="btn-danger-outline btn-small" style="width: 100%;">
+                        <i class="fa-solid fa-file-import"></i> Importer une sauvegarde
+                    </button>
+                    <p class="backup-warning" style="font-size: 0.78rem; margin-top: 8px;">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Remplace les données actuelles
+                    </p>
+                    <div id="backup-status" class="backup-status hidden"></div>
+                </div>
             </div>
 
             <p id="selected-mosque-name"

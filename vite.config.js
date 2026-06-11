@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import { fileURLToPath } from 'node:url'
 
 export default defineConfig({
   clearScreen: false,
@@ -11,6 +12,13 @@ export default defineConfig({
   build: {
     target: 'esnext',
     outDir: 'dist',
+    // Multi-page : fenêtre principale + mini-widget bureau (fenêtre Tauri séparée)
+    rollupOptions: {
+      input: {
+        main: fileURLToPath(new URL('index.html', import.meta.url)),
+        widget: fileURLToPath(new URL('widget.html', import.meta.url)),
+      },
+    },
   },
   test: {
     environment: 'jsdom',

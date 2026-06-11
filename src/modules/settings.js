@@ -393,6 +393,7 @@ export function initSettings(onSave) {
   const tabMap = document.getElementById('tab-map')
   const tabNotifs = document.getElementById('tab-notifs')
   const tabCalc = document.getElementById('tab-calc')
+  const tabData = document.getElementById('tab-data')
 
   tabButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -404,6 +405,7 @@ export function initSettings(onSave) {
       if (tabMap) tabMap.classList.toggle('hidden', tab !== 'map')
       if (tabNotifs) tabNotifs.classList.toggle('hidden', tab !== 'notifs')
       if (tabCalc) tabCalc.classList.toggle('hidden', tab !== 'calc')
+      if (tabData) tabData.classList.toggle('hidden', tab !== 'data')
 
       if (tab === 'map') {
         shouldFlyToSelected = true
@@ -430,6 +432,7 @@ export function initSettings(onSave) {
     if (tabMap) tabMap.classList.add('hidden')
     if (tabNotifs) tabNotifs.classList.add('hidden')
     if (tabCalc) tabCalc.classList.add('hidden')
+    if (tabData) tabData.classList.add('hidden')
 
     // Pre-fill
     if (searchInput) searchInput.value = ''

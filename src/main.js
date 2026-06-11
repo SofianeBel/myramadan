@@ -29,11 +29,14 @@ import { initChangelog } from './modules/changelog.js'
 import { initUpdater } from './modules/updater.js'
 import { resolveMode, applyMode, getRamadanDay } from './modules/app-mode.js'
 import { initTracker } from './modules/practice-tracker.js'
+import { initKhatm, setHijriContext } from './modules/khatm.js'
 import { initDhikr } from './modules/dhikr.js'
 import { initQibla } from './modules/qibla.js'
 import { initDuas } from './modules/duas.js'
 import { initJournal } from './modules/journal.js'
 import { initStatistics } from './modules/statistics.js'
+import { initBackup } from './modules/backup.js'
+import { publishTimings, initWidgetBridge } from './modules/widget-bridge.js'
 import { applyPlatformClass, isMobile } from './modules/platform.js'
 import { revealApp, runStartupStep, runStartupStepWithTimeout } from './modules/startup.js'
 
@@ -199,6 +202,14 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
   const mode = resolveMode(currentHijriDate)
   applyMode(mode)
   updateRamadanProgress(getRamadanDay(currentHijriDate))
+
+  // Fournit le contexte Hijri au planificateur de khatm (date cible par défaut)
+  setHijriContext(currentHijriDate)
+
+  // Pousse les horaires du jour vers le mini-widget bureau (no-op si navigateur/mobile)
+  if (isToday) {
+    publishTimings(timings, mode)
+  }
 }
 
 /**
@@ -382,6 +393,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 3.11 Initialize Auto-updater
     if (!isMobile) await runStartupStep('updater', initUpdater)
 
+    // 3.12 Initialize mini-widget bridge.
+    // Appelé inconditionnellement : self-guard interne (init complet sur bureau,
+    // masquage de la ligne de réglage sur mobile).
+    await runStartupStep('widget bridge', initWidgetBridge)
+
     // Baseline mode before network data arrives.
     applyMode(resolveMode(null))
     updateRamadanProgress(null)
@@ -409,7 +425,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateDailyContent(isRamadanMode)
     initDailyContentActions()
 
-    // 6.5. Practice tracker (dashboard card)
+    // 6.45. Planificateur de khatm (carte dashboard).
+    // DOIT tourner AVANT initTracker() : rollupOldPages() absorbe les jours
+    // hors fenêtre live (60 j) AVANT que pruneLog() du tracker ne supprime
+    // les entrées vieilles de 90 jours.
+    runStartupStep('khatm', initKhatm)
+
+    // 6.5. Practice tracker (dashboard card).
+    // APRÈS initKhatm() : son pruneLog() peut désormais supprimer en toute
+    // sécurité les vieux jours déjà absorbés par le khatm.
     initTracker()
 
     // 6.6. Dhikr counter (dashboard card)
@@ -442,6 +466,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       )
       await refreshCalendar()
     })
+
+    // 9.1. Onglet Données — export / import des données utilisateur
+    initBackup()
 
     // 9.5. Toast auto-détection (après que l'app soit entièrement chargée)
     if (autoDetectResult) {
