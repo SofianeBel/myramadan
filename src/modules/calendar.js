@@ -109,7 +109,29 @@ async function renderCalendar(year, month) {
     loading.classList.add('hidden')
 
     if (!calendarData || !Array.isArray(calendarData)) {
-        tBody.innerHTML = `<tr><td colspan="7" style="color: var(--clr-gold); padding: 20px;">Erreur lors du chargement des horaires.</td></tr>`
+        // État d'erreur avec récupération : message + bouton Réessayer
+        tBody.replaceChildren()
+        const tr = document.createElement('tr')
+        const td = document.createElement('td')
+        td.colSpan = 7
+        td.className = 'calendar-error-cell'
+
+        const msg = document.createElement('p')
+        msg.textContent = 'Impossible de charger les horaires du mois. Vérifiez votre connexion internet.'
+        td.appendChild(msg)
+
+        const retryBtn = document.createElement('button')
+        retryBtn.type = 'button'
+        retryBtn.className = 'btn-primary btn-small'
+        const retryIcon = document.createElement('i')
+        retryIcon.className = 'fa-solid fa-arrows-rotate'
+        retryIcon.setAttribute('aria-hidden', 'true')
+        retryBtn.append(retryIcon, ' Réessayer')
+        retryBtn.addEventListener('click', () => renderCalendar(year, month))
+        td.appendChild(retryBtn)
+
+        tr.appendChild(td)
+        tBody.appendChild(tr)
         return
     }
 

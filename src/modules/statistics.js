@@ -18,9 +18,9 @@ const GOALS_KEY = 'goals'
 const PRESET_GOALS = [
   { id: 'fajr-7', label: 'Prier Fajr 7 jours de suite', type: 'prayer-streak', prayer: 0, target: 7 },
   { id: 'prayers-30', label: 'Prier 5/5 pendant 30 jours', type: 'prayer-streak', prayer: 'all', target: 30 },
-  { id: 'khatma', label: 'Khatma complete (604 pages)', type: 'quran-total', target: 604 },
+  { id: 'khatma', label: 'Khatma complète (604 pages)', type: 'quran-total', target: 604 },
   { id: 'dhikr-1000', label: '1000 dhikr ce mois', type: 'dhikr-monthly', target: 1000 },
-  { id: 'fasting-4', label: 'Jeuner lundi/jeudi pendant 4 semaines', type: 'fasting-weeks', target: 4 }
+  { id: 'fasting-4', label: 'Jeûner lundi/jeudi pendant 4 semaines', type: 'fasting-weeks', target: 4 }
 ]
 
 // ─── Helpers ───
@@ -124,17 +124,16 @@ function renderHeatmap(container) {
   const allDayLabels = ['L', 'M', 'M', 'J', 'V', 'S', 'D'] // Mon=0 … Sun=6
   const todayDow = (new Date().getDay() + 6) % 7 // JS Sun=0 → Mon=0 based
   const dayLabels = [...allDayLabels.slice(todayDow + 1), ...allDayLabels.slice(0, todayDow + 1)]
+  // Tous les jours affichés : un libellé sur deux donnait un axe cryptique (« V D M J »)
   dayLabels.forEach((label, i) => {
-    if (i % 2 === 0) {
-      const t = document.createElementNS(ns, 'text')
-      t.setAttribute('x', '0')
-      t.setAttribute('y', topOffset + i * (cellSize + gap) + cellSize - 2)
-      t.setAttribute('fill', 'var(--text-muted)')
-      t.setAttribute('font-size', '10')
-      t.setAttribute('font-family', 'var(--font-main)')
-      t.textContent = label
-      svg.appendChild(t)
-    }
+    const t = document.createElementNS(ns, 'text')
+    t.setAttribute('x', '0')
+    t.setAttribute('y', topOffset + i * (cellSize + gap) + cellSize - 2)
+    t.setAttribute('fill', 'var(--text-muted)')
+    t.setAttribute('font-size', '10')
+    t.setAttribute('font-family', 'var(--font-main)')
+    t.textContent = label
+    svg.appendChild(t)
   })
 
   // Month labels across the top
@@ -195,11 +194,14 @@ function renderHeatmap(container) {
         rect.setAttribute('stroke-width', '0.5')
       }
 
-      // Tooltip via title element
+      // Tooltip (title) + nom accessible pour les lecteurs d'écran
       if (!isFuture) {
+        const cellLabel = `${dateStr} : ${prayerCount}/5 prières`
         const title = document.createElementNS(ns, 'title')
-        title.textContent = `${dateStr}: ${prayerCount}/5 prieres`
+        title.textContent = cellLabel
         rect.appendChild(title)
+        rect.setAttribute('role', 'img')
+        rect.setAttribute('aria-label', cellLabel)
       }
 
       svg.appendChild(rect)
@@ -217,12 +219,12 @@ function renderStats(stats) {
   if (!grid) return
 
   const items = [
-    { label: 'Prieres', value: `${stats.prayerPercent}%`, icon: 'fa-mosque' },
+    { label: 'Prières', value: `${stats.prayerPercent}%`, icon: 'fa-mosque' },
     { label: 'Jours parfaits', value: stats.perfectDays, icon: 'fa-star' },
     { label: 'Pages Coran', value: stats.totalQuranPages, icon: 'fa-book-quran' },
     { label: 'Khatma', value: `${stats.khatmaProgress}%`, icon: 'fa-bookmark' },
     { label: 'Dhikr total', value: stats.totalDhikr, icon: 'fa-circle-notch' },
-    { label: 'Jours jeune', value: stats.fastingDays, icon: 'fa-utensils' }
+    { label: 'Jours de jeûne', value: stats.fastingDays, icon: 'fa-utensils' }
   ]
 
   grid.replaceChildren()
@@ -256,8 +258,8 @@ function renderStreaks() {
   if (!container) return
 
   const streaks = [
-    { label: 'Prieres 5/5', value: getStreak('prayers'), icon: 'fa-mosque' },
-    { label: 'Jeune', value: getStreak('fasting'), icon: 'fa-utensils' },
+    { label: 'Prières 5/5', value: getStreak('prayers'), icon: 'fa-mosque' },
+    { label: 'Jeûne', value: getStreak('fasting'), icon: 'fa-utensils' },
     { label: 'Coran', value: getStreak('quran'), icon: 'fa-book-quran' },
     { label: 'Dhikr', value: getStreak('dhikr'), icon: 'fa-circle-notch' }
   ]
@@ -294,7 +296,7 @@ function renderJournalCount() {
   const el = document.getElementById('stats-journal-count')
   if (!el) return
   const count = getJournalEntryCount()
-  el.textContent = `${count} entree${count !== 1 ? 's' : ''} au total`
+  el.textContent = `${count} entrée${count !== 1 ? 's' : ''} au total`
 }
 
 // ─── Goals system ───
@@ -375,7 +377,7 @@ function renderGoals() {
   if (goals.length === 0) {
     const empty = document.createElement('p')
     empty.className = 'stats-journal-count'
-    empty.textContent = 'Aucun objectif defini. Ajoutez-en un ci-dessous !'
+    empty.textContent = 'Aucun objectif défini. Ajoutez-en un ci-dessous !'
     container.appendChild(empty)
   }
 
@@ -459,17 +461,25 @@ function setupPeriodButtons() {
   const btns = document.querySelectorAll('.stats-period-btn')
   btns.forEach(btn => {
     btn.addEventListener('click', () => {
-      btns.forEach(b => b.classList.remove('active'))
-      btn.classList.add('active')
       currentPeriod = btn.dataset.period
       refreshStats()
     })
   })
 }
 
+/** Resynchronise l'état visuel des boutons de période avec currentPeriod. */
+function syncPeriodButtons() {
+  document.querySelectorAll('.stats-period-btn').forEach(btn => {
+    const isActive = btn.dataset.period === currentPeriod
+    btn.classList.toggle('active', isActive)
+    btn.setAttribute('aria-pressed', String(isActive))
+  })
+}
+
 // ─── Refresh all stats ───
 
 function refreshStats() {
+  syncPeriodButtons()
   const stats = computeStats(currentPeriod)
   renderStats(stats)
   renderHeatmap(document.getElementById('stats-heatmap'))

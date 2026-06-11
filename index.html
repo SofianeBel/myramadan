@@ -16,29 +16,27 @@
     <!-- Custom Titlebar -->
     <div data-tauri-drag-region class="custom-titlebar">
         <div class="titlebar-pattern" data-tauri-drag-region></div>
-        <!-- Sakura Petals Container -->
-        <div id="sakura-container" class="sakura-container" data-tauri-drag-region></div>
 
         <div class="titlebar-center" data-tauri-drag-region>
             <img src="/logo.png" alt="GuideME" class="titlebar-logo" data-tauri-drag-region />
             <span class="titlebar-title" data-tauri-drag-region>GuideME</span>
         </div>
         <div class="titlebar-controls">
-            <div class="titlebar-button" id="titlebar-minimize">
-                <svg width="10" height="1" viewBox="0 0 10 1">
+            <button type="button" class="titlebar-button" id="titlebar-minimize" aria-label="Réduire">
+                <svg width="10" height="1" viewBox="0 0 10 1" aria-hidden="true">
                     <path d="M0,0.5 h10" stroke="currentColor" stroke-width="1.5" />
                 </svg>
-            </div>
-            <div class="titlebar-button" id="titlebar-maximize">
-                <svg width="10" height="10" viewBox="0 0 10 10">
+            </button>
+            <button type="button" class="titlebar-button" id="titlebar-maximize" aria-label="Agrandir">
+                <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
                     <path d="M0.5,0.5 h9 v9 h-9 Z" fill="none" stroke="currentColor" stroke-width="1.2" />
                 </svg>
-            </div>
-            <div class="titlebar-button titlebar-close" id="titlebar-close">
-                <svg width="10" height="10" viewBox="0 0 10 10">
+            </button>
+            <button type="button" class="titlebar-button titlebar-close" id="titlebar-close" aria-label="Fermer">
+                <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
                     <path d="M0.5,0.5 l9,9 M9.5,0.5 l-9,9" stroke="currentColor" stroke-width="1.2" />
                 </svg>
-            </div>
+            </button>
         </div>
     </div>
     <div id="splash-screen" class="splash-screen">
@@ -61,8 +59,8 @@
         <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
         <!-- Sidebar -->
         <aside class="sidebar">
-            <button id="sidebar-toggle" class="sidebar-toggle-btn">
-                <i class="fa-solid fa-chevron-left"></i>
+            <button id="sidebar-toggle" class="sidebar-toggle-btn" aria-label="Réduire ou agrandir le menu">
+                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
             </button>
             <div class="logo">
                 <img class="sidebar-logo-img" src="/logo.png" alt="GuideME" width="32" height="32" />
@@ -121,9 +119,10 @@
                     <span>Signaler un bug</span>
                     <div class="menu-item-bg"></div>
                 </a>
-                <a href="#" class="menu-item" id="theme-toggle">
-                    <i class="fa-solid fa-moon anim-spin-hover"></i>
+                <a href="#" class="menu-item" id="theme-toggle" role="switch" aria-checked="true">
+                    <i class="fa-solid fa-moon anim-spin-hover" aria-hidden="true"></i>
                     <span>Mode Sombre</span>
+                    <span class="theme-switch" aria-hidden="true"></span>
                     <div class="menu-item-bg"></div>
                 </a>
                 <a href="#" class="menu-item" id="settings-btn">
@@ -131,6 +130,17 @@
                     <span>Paramètres</span>
                     <div class="menu-item-bg"></div>
                 </a>
+            </div>
+
+            <div class="sidebar-promo">
+                <svg class="sidebar-promo-art" viewBox="0 0 64 48" aria-hidden="true">
+                    <path d="M 44 10 A 14 14 0 1 0 58 24 A 10.5 10.5 0 1 1 44 10 Z" fill="#E8C468" />
+                    <circle cx="54" cy="8" r="1.6" fill="#E8C468" opacity="0.9" />
+                    <circle cx="60" cy="16" r="1.1" fill="#E8C468" opacity="0.6" />
+                    <path d="M 6 42 Q 20 30 38 38 T 64 36 L 64 48 L 0 48 Z" fill="currentColor" opacity="0.25" />
+                </svg>
+                <p class="sidebar-promo-title">Restez constant dans vos actes.</p>
+                <p class="sidebar-promo-sub">Chaque pas compte.</p>
             </div>
         </aside>
 
@@ -274,7 +284,7 @@
             <header class="top-header animate-entry" style="--anim-delay: 0.1s;">
                 <div class="date-info">
                     <h1 id="gregorian-date">Journée actuelle</h1>
-                    <p id="hijri-date">Ramadan 1445</p>
+                    <p id="hijri-date">Chargement de la date…</p>
                 </div>
                 <div class="user-profile">
                     <div class="location interactive-element">
@@ -338,45 +348,119 @@
 
                 <!-- Next Prayer Countdown -->
                 <div class="card countdown-card animate-entry" style="--anim-delay: 0.3s;">
-                    <div class="card-header">
-                        <h2>Prochaine Prière</h2>
-                        <span class="badge breathing-badge" id="next-prayer-badge">--</span>
+                    <div class="countdown-hero">
+                        <div class="countdown-art" aria-hidden="true">
+                            <svg viewBox="0 0 300 360" preserveAspectRatio="xMidYMax slice"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <linearGradient id="cd-sky" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0" stop-color="#101D33" />
+                                        <stop offset="0.55" stop-color="#26304F" />
+                                        <stop offset="0.85" stop-color="#6B4A5A" />
+                                        <stop offset="1" stop-color="#A56A4E" />
+                                    </linearGradient>
+                                    <radialGradient id="cd-halo" cx="0.5" cy="0.5" r="0.5">
+                                        <stop offset="0" stop-color="#F4EBD0" stop-opacity="0.35" />
+                                        <stop offset="1" stop-color="#F4EBD0" stop-opacity="0" />
+                                    </radialGradient>
+                                </defs>
+                                <rect width="300" height="360" fill="url(#cd-sky)" />
+                                <circle cx="92" cy="78" r="46" fill="url(#cd-halo)" />
+                                <path d="M 84 50 A 28 28 0 1 0 112 78 A 21 21 0 1 1 84 50 Z" fill="#F4EBD0" />
+                                <circle cx="190" cy="50" r="2.2" fill="#FFF" opacity="0.9" />
+                                <circle cx="240" cy="92" r="1.6" fill="#FFF" opacity="0.7" />
+                                <circle cx="150" cy="120" r="1.4" fill="#FFF" opacity="0.5" />
+                                <circle cx="266" cy="40" r="1.8" fill="#FFF" opacity="0.8" />
+                                <circle cx="40" cy="150" r="1.5" fill="#FFF" opacity="0.6" />
+                                <!-- Minaret -->
+                                <g fill="#131022">
+                                    <rect x="58" y="170" width="16" height="150" rx="3" />
+                                    <rect x="52" y="196" width="28" height="8" rx="3" />
+                                    <path d="M 66 132 L 78 170 L 54 170 Z" />
+                                    <circle cx="66" cy="130" r="4" />
+                                    <rect x="64.5" y="118" width="3" height="10" rx="1.5" />
+                                </g>
+                                <!-- Mosque -->
+                                <g fill="#131022">
+                                    <path d="M 100 360 L 100 268 Q 100 232 150 210 Q 200 232 200 268 L 200 360 Z" />
+                                    <path d="M 150 196 Q 154 204 158 208 L 142 208 Q 146 204 150 196 Z" />
+                                    <circle cx="150" cy="193" r="3.4" />
+                                    <rect x="148.6" y="180" width="2.8" height="10" rx="1.4" />
+                                    <rect x="200" y="288" width="100" height="72" />
+                                    <rect x="216" y="252" width="12" height="36" rx="4" />
+                                    <rect x="252" y="252" width="12" height="36" rx="4" />
+                                </g>
+                                <!-- Lit windows -->
+                                <g fill="#E8C468">
+                                    <path d="M 143 320 L 143 296 Q 143 286 150 282 Q 157 286 157 296 L 157 320 Z"
+                                        opacity="0.95" />
+                                    <rect x="120" y="300" width="7" height="14" rx="3.5" opacity="0.6" />
+                                    <rect x="173" y="300" width="7" height="14" rx="3.5" opacity="0.6" />
+                                    <rect x="226" y="308" width="7" height="12" rx="3.5" opacity="0.5" />
+                                    <rect x="262" y="308" width="7" height="12" rx="3.5" opacity="0.5" />
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="countdown-main">
+                            <span class="countdown-label">Prochaine prière</span>
+                            <span class="countdown-prayer-name" id="next-prayer-badge">--</span>
+                            <div class="countdown-display">
+                                <div class="time-unit pop-in" style="--anim-delay: 0.4s;">
+                                    <span class="number" id="cd-hours">--</span>
+                                    <span class="unit">Heures</span>
+                                </div>
+                                <span class="colon" aria-hidden="true">:</span>
+                                <div class="time-unit pop-in" style="--anim-delay: 0.5s;">
+                                    <span class="number" id="cd-minutes">--</span>
+                                    <span class="unit">Min</span>
+                                </div>
+                                <span class="colon" aria-hidden="true">:</span>
+                                <div class="time-unit pop-in" style="--anim-delay: 0.6s;">
+                                    <span class="number" id="cd-seconds">--</span>
+                                    <span class="unit">Sec</span>
+                                </div>
+                            </div>
+                            <div id="prayer-data-error" class="prayer-data-error hidden" role="alert">
+                                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                                <p class="prayer-data-error-title">Horaires indisponibles</p>
+                                <p class="prayer-data-error-text">Impossible de charger les horaires de prière.
+                                    Vérifiez votre connexion internet ou votre position dans les paramètres.</p>
+                                <button type="button" id="prayer-retry-btn" class="btn-primary btn-small">
+                                    <i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i> Réessayer
+                                </button>
+                            </div>
+                            <button id="reminder-btn" class="btn-primary ripple-btn"><i
+                                    class="fa-solid fa-bell bell-icon"></i>
+                                Activer le rappel</button>
+                        </div>
                     </div>
-                    <div class="countdown-display">
-                        <div class="time-unit pop-in" style="--anim-delay: 0.4s;">
-                            <span class="number" id="cd-hours">--</span>
-                            <span class="unit">Heures</span>
-                        </div>
-                        <span class="colon blink">:</span>
-                        <div class="time-unit pop-in" style="--anim-delay: 0.5s;">
-                            <span class="number" id="cd-minutes">--</span>
-                            <span class="unit">Min</span>
-                        </div>
-                        <span class="colon blink">:</span>
-                        <div class="time-unit pop-in" style="--anim-delay: 0.6s;">
-                            <span class="number" id="cd-seconds">--</span>
-                            <span class="unit">Sec</span>
-                        </div>
-                    </div>
-                    <button id="reminder-btn" class="btn-primary ripple-btn"><i class="fa-solid fa-bell bell-icon"></i>
-                        Activer le
-                        rappel</button>
                 </div>
 
                 <!-- Daily Schedule -->
-                <div class="card schedule-card full-width animate-entry" style="--anim-delay: 0.4s;">
+                <div class="card schedule-card animate-entry" style="--anim-delay: 0.4s;">
                     <div class="card-header">
                         <h2>Horaires du jour</h2>
                         <div class="date-selector interactive-element">
-                            <i id="nav-prev" class="fa-solid fa-chevron-left"></i>
+                            <button type="button" id="nav-prev" class="nav-chevron" aria-label="Jour précédent">
+                                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                            </button>
                             <span>Aujourd'hui</span>
-                            <i id="nav-next" class="fa-solid fa-chevron-right"></i>
+                            <button type="button" id="nav-next" class="nav-chevron" aria-label="Jour suivant">
+                                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
 
                     <div class="prayer-list" id="prayer-list">
                         <!-- Dynamically generated by schedule.js -->
                     </div>
+
+                    <div id="schedule-error" class="schedule-error hidden" role="status">
+                        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                        Horaires indisponibles pour le moment.
+                    </div>
+
+                    <p id="prayer-source" class="prayer-source hidden"></p>
 
                     <!-- Legend Section -->
                     <div class="schedule-legend">
@@ -390,7 +474,7 @@
                         </div>
                         <div class="legend-item">
                             <span class="legend-color color-selected"></span>
-                            <span class="legend-text">Sélectionnée</span>
+                            <span class="legend-text">Prochaine prière</span>
                         </div>
                         <div class="legend-item">
                             <span class="legend-color color-suhoor"></span>
@@ -417,14 +501,29 @@
                     <div class="tracker-compact">
                         <div class="tracker-row">
                             <div id="tracker-dots" class="tracker-dots"></div>
-                            <span id="tracker-summary" class="tracker-summary">Prieres 0/5</span>
+                            <span id="tracker-summary" class="tracker-summary">Prières 0/5</span>
                         </div>
                         <div class="tracker-row">
-                            <span>Jeune <span id="tracker-fasting-status">&mdash;</span></span>
+                            <span>Jeûne <span id="tracker-fasting-status">&mdash;</span></span>
                             <span>Coran <span id="tracker-quran-count">0 pages</span></span>
                         </div>
                     </div>
                     <div id="tracker-expanded" class="tracker-expanded hidden"></div>
+
+                    <!-- Daily Quote / Hadith -->
+                    <div class="tracker-quote">
+                        <i class="fa-solid fa-quote-left tracker-quote-icon"></i>
+                        <span id="daily-category" class="daily-category-badge"></span>
+                        <p class="arabic-text" id="daily-arabic"></p>
+                        <p class="transliteration" id="daily-transliteration"></p>
+                        <p class="translation" id="daily-translation"></p>
+                        <div class="tracker-quote-footer">
+                            <span class="reference" id="daily-reference"></span>
+                            <button id="daily-copy-btn" class="btn-icon-small" title="Copier">
+                                <i class="fa-regular fa-copy"></i> Copier
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Planificateur de Khatm -->
@@ -439,7 +538,7 @@
                 <div id="dhikr-card" class="card premium-card dhikr-card animate-entry" style="--anim-delay: 0.4s;">
                     <div class="card-header">
                         <h2><i class="fa-solid fa-circle-notch"></i> Dhikr</h2>
-                        <select id="dhikr-preset-select" class="dhikr-select"></select>
+                        <select id="dhikr-preset-select" class="dhikr-select" aria-label="Choisir un dhikr"></select>
                     </div>
                     <div class="dhikr-content">
                         <p class="dhikr-arabic" id="dhikr-arabic"></p>
@@ -454,17 +553,20 @@
                         <span id="dhikr-step-indicator" class="dhikr-step-indicator hidden"></span>
                     </div>
                     <div class="dhikr-actions">
-                        <button id="dhikr-reset" class="btn-icon-small" title="Reinitialiser">
-                            <i class="fa-solid fa-rotate-left"></i>
+                        <button id="dhikr-reset" class="btn-icon-small" title="Réinitialiser"
+                            aria-label="Réinitialiser le compteur de dhikr">
+                            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
                         </button>
-                        <button id="dhikr-increment" class="dhikr-btn-increment" title="Incrementer (Espace)">
-                            <i class="fa-solid fa-plus"></i>
+                        <button id="dhikr-increment" class="dhikr-btn-increment" title="Incrémenter (Espace)"
+                            aria-label="Incrémenter le compteur de dhikr (touche Espace)">
+                            <i class="fa-solid fa-plus" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
 
                 <!-- Qibla Compass -->
-                <div id="qibla-card" class="card premium-card qibla-card animate-entry" style="--anim-delay: 0.45s;">
+                <div id="qibla-card" class="card premium-card qibla-card full-width animate-entry"
+                    style="--anim-delay: 0.45s;">
                     <div class="card-header">
                         <h2><i class="fa-solid fa-compass"></i> Qibla</h2>
                     </div>
@@ -481,31 +583,11 @@
                             style="font-size: 2rem; color: var(--text-muted); margin-bottom: 8px;"></i>
                         <p>Position requise pour la boussole Qibla</p>
                         <button class="qibla-settings-link btn-icon-small">
-                            <i class="fa-solid fa-gear"></i> Ouvrir les parametres
+                            <i class="fa-solid fa-gear" aria-hidden="true"></i> Ouvrir les paramètres
                         </button>
                     </div>
                 </div>
 
-                <!-- Daily Quote / Hadith -->
-                <div class="card quote-card full-width animate-entry" style="--anim-delay: 0.5s; text-align: center;">
-                    <div class="quote-icon" style="color: var(--clr-gold); font-size: 2rem; margin-bottom: 12px;"><i
-                            class="fa-solid fa-quote-left"></i></div>
-                    <div class="quote-content" style="display: flex; flex-direction: column; align-items: center;">
-                        <span id="daily-category" class="daily-category-badge" style="margin-bottom: 12px;"></span>
-                        <p class="arabic-text" id="daily-arabic" style="margin-bottom: 16px;"></p>
-                        <p class="transliteration" id="daily-transliteration" style="margin-bottom: 8px;"></p>
-                        <p class="translation" id="daily-translation" style="margin-bottom: 20px; font-style: italic;">
-                        </p>
-                        <div class="quote-footer"
-                            style="display: flex; justify-content: center; align-items: center; gap: 16px; width: 100%; border-top: 1px solid rgba(122, 139, 128, 0.15); padding-top: 16px;">
-                            <span class="reference" id="daily-reference"
-                                style="font-weight: 600; color: var(--clr-gold);"></span>
-                            <button id="daily-copy-btn" class="btn-icon-small" title="Copier">
-                                <i class="fa-regular fa-copy"></i> Copier
-                            </button>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Horaires View -->
@@ -516,19 +598,23 @@
                         style="justify-content: space-between; align-items: center; margin-bottom: 24px;">
                         <div>
                             <h2 style="font-size: 1.5rem; margin-bottom: 4px;">Calendrier Mensuel</h2>
-                            <p id="horaires-month-name" style="color: rgba(244, 235, 208, 0.7); font-size: 0.95rem;">
+                            <p id="horaires-month-name" style="color: var(--text-muted); font-size: 0.95rem;">
                                 Chargement...</p>
                         </div>
                         <div class="month-selector interactive-element"
                             style="display: flex; align-items: center; gap: 16px; background: var(--clr-glass-bg); padding: 8px 16px; border-radius: 12px; border: 1px solid var(--clr-glass-border);">
-                            <i id="hnav-prev" class="fa-solid fa-chevron-left"
-                                style="cursor: pointer; color: var(--clr-gold); padding: 4px;"></i>
+                            <button type="button" id="hnav-prev" class="nav-chevron" aria-label="Mois précédent"
+                                style="color: var(--clr-gold); padding: 4px;">
+                                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                            </button>
                             <span id="hnav-current"
                                 style="font-weight: 500; min-width: 120px; text-align: center; color: var(--text-light);">Mois
                                 en
                                 cours</span>
-                            <i id="hnav-next" class="fa-solid fa-chevron-right"
-                                style="cursor: pointer; color: var(--clr-gold); padding: 4px;"></i>
+                            <button type="button" id="hnav-next" class="nav-chevron" aria-label="Mois suivant"
+                                style="color: var(--clr-gold); padding: 4px;">
+                                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -566,8 +652,9 @@
                 <div class="card premium-card full-width animate-entry"
                     style="--anim-delay: 0.2s; min-height: calc(100vh - 140px); display: flex; flex-direction: column;">
                     <div class="duas-header animate-entry" style="--anim-delay: 0.3s; margin-bottom: 24px;">
-                        <h2 class="view-title" style="color: var(--clr-gold);"><i class="fa-solid fa-hands-praying"></i>
-                            Encyclopedie des Douas</h2>
+                        <h2 class="view-title" style="color: var(--clr-gold);"><i class="fa-solid fa-hands-praying"
+                                aria-hidden="true"></i>
+                            Encyclopédie des Douas</h2>
                         <div class="duas-search-wrapper"
                             style="background: var(--clr-glass-bg); border-color: var(--clr-glass-border);">
                             <i class="fa-solid fa-search"></i>
@@ -588,13 +675,14 @@
                         <h2 class="view-title" style="color: var(--clr-gold);"><i class="fa-solid fa-book-open"></i>
                             Journal de gratitude</h2>
                         <div class="journal-controls">
-                            <select id="journal-month-filter" class="journal-filter"
+                            <select id="journal-month-filter" class="journal-filter" aria-label="Filtrer par mois"
                                 style="background: var(--clr-glass-bg); color: var(--clr-sand); border-color: var(--clr-glass-border);"></select>
                         </div>
                     </div>
                     <div class="journal-write-section animate-entry"
                         style="--anim-delay: 0.35s; background: var(--clr-glass-bg); border-color: var(--clr-glass-border);">
                         <textarea id="journal-textarea" class="journal-textarea" rows="5"
+                            aria-label="Écrire une entrée de journal"
                             style="color: var(--clr-sand); background: transparent;"></textarea>
                         <div class="journal-write-footer">
                             <span id="journal-save-indicator" class="journal-save-indicator hidden">Sauvegarde</span>
@@ -626,7 +714,7 @@
                     <div class="stats-content animate-entry" style="--anim-delay: 0.4s; flex: 1; overflow-y: auto;">
                         <!-- Heatmap -->
                         <div class="stats-section">
-                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Activite</h3>
+                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Activité</h3>
                             <div id="stats-heatmap" class="stats-heatmap"></div>
                             <div class="heatmap-legend">
                                 <span class="heatmap-legend-item"><span class="heatmap-dot heatmap-none"></span>
@@ -645,7 +733,7 @@
 
                         <!-- Streaks -->
                         <div class="stats-section" style="margin-top: 24px;">
-                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Series en cours</h3>
+                            <h3 class="stats-section-title" style="color: var(--clr-sand);">Séries en cours</h3>
                             <div id="stats-streaks" class="stats-streaks"></div>
                         </div>
 
@@ -669,15 +757,10 @@
                             <div class="stats-add-goal"
                                 style="display: flex; gap: 8px; margin-top: 12px; align-items: center;">
                                 <select id="stats-goal-select" class="journal-filter"
+                                    aria-label="Choisir un objectif à ajouter"
                                     style="background: var(--clr-glass-bg); color: var(--clr-sand); border-color: var(--clr-glass-border); padding: 8px; border-radius: 8px;">
-                                    <option value="">Ajouter un objectif...
-                                    </option>
-                                    <option value="pray_5">5 prières par jour
-                                    </option>
-                                    <option value="quran_10">10 pages du Coran /
-                                        jour</option>
-                                    <option value="dhikr_100">100 Dhikr / jour
-                                    </option>
+                                    <!-- Options peuplées par statistics.js (renderGoals) -->
+                                    <option value="">Ajouter un objectif...</option>
                                 </select>
                                 <button id="stats-add-goal-btn" class="btn-icon-small"
                                     style="background: var(--clr-gold); color: var(--clr-dark-green);">
@@ -693,14 +776,15 @@
 
     <!-- Settings Modal -->
     <div id="settings-modal" class="onboarding-overlay hidden">
-        <div class="onboarding-tooltip settings-tooltip" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <h3>Paramètres</h3>
+        <div class="onboarding-tooltip settings-tooltip" role="dialog" aria-modal="true"
+            aria-labelledby="settings-modal-title" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <h3 id="settings-modal-title">Paramètres</h3>
             <p>Recherchez votre mosquée par nom ou trouvez-en une proche sur la carte.</p>
 
             <!-- Tab Switcher -->
             <div class="settings-tabs">
                 <button class="settings-tab active" data-tab="list">
-                    <i class="fa-solid fa-mosque"></i> Mosquee
+                    <i class="fa-solid fa-mosque" aria-hidden="true"></i> Mosquée
                 </button>
                 <button class="settings-tab" data-tab="map">
                     <i class="fa-solid fa-map-location-dot"></i> Carte
@@ -719,11 +803,11 @@
             <!-- Tab: List (text search) -->
             <div class="settings-tab-content" id="tab-list">
                 <div style="margin-bottom: 12px;">
-                    <label
+                    <label for="settings-mosque-search"
                         style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px;">Rechercher
                         une mosquée</label>
                     <input type="text" id="settings-mosque-search" placeholder="Nom ou ville..."
-                        style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none;">
+                        style="width: 100%; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem;">
                 </div>
                 <div id="mosque-results" style="max-height: 200px; overflow-y: auto; scrollbar-width: thin;"></div>
             </div>
@@ -738,8 +822,8 @@
 
                 <!-- Master toggle -->
                 <div class="notif-setting-row">
-                    <label class="notif-label">
-                        <i class="fa-solid fa-bell"></i> Activer les rappels
+                    <label class="notif-label" for="notif-enabled">
+                        <i class="fa-solid fa-bell" aria-hidden="true"></i> Activer les rappels
                     </label>
                     <label class="notif-toggle">
                         <input type="checkbox" id="notif-enabled">
@@ -749,8 +833,8 @@
 
                 <!-- Advance time selector -->
                 <div class="notif-setting-row">
-                    <label class="notif-label">
-                        <i class="fa-solid fa-clock"></i> Rappel avant
+                    <label class="notif-label" for="notif-advance">
+                        <i class="fa-solid fa-clock" aria-hidden="true"></i> Rappel avant
                     </label>
                     <select id="notif-advance" class="notif-select">
                         <option value="5">5 min</option>
@@ -762,8 +846,8 @@
 
                 <!-- Adhan choice (regular prayers) -->
                 <div class="notif-setting-row">
-                    <label class="notif-label">
-                        <i class="fa-solid fa-volume-high"></i> Adhan (prieres)
+                    <label class="notif-label" for="notif-adhan-regular">
+                        <i class="fa-solid fa-volume-high" aria-hidden="true"></i> Adhan (prières)
                     </label>
                     <select id="notif-adhan-regular" class="notif-select">
                         <option value="makkah">Makkah</option>
@@ -774,11 +858,11 @@
 
                 <!-- Adhan choice (Fajr) -->
                 <div class="notif-setting-row">
-                    <label class="notif-label">
-                        <i class="fa-solid fa-cloud-moon"></i> Adhan Fajr
+                    <label class="notif-label" for="notif-adhan-fajr">
+                        <i class="fa-solid fa-cloud-moon" aria-hidden="true"></i> Adhan Fajr
                     </label>
                     <select id="notif-adhan-fajr" class="notif-select">
-                        <option value="fajr">Fajr special</option>
+                        <option value="fajr">Fajr spécial</option>
                         <option value="makkah">Makkah</option>
                         <option value="madina">Madina</option>
                         <option value="none">Aucun</option>
@@ -787,8 +871,8 @@
 
                 <!-- Iftar / Suhoor special notifications -->
                 <div class="notif-setting-row">
-                    <label class="notif-label">
-                        <i class="fa-solid fa-utensils"></i> Rappel Iftar
+                    <label class="notif-label" for="notif-iftar">
+                        <i class="fa-solid fa-utensils" aria-hidden="true"></i> Rappel Iftar
                     </label>
                     <label class="notif-toggle">
                         <input type="checkbox" id="notif-iftar" checked>
@@ -797,8 +881,8 @@
                 </div>
 
                 <div class="notif-setting-row">
-                    <label class="notif-label">
-                        <i class="fa-solid fa-moon"></i> Rappel Suhoor
+                    <label class="notif-label" for="notif-suhoor">
+                        <i class="fa-solid fa-moon" aria-hidden="true"></i> Rappel Suhoor
                     </label>
                     <label class="notif-toggle">
                         <input type="checkbox" id="notif-suhoor" checked>
@@ -808,11 +892,11 @@
 
                 <!-- Autostart toggle -->
                 <div class="notif-divider"></div>
-                <p class="notif-section-title">Systeme</p>
+                <p class="notif-section-title">Système</p>
 
                 <div class="notif-setting-row">
-                    <label class="notif-label">
-                        <i class="fa-solid fa-power-off"></i> Lancer au demarrage
+                    <label class="notif-label" for="notif-autostart">
+                        <i class="fa-solid fa-power-off" aria-hidden="true"></i> Lancer au démarrage
                     </label>
                     <label class="notif-toggle">
                         <input type="checkbox" id="notif-autostart">
@@ -821,8 +905,8 @@
                 </div>
 
                 <div class="notif-setting-row" id="widget-enabled-row">
-                    <label class="notif-label">
-                        <i class="fa-solid fa-window-restore"></i> Mini-widget horaires
+                    <label class="notif-label" for="widget-enabled">
+                        <i class="fa-solid fa-window-restore" aria-hidden="true"></i> Mini-widget horaires
                         <span class="notif-label-hint">Fenêtre flottante toujours visible</span>
                     </label>
                     <label class="notif-toggle">
@@ -833,7 +917,7 @@
 
                 <div class="notif-setting-row">
                     <label class="notif-label">
-                        <i class="fa-solid fa-circle-question"></i> Tutoriel de bienvenue
+                        <i class="fa-solid fa-circle-question" aria-hidden="true"></i> Tutoriel de bienvenue
                     </label>
                     <button id="btn-reset-tour" class="btn-primary btn-small"
                         style="padding: 6px 12px; font-size: 0.8rem; border-radius: 8px;">
@@ -854,7 +938,7 @@
 
                 <!-- Per-prayer toggles -->
                 <div class="notif-divider"></div>
-                <p class="notif-section-title">Prieres individuelles</p>
+                <p class="notif-section-title">Prières individuelles</p>
 
                 <div class="notif-prayer-grid" id="notif-prayer-toggles">
                     <!-- Generated by JS -->
@@ -873,24 +957,24 @@
                         <i class="fa-solid fa-moon"></i> Mode de l'application
                     </label>
                     <select id="app-mode-select" class="notif-select" style="width: 100%; padding: 10px 14px;">
-                        <option value="auto">Automatique (detection Ramadan)</option>
-                        <option value="ramadan">Ramadan (force)</option>
-                        <option value="normal">Normal (force)</option>
+                        <option value="auto">Automatique (détection Ramadan)</option>
+                        <option value="ramadan">Ramadan (forcé)</option>
+                        <option value="normal">Normal (forcé)</option>
                     </select>
                     <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">
-                        En mode automatique, l'app detecte le Ramadan via la date Hijri.
+                        En mode automatique, l'app détecte le Ramadan via la date Hijri.
                     </p>
                 </div>
                 <div class="notif-divider"></div>
                 <div id="calc-mosque-hint" class="calc-hint" style="display: none;">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span>Une mosquee est selectionnee. Les horaires proviennent de la mosquee. La methode ci-dessous
-                        s'applique en mode calcule (sans mosquee).</span>
+                    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+                    <span>Une mosquée est sélectionnée. Les horaires proviennent de la mosquée. La méthode ci-dessous
+                        s'applique en mode calculé (sans mosquée).</span>
                 </div>
 
                 <div class="notif-setting-row" style="flex-direction: column; align-items: stretch; gap: 8px;">
-                    <label class="notif-label">
-                        <i class="fa-solid fa-calculator"></i> Methode de calcul
+                    <label class="notif-label" for="calc-method-select">
+                        <i class="fa-solid fa-calculator" aria-hidden="true"></i> Méthode de calcul
                     </label>
                     <select id="calc-method-select" class="notif-select" style="width: 100%; padding: 10px 14px;">
                         <!-- Options populated by JS -->
@@ -899,8 +983,8 @@
 
                 <div class="notif-divider"></div>
                 <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
-                    La methode determine les angles utilises pour calculer Fajr et Isha. En France, la methode UOIF est
-                    recommandee.
+                    La méthode détermine les angles utilisés pour calculer Fajr et Isha. En France, la méthode UOIF est
+                    recommandée.
                 </p>
             </div>
 
@@ -942,7 +1026,7 @@
                 Aucune mosquée sélectionnée</p>
             <button id="clear-mosque-btn" class="btn-text"
                 style="font-size: 0.78rem; display: none; margin-top: 4px; color: var(--text-muted);">
-                <i class="fa-solid fa-xmark"></i> Dissocier la mosquee
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i> Dissocier la mosquée
             </button>
             <div class="onboarding-controls">
                 <button id="settings-cancel" class="btn-text">Annuler</button>
@@ -953,7 +1037,7 @@
 
     <!-- Onboarding Overlay -->
     <div id="onboarding-overlay" class="onboarding-overlay hidden">
-        <div class="onboarding-tooltip">
+        <div class="onboarding-tooltip" role="dialog" aria-modal="true" aria-labelledby="onboarding-title">
             <h3 id="onboarding-title">Bienvenue !</h3>
             <p id="onboarding-text">Suivez ce guide rapide pour découvrir les fonctionnalités.</p>
             <div class="onboarding-controls">
@@ -968,10 +1052,11 @@
 
     <!-- Bug Report Modal -->
     <div id="bug-report-modal" class="onboarding-overlay hidden">
-        <div class="onboarding-tooltip settings-tooltip"
+        <div class="onboarding-tooltip settings-tooltip" role="dialog" aria-modal="true"
+            aria-labelledby="bug-report-title"
             style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 500px;">
-            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><i
-                    class="fa-solid fa-comment-dots" style="color: var(--clr-gold);"></i> Signaler ou suggérer</h3>
+            <h3 id="bug-report-title" style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;"><i
+                    class="fa-solid fa-comment-dots" style="color: var(--clr-gold);" aria-hidden="true"></i> Signaler ou suggérer</h3>
             <p style="margin-bottom: 24px; color: var(--text-muted); font-size: 0.95rem;">Un problème ou une idée ?
                 Dites-nous tout.</p>
 
@@ -992,18 +1077,18 @@
                     </div>
                 </div>
                 <div>
-                    <label
+                    <label for="bug-title"
                         style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Titre</label>
                     <input type="text" id="bug-title" placeholder="Ex: Bouton invisible, nouvelle idée..." required
-                        style="width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none;">
+                        style="width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem;">
                 </div>
                 <div>
-                    <label
+                    <label for="bug-description"
                         style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px;">Description
                         détaillée</label>
                     <textarea id="bug-description" placeholder="Que s'est-il passé ou quelle est votre idée ?" required
                         rows="4"
-                        style="width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem; outline: none; resize: vertical;"></textarea>
+                        style="width: 100%; padding: 12px 14px; border-radius: 8px; border: 1px solid var(--clr-sand-dark); background: var(--clr-sand); color: var(--text-main); font-family: inherit; font-size: 0.95rem; resize: vertical;"></textarea>
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px; padding-left: 4px;">
                     <input type="checkbox" id="bug-include-logs"
@@ -1019,7 +1104,7 @@
                 </p>
 
                 <div class="onboarding-controls"
-                    style="margin-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;">
+                    style="margin-top: 24px; border-top: 1px solid var(--clr-changelog-border); padding-top: 20px;">
                     <button type="button" id="bug-cancel" class="btn-text">Annuler</button>
                     <button type="submit" id="bug-submit" class="btn-primary btn-small">Envoyer le rapport</button>
                 </div>
@@ -1052,13 +1137,14 @@
 
     <!-- Support / Ads Modal -->
     <div id="support-modal" class="onboarding-overlay hidden">
-        <div class="onboarding-tooltip settings-tooltip"
+        <div class="onboarding-tooltip settings-tooltip" role="dialog" aria-modal="true"
+            aria-labelledby="support-modal-title"
             style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 500px;">
-            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                <i class="fa-solid fa-hand-holding-heart" style="color: var(--clr-gold);"></i> Soutenir GuideME
+            <h3 id="support-modal-title" style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                <i class="fa-solid fa-hand-holding-heart" style="color: var(--clr-gold);" aria-hidden="true"></i> Soutenir GuideME
             </h3>
             <p style="margin-bottom: 16px; color: var(--text-muted); font-size: 0.95rem; line-height: 1.5;">
-                Soutenez le développement de GuideME gratuitement ou faire un don pour maintenir l'application sans
+                Soutenez le développement de GuideME en faisant un don pour maintenir l'application sans
                 publicité.
             </p>
 
@@ -1119,10 +1205,9 @@
                 </div>
 
                 <div class="onboarding-controls"
-                    style="margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 20px;">
-                    <button type="button" id="support-cancel" class="btn-text">Fermer</button>
-                    <button type="submit" id="support-save" class="btn-primary btn-small">Enregistrer les
-                        préférences</button>
+                    style="margin-top: 12px; border-top: 1px solid var(--clr-changelog-border); padding-top: 20px;">
+                    <span></span>
+                    <button type="button" id="support-cancel" class="btn-primary btn-small">Fermer</button>
                 </div>
             </form>
         </div>
@@ -1130,10 +1215,11 @@
 
     <!-- Changelog / Quoi de neuf Modal -->
     <div id="changelog-modal" class="onboarding-overlay hidden">
-        <div class="onboarding-tooltip settings-tooltip"
+        <div class="onboarding-tooltip settings-tooltip" role="dialog" aria-modal="true"
+            aria-labelledby="changelog-modal-title"
             style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 500px;">
-            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                <i class="fa-solid fa-sparkles" style="color: var(--clr-gold);"></i> Quoi de neuf
+            <h3 id="changelog-modal-title" style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                <i class="fa-solid fa-sparkles" style="color: var(--clr-gold);" aria-hidden="true"></i> Quoi de neuf
             </h3>
             <p style="margin-bottom: 16px; color: var(--text-muted); font-size: 0.95rem; line-height: 1.5;">
                 Découvrez les dernières nouveautés et améliorations de GuideME.
@@ -1144,7 +1230,7 @@
             </div>
 
             <div class="onboarding-controls"
-                style="margin-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 16px;">
+                style="margin-top: 16px; border-top: 1px solid var(--clr-changelog-border); padding-top: 16px;">
                 <span id="changelog-version"
                     style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600;"></span>
                 <button type="button" id="changelog-close" class="btn-primary btn-small">Fermer</button>
@@ -1154,10 +1240,11 @@
 
     <!-- Updater Modal -->
     <div id="updater-modal" class="onboarding-overlay hidden">
-        <div class="onboarding-tooltip settings-tooltip"
+        <div class="onboarding-tooltip settings-tooltip" role="dialog" aria-modal="true"
+            aria-labelledby="updater-modal-title"
             style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 460px;">
-            <h3 style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                <i class="fa-solid fa-download" style="color: var(--clr-gold);"></i> Mises à jour
+            <h3 id="updater-modal-title" style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                <i class="fa-solid fa-download" style="color: var(--clr-gold);" aria-hidden="true"></i> Mises à jour
             </h3>
 
             <!-- État : Vérification en cours -->

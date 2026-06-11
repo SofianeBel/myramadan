@@ -158,12 +158,17 @@ function getMosqueCoords(mosque) {
 export function getUserCoords() {
   const lat = storage.get(LAT_KEY)
   const lon = storage.get(LON_KEY)
+  // Number(null) === 0 : une clé absente deviendrait (0,0) — coordonnées
+  // envoyées telles quelles à Aladhan (HTTP 400). On rejette explicitement.
+  if (lat === null || lat === undefined || lon === null || lon === undefined) return null
+  if (typeof lat === 'string' && lat.trim() === '') return null
+  if (typeof lon === 'string' && lon.trim() === '') return null
   const numericLat = Number(lat)
   const numericLon = Number(lon)
-  if (Number.isFinite(numericLat) && Number.isFinite(numericLon)) {
-    return { lat: numericLat, lon: numericLon }
-  }
-  return null
+  if (!Number.isFinite(numericLat) || !Number.isFinite(numericLon)) return null
+  // (0,0) = "null island", jamais une vraie position utilisateur
+  if (numericLat === 0 && numericLon === 0) return null
+  return { lat: numericLat, lon: numericLon }
 }
 
 /** Save GPS coordinates to persistent storage */
@@ -1032,6 +1037,7 @@ export function initSettings(onSave) {
         checkbox.type = 'checkbox'
         checkbox.checked = !!prefs.perPrayer[key]
         checkbox.dataset.prayer = key
+        checkbox.setAttribute('aria-label', `Rappel pour ${label}`)
         toggleLabel.appendChild(checkbox)
 
         const slider = document.createElement('span')

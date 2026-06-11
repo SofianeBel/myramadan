@@ -5,9 +5,20 @@
 
 import storage from './storage.js'
 
-export const APP_VERSION = '1.9.0'
+export const APP_VERSION = '1.10.0'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.10.0',
+    date: '11 juin 2026',
+    changes: [
+      { type: 'feature', text: 'Nouveau panneau « Prochaine prière » — illustration nocturne de mosquée avec compte à rebours repensé' },
+      { type: 'improvement', text: 'Accessibilité — navigation clavier complète : modales (Échap, focus piégé), cloches de rappel, pastilles du suivi et boutons de fenêtre sont de vrais boutons annoncés aux lecteurs d\'écran' },
+      { type: 'improvement', text: 'États d\'erreur — bouton « Réessayer » sur l\'accueil et le calendrier au lieu de tirets muets, repli automatique sur Paris si aucune position n\'est disponible' },
+      { type: 'improvement', text: 'Interface — refonte visuelle générale (sidebar, cartes, espacement) et correction des accents manquants dans les textes' },
+      { type: 'fix', text: 'Coordonnées GPS — les positions invalides (0,0) ou vides ne sont plus envoyées à l\'API des horaires' },
+    ],
+  },
   {
     version: '1.9.0',
     date: '10 juin 2026',

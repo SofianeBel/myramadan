@@ -116,37 +116,38 @@ export function renderPrayerSchedule(timings, isToday = true) {
     timeDiv.appendChild(timeSpan)
 
     if (bell.icon) {
-      const bellEl = document.createElement('i')
-      bellEl.className = bell.icon
-      if (bell.clickable) {
-        bellEl.classList.add('notif-bell')
-        bellEl.dataset.prayer = prayer.name
-      }
-      if (bell.disabled) bellEl.classList.add('notif-disabled')
-      timeDiv.appendChild(bellEl)
+      const bellIcon = document.createElement('i')
+      bellIcon.className = bell.icon
+      bellIcon.setAttribute('aria-hidden', 'true')
 
-      // Click handler on the bell icon (toggle notification)
       if (bell.clickable) {
-        bellEl.addEventListener('click', (e) => {
+        // Vrai bouton : focusable au clavier, état annoncé aux lecteurs d'écran
+        const bellBtn = document.createElement('button')
+        bellBtn.type = 'button'
+        bellBtn.className = 'notif-bell'
+        bellBtn.dataset.prayer = prayer.name
+        bellBtn.setAttribute('aria-pressed', String(notifEnabled))
+        bellBtn.setAttribute('aria-label', `Rappel pour ${prayer.nameFr}`)
+        if (bell.disabled) bellBtn.classList.add('notif-disabled')
+        bellBtn.appendChild(bellIcon)
+
+        bellBtn.addEventListener('click', (e) => {
           e.stopPropagation()
-          const prayerName = bellEl.dataset.prayer
+          const prayerName = bellBtn.dataset.prayer
           const currentPrefs = loadPrefs()
           currentPrefs.perPrayer[prayerName] = !currentPrefs.perPrayer[prayerName]
           savePrefs(currentPrefs)
         })
+
+        timeDiv.appendChild(bellBtn)
+      } else {
+        if (bell.disabled) bellIcon.classList.add('notif-disabled')
+        timeDiv.appendChild(bellIcon)
       }
     }
 
     item.appendChild(infoDiv)
     item.appendChild(timeDiv)
-
-    // Click handler for selection (visual only, does not affect bell)
-    item.addEventListener('click', () => {
-      container.querySelectorAll('.prayer-item').forEach(el => {
-        el.classList.remove('selected')
-      })
-      item.classList.add('selected')
-    })
 
     container.appendChild(item)
   })

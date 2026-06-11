@@ -135,15 +135,18 @@ function renderTracker() {
   const prayerCount = entry.prayers.filter(Boolean).length
   const streak = getStreak('prayers')
 
-  // Compact view — prayer dots
+  // Compact view — prayer dots (vrais boutons : clavier + lecteur d'écran)
   const dotsContainer = document.getElementById('tracker-dots')
   if (dotsContainer) {
     dotsContainer.replaceChildren()
     entry.prayers.forEach((done, i) => {
-      const dot = document.createElement('span')
+      const dot = document.createElement('button')
+      dot.type = 'button'
       dot.className = `tracker-dot ${done ? 'done' : ''}`
       dot.dataset.prayer = i
       dot.title = PRAYER_NAMES[i]
+      dot.setAttribute('aria-pressed', String(done))
+      dot.setAttribute('aria-label', `${PRAYER_NAMES[i]} — marquer comme accomplie`)
       dot.addEventListener('click', (e) => {
         e.stopPropagation()
         togglePrayer(i)
@@ -153,7 +156,7 @@ function renderTracker() {
   }
 
   const summaryEl = document.getElementById('tracker-summary')
-  if (summaryEl) summaryEl.textContent = `Prieres ${prayerCount}/5`
+  if (summaryEl) summaryEl.textContent = `Prières ${prayerCount}/5`
 
   const streakEl = document.getElementById('tracker-streak')
   if (streakEl) streakEl.textContent = streak > 0 ? `${streak} j.` : ''
@@ -200,7 +203,7 @@ function renderExpandedView(container, entry) {
   const fastingRow = document.createElement('div')
   fastingRow.className = 'tracker-fasting-row'
   const fastingLabel = document.createElement('span')
-  fastingLabel.textContent = 'Jeune'
+  fastingLabel.textContent = 'Jeûne'
   const fastingToggle = document.createElement('button')
   fastingToggle.className = `tracker-toggle ${entry.fasting ? 'active' : ''}`
   fastingToggle.textContent = entry.fasting ? 'Oui' : 'Non'
@@ -232,7 +235,7 @@ export function initTracker() {
   const card = document.getElementById('tracker-card')
   if (card) {
     card.addEventListener('click', (e) => {
-      if (e.target.closest('.tracker-dot') || e.target.closest('input') || e.target.closest('button')) return
+      if (e.target.closest('.tracker-dot') || e.target.closest('input') || e.target.closest('button') || e.target.closest('.tracker-quote')) return
       expanded = !expanded
       renderTracker()
     })

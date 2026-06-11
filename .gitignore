@@ -28,6 +28,7 @@ aider.conf.yaml
 .github/workflows/codex*.yml
 .github/workflows/codex*.yaml
 .github/copilot-instructions.md
+.github/skills/
 
 # Logs temporaires
 build_log.txt
@@ -96,3 +97,4 @@ coverage/
 
 # Artefacts Playwright MCP (sessions de test navigateur)
 .playwright-mcp/
+.impeccable/

@@ -59,14 +59,9 @@ class SupportManager {
             })
         })
 
-        this.form.addEventListener('submit', async (e) => {
-            e.preventDefault()
-            // Mark as interacted + remove NEW badge
-            await storage.set('support_interacted', true)
-            const badge = this.btn.querySelector('.badge-new')
-            if (badge) badge.remove()
-            this.closeModal()
-        })
+        // Le formulaire n'a plus de bouton de soumission (rien à enregistrer) :
+        // on neutralise un éventuel submit implicite (touche Entrée)
+        this.form.addEventListener('submit', (e) => e.preventDefault())
 
         // Close on overlay click
         this.modal.addEventListener('click', (e) => {
@@ -78,6 +73,10 @@ class SupportManager {
 
     openModal() {
         this.modal.classList.remove('hidden')
+        // Ouvrir la modale = interaction : masquer le badge NEW définitivement
+        storage.set('support_interacted', true)
+        const badge = this.btn.querySelector('.badge-new')
+        if (badge) badge.remove()
     }
 
     closeModal() {

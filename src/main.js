@@ -17,7 +17,7 @@ import { updateDailyContent, initDailyContentActions } from './modules/daily-con
 import { initTheme } from './modules/theme.js'
 import { initSplash } from './modules/splash.js'
 import { initOnboarding } from './modules/onboarding.js'
-import { getMosqueSlug, getCity, getCountry, getCalculationMethod, getMethodAngles, getUserCoords, requestGeolocation, updateLocationDisplay, initSettings, autoSelectNearestMosque } from './modules/settings.js'
+import { getMosqueSlug, getMosqueName, getCity, getCountry, getCalculationMethod, getMethodAngles, getUserCoords, requestGeolocation, updateLocationDisplay, initSettings, autoSelectNearestMosque } from './modules/settings.js'
 import { startNotifications, stopNotifications, isNotificationsEnabled, loadPrefs, savePrefs } from './modules/notifications.js'
 import { getOffset, getOffsetDateForAladhan, initDateNavigation } from './modules/date-navigation.js'
 import { initCalendar, refreshCalendar } from './modules/calendar.js'
@@ -38,6 +38,7 @@ import { initStatistics } from './modules/statistics.js'
 import { initBackup } from './modules/backup.js'
 import { publishTimings, initWidgetBridge } from './modules/widget-bridge.js'
 import { applyPlatformClass, isMobile } from './modules/platform.js'
+import { initModalA11y } from './modules/modal-a11y.js'
 import { revealApp, runStartupStep, runStartupStepWithTimeout } from './modules/startup.js'
 
 // Intervals
@@ -46,51 +47,12 @@ const STARTUP_GEOLOCATION_TIMEOUT_MS = 3500
 const STARTUP_AUTO_SELECT_TIMEOUT_MS = 4500
 const STARTUP_PRAYER_DATA_TIMEOUT_MS = 8000
 
-/**
- * Initialize Sakura petal animations in the titlebar
- */
-function initSakura() {
-  const container = document.getElementById('sakura-container');
-  if (!container) return;
+// Dernier recours documenté quand aucune position n'est disponible :
+// GPS → coords sauvegardées → Paris
+const PARIS_FALLBACK = { lat: 48.8566, lon: 2.3522 }
 
-  container.innerHTML = ''; // Clear any existing petals
-
-  // Create 15 petals on the branches
-  const numPetals = 15;
-
-  for (let i = 0; i < numPetals; i++) {
-    const petal = document.createElement('div');
-    petal.classList.add('sakura-petal');
-
-    // Size between 5px and 12px
-    const size = Math.random() * 7 + 5;
-    petal.style.width = `${size}px`;
-    petal.style.height = `${size}px`;
-
-    // Position on branches (left 0-35% or right 65-100%)
-    const isLeft = Math.random() > 0.5;
-    const leftPos = isLeft ? Math.random() * 35 : 65 + Math.random() * 35;
-    const topPos = Math.random() * 30 + 5; // 5px to 35px from top
-
-    petal.style.left = `${leftPos}%`;
-    petal.style.top = `${topPos}px`;
-
-    // Base rotation to look natural and target rotation for the subtle animation
-    const baseRotation = Math.random() * 360;
-    const targetRotation = baseRotation + (Math.random() > 0.5 ? 15 : -15);
-
-    petal.style.setProperty('--base-rot', `${baseRotation}deg`);
-    petal.style.setProperty('--target-rot', `${targetRotation}deg`);
-
-    // Subtle breathing animation durations
-    const breatheDuration = Math.random() * 2 + 3; // 3-5s
-    const delay = Math.random() * 3;
-
-    petal.style.animation = `breathe-sakura ${breatheDuration}s ease-in-out ${delay}s infinite alternate`;
-
-    container.appendChild(petal);
-  }
-}
+// Derniers arguments de chargement — utilisés par le bouton « Réessayer »
+let lastLoadArgs = { mosqueSlug: null, offset: 0 }
 
 
 /**
@@ -119,7 +81,16 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
   const isToday = offset === 0
   const method = getCalculationMethod()
   const angles = getMethodAngles()
-  const coords = getUserCoords()
+  lastLoadArgs = { mosqueSlug, offset }
+
+  // Chaîne de repli position : coords sauvegardées → ville/pays → Paris.
+  // Sans ce dernier recours, l'app affichait des « -- » muets (aucune requête possible).
+  let coords = getUserCoords()
+  const hasCityCountry = Boolean(getCity() && getCountry())
+  if (!coords && !hasCityCountry) {
+    coords = PARIS_FALLBACK
+  }
+
   const locationParams = {
     lat: coords?.lat,
     lon: coords?.lon,
@@ -133,10 +104,12 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
   const aladhanDate = isToday ? null : getOffsetDateForAladhan()
 
   // 1. Try Mawaqit only for today
+  let usedMawaqit = false
   if (mosqueSlug && isToday) {
     const mawaqitData = await fetchMawaqitTimes(mosqueSlug)
     if (mawaqitData) {
       timings = mawaqitData.timings
+      usedMawaqit = true
     }
   }
 
@@ -169,8 +142,12 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
 
   if (!timings) {
     console.error('[main] No prayer data available from any source')
+    showPrayerDataError()
     return
   }
+
+  clearPrayerDataError()
+  updatePrayerSource(usedMawaqit)
 
   // 4. Render prayer schedule (mode-aware)
   renderPrayerSchedule(timings, isToday)
@@ -210,6 +187,73 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
   if (isToday) {
     publishTimings(timings, mode)
   }
+}
+
+/**
+ * État d'erreur des horaires : la donnée reine (prochaine prière) ne doit
+ * jamais mourir en silence. Affiche un message explicite + bouton Réessayer
+ * dans la carte compte à rebours, masque la légende orpheline et signale
+ * l'indisponibilité dans les cartes Horaires et Jeûne.
+ */
+function showPrayerDataError() {
+  const errorEl = document.getElementById('prayer-data-error')
+  if (errorEl) errorEl.classList.remove('hidden')
+  document.querySelector('.countdown-display')?.classList.add('hidden')
+
+  const badge = document.getElementById('next-prayer-badge')
+  if (badge) badge.textContent = '--'
+
+  // Carte Horaires : liste vide + légende masquée + message dédié
+  const list = document.getElementById('prayer-list')
+  if (list) list.replaceChildren()
+  document.querySelector('.schedule-legend')?.classList.add('hidden')
+  const scheduleError = document.getElementById('schedule-error')
+  if (scheduleError) scheduleError.classList.remove('hidden')
+  const sourceEl = document.getElementById('prayer-source')
+  if (sourceEl) sourceEl.classList.add('hidden')
+
+  // Carte Jeûne : remplacer « Chargement... » par un état explicite
+  const timeRemaining = document.getElementById('time-remaining')
+  if (timeRemaining) timeRemaining.textContent = 'Horaires indisponibles'
+}
+
+/** Retire l'état d'erreur des horaires (données chargées avec succès). */
+function clearPrayerDataError() {
+  document.getElementById('prayer-data-error')?.classList.add('hidden')
+  document.querySelector('.countdown-display')?.classList.remove('hidden')
+  document.querySelector('.schedule-legend')?.classList.remove('hidden')
+  document.getElementById('schedule-error')?.classList.add('hidden')
+}
+
+/**
+ * Affiche la provenance des horaires (principe « confiance par la précision ») :
+ * mosquée Mawaqit ou calcul Aladhan.
+ */
+function updatePrayerSource(usedMawaqit) {
+  const sourceEl = document.getElementById('prayer-source')
+  if (!sourceEl) return
+  sourceEl.textContent = usedMawaqit
+    ? `Source : ${getMosqueName() || 'mosquée'} (Mawaqit)`
+    : 'Source : horaires calculés (Aladhan)'
+  sourceEl.classList.remove('hidden')
+}
+
+/** Bouton « Réessayer » de l'état d'erreur — recharge avec les derniers arguments. */
+function initPrayerRetry() {
+  const retryBtn = document.getElementById('prayer-retry-btn')
+  if (!retryBtn) return
+  retryBtn.addEventListener('click', async () => {
+    retryBtn.disabled = true
+    try {
+      await runStartupStepWithTimeout(
+        'retry prayer data',
+        () => loadPrayerData(lastLoadArgs.mosqueSlug, lastLoadArgs.offset),
+        STARTUP_PRAYER_DATA_TIMEOUT_MS
+      )
+    } finally {
+      retryBtn.disabled = false
+    }
+  })
 }
 
 /**
@@ -381,8 +425,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 3.7 Setup bug report modal
     runStartupStep('bug report', initBugReport)
 
-    // 3.8 Initialize Sakura Titlebar Effects
-    if (!isMobile) runStartupStep('sakura', initSakura)
+    // 3.8 Bouton Réessayer de l'état d'erreur des horaires
+    initPrayerRetry()
 
     // 3.9 Initialize Support / Ads Feature
     await runStartupStep('support', initSupport)
@@ -469,6 +513,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 9.1. Onglet Données — export / import des données utilisateur
     initBackup()
+
+    // 9.2. Accessibilité des modales (Échap, piège à focus, retour du focus)
+    initModalA11y()
+
+    // 9.3. L'animation d'entrée ne joue qu'une fois : passé le délai max de la
+    // chorégraphie (0.6s de stagger + 0.8s d'animation), les vues s'affichent
+    // immédiatement lors des navigations suivantes
+    setTimeout(() => {
+      document.querySelector('.app-container')?.classList.add('anim-entries-done')
+    }, 1800)
 
     // 9.5. Toast auto-détection (après que l'app soit entièrement chargée)
     if (autoDetectResult) {

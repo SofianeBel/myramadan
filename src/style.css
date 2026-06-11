@@ -18,7 +18,11 @@
     --bg-card: #FFFFFF;
     --text-main: var(--clr-dark-green);
     --text-light: var(--clr-sand);
-    --text-muted: #7A8B80;
+    /* ≥4.5:1 sur --bg-main et blanc (WCAG AA) */
+    --text-muted: #5C6B61;
+    /* Variantes texte lisibles sur fonds clairs (l'or/corail pleins passent sous 4.5:1 sur blanc) */
+    --clr-gold-text: #8C7218;
+    --clr-iftar-text: #C04A33;
     --nav-hover: rgba(255, 255, 255, 0.05);
 
     --shadow-sm: 0 4px 6px rgba(11, 43, 27, 0.05);
@@ -30,14 +34,25 @@
 
     --font-main: 'Outfit', sans-serif;
 
+    /* Décélération naturelle (ease-out-quint) — pas de rebond élastique */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* Accent (vert émeraude — actions, états actifs) */
+    --clr-accent: #2F8A5D;
+    --clr-accent-strong: #1E5C3E;
+    --clr-accent-soft: rgba(47, 138, 93, 0.14);
+    --clr-accent-border: rgba(47, 138, 93, 0.35);
+    --clr-on-accent: #FFFFFF;
+
+    /* Rupture du jeûne (Iftar / Maghrib) */
+    --clr-iftar: #E0735C;
+    --clr-iftar-soft: rgba(224, 115, 92, 0.14);
+
     /* Semantic / Component Colors */
-    --clr-sakura: #FFB7C5;
-    --clr-sakura-shadow: rgba(255, 183, 197, 0.4);
-    --clr-sakura-glow: rgba(255, 183, 197, 0.6);
     --clr-titlebar-close-hover: #E81123;
     --clr-active-time-bg: #E8F5E9;
-    --clr-suhoor: #5D8AA8;
-    --clr-suhoor-bg-top: #F0F4F8;
+    --clr-suhoor: #2F8A5D;
+    --clr-suhoor-bg-top: #E8F5EE;
     --clr-suhoor-bg-bottom: #FFFFFF;
     --clr-badge-new-bg: #FF3B30;
     --clr-badge-new-text: #FFFFFF;
@@ -82,20 +97,38 @@
 }
 
 [data-theme="dark"] {
-    /* UI Colors (Sahara Night Theme) */
-    --bg-main: #0B1320;
-    /* Deep twilight blue */
-    --bg-sidebar: rgba(11, 19, 32, 0.85);
+    /* UI Colors (Nuit émeraude — maquette dashboard) */
+    --bg-main: #0A1410;
+    /* Vert-nuit profond */
+    --bg-sidebar: rgba(8, 18, 14, 0.85);
     /* Translucent sidebar */
-    --bg-card: rgba(20, 35, 58, 0.55);
+    --bg-card: rgba(15, 30, 24, 0.58);
     /* Glassmorphism card */
-    --text-main: #E8DFC6;
-    /* Warm sand — readable on dark backgrounds */
-    --text-light: #C8BFA8;
-    /* Dimmer sand for secondary text on dark green cards */
-    --text-muted: #8CA0BE;
-    /* Muted blue-grey */
-    --nav-hover: rgba(212, 175, 55, 0.15);
+    --text-main: #EAF3EC;
+    /* Blanc cassé légèrement vert */
+    --text-light: #C9D8CC;
+    /* Secondaire sur cartes vert foncé */
+    --text-muted: #8BA697;
+    /* Vert-gris doux */
+    --nav-hover: rgba(76, 195, 138, 0.1);
+
+    /* Sur fonds sombres, l'or/corail pleins contrastent suffisamment */
+    --clr-gold-text: var(--clr-gold);
+    --clr-iftar-text: var(--clr-iftar);
+
+    /* Accent (plus lumineux sur fond sombre) */
+    --clr-accent: #4CC38A;
+    --clr-accent-strong: #2F8A5D;
+    --clr-accent-soft: rgba(76, 195, 138, 0.14);
+    --clr-accent-border: rgba(76, 195, 138, 0.35);
+    --clr-on-accent: #06130D;
+
+    /* Début / rupture du jeûne */
+    --clr-suhoor: #4CC38A;
+    --clr-suhoor-bg-top: rgba(76, 195, 138, 0.2);
+    --clr-suhoor-bg-bottom: rgba(76, 195, 138, 0.06);
+    --clr-iftar: #E0735C;
+    --clr-iftar-soft: rgba(224, 115, 92, 0.16);
 
     --shadow-sm: 0 8px 16px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 16px 32px rgba(0, 0, 0, 0.6);
@@ -103,8 +136,8 @@
     /* --clr-sand stays #F4EBD0 for text usage (inherited from :root).
        Use --clr-sand-panel for dark translucent backgrounds that
        replaced sand in the old dark theme. */
-    --clr-sand-panel: rgba(30, 48, 77, 0.6);
-    --clr-sand-panel-dark: rgba(45, 68, 105, 0.8);
+    --clr-sand-panel: rgba(22, 42, 33, 0.6);
+    --clr-sand-panel-dark: rgba(36, 62, 50, 0.8);
 
     /* Used for glassmorphism */
     --bg-modal: var(--bg-card);
@@ -139,6 +172,42 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+/* Focus clavier visible partout (WCAG 2.4.7) — n'apparaît pas au clic souris */
+:focus-visible {
+    outline: 2px solid var(--clr-accent);
+    outline-offset: 2px;
+}
+
+/* Cibles tactiles ≥ 44px sur écrans tactiles (WCAG 2.5.5 / Android) */
+@media (pointer: coarse) {
+
+    .btn-icon-small,
+    .nav-chevron,
+    .titlebar-button {
+        min-width: 44px;
+        min-height: 44px;
+    }
+
+    .dhikr-actions .btn-icon-small {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+/* Mouvement réduit (WCAG 2.3.3) : neutralise animations décoratives et transitions.
+   Le !important prime aussi sur les animations posées en style inline. */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
 
 body {
@@ -271,18 +340,8 @@ body {
     /* Important to keep petals inside */
 }
 
-/* Base Sakura Container for Petals */
-.sakura-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
-}
-
+/* Motif de barre de titre : croissant et étoiles or sur fond émeraude.
+   Statique et discret — calme structurel, identité émeraude & or. */
 .titlebar-pattern {
     position: absolute;
     top: 0;
@@ -291,53 +350,11 @@ body {
     height: 100%;
     pointer-events: none;
     opacity: 1;
-    /* Organic Tree branches curving from the sides */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='54' preserveAspectRatio='none' viewBox='0 0 800 54'%3E%3C!-- Left Branch --%3E%3Cpath d='M-10,10 Q50,-5 120,20 T350,15' fill='none' stroke='%233E2723' stroke-width='4' stroke-linecap='round' opacity='0.8'/%3E%3Cpath d='M-5,25 Q40,35 150,15 T300,30' fill='none' stroke='%234E342E' stroke-width='3' stroke-linecap='round' opacity='0.7'/%3E%3Cpath d='M80,18 Q120,-5 180,10' fill='none' stroke='%233E2723' stroke-width='2' stroke-linecap='round' opacity='0.6'/%3E%3C!-- Right Branch --%3E%3Cpath d='M810,5 Q750,25 680,10 T450,25' fill='none' stroke='%233E2723' stroke-width='4' stroke-linecap='round' opacity='0.8'/%3E%3Cpath d='M805,30 Q760,15 650,35 T500,20' fill='none' stroke='%234E342E' stroke-width='3' stroke-linecap='round' opacity='0.7'/%3E%3Cpath d='M720,12 Q680,45 620,15' fill='none' stroke='%233E2723' stroke-width='2' stroke-linecap='round' opacity='0.6'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='54' preserveAspectRatio='none' viewBox='0 0 800 54'%3E%3Cg stroke='none'%3E%3C!-- Croissant gauche --%3E%3Cpath d='M 38 12 A 15 15 0 1 0 53 27 A 11.5 11.5 0 1 1 38 12 Z' fill='%23D4AF37' opacity='0.5'/%3E%3C!-- Etoiles a 4 branches dispersees --%3E%3Cpath d='M 92 20 l 1.6 4 4 1.6 -4 1.6 -1.6 4 -1.6 -4 -4 -1.6 4 -1.6 Z' fill='%23D4AF37' opacity='0.35'/%3E%3Ccircle cx='150' cy='14' r='1.4' fill='%23D4AF37' opacity='0.4'/%3E%3Ccircle cx='205' cy='32' r='1' fill='%23D4AF37' opacity='0.3'/%3E%3Ccircle cx='265' cy='18' r='1.2' fill='%23D4AF37' opacity='0.35'/%3E%3C!-- Cote droit, miroir --%3E%3Cpath d='M 700 34 l 1.6 -4 4 -1.6 -4 -1.6 -1.6 -4 -1.6 4 -4 1.6 4 1.6 Z' fill='%23D4AF37' opacity='0.35'/%3E%3Ccircle cx='648' cy='16' r='1.4' fill='%23D4AF37' opacity='0.4'/%3E%3Ccircle cx='592' cy='30' r='1' fill='%23D4AF37' opacity='0.3'/%3E%3Ccircle cx='536' cy='14' r='1.2' fill='%23D4AF37' opacity='0.35'/%3E%3Cpath d='M 758 10 A 13 13 0 1 0 771 23 A 10 10 0 1 1 758 10 Z' fill='%23D4AF37' opacity='0.45'/%3E%3C/g%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;
     z-index: 0;
-}
-
-/* --- Sakura Petal Styles --- */
-.sakura-petal {
-    position: absolute;
-    background-color: var(--clr-sakura);
-    /* Default pink */
-    border-radius: 150% 0 150% 0;
-    /* Basic leaf shape */
-    transform-origin: center;
-    opacity: 0.8;
-    z-index: 1;
-    pointer-events: none;
-    box-shadow: 0 0 3px var(--clr-sakura-shadow);
-}
-
-.sakura-petal::after {
-    content: "";
-    position: absolute;
-    top: -5%;
-    left: -5%;
-    width: 110%;
-    height: 110%;
-    border-radius: 150% 0 150% 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, transparent 60%);
-}
-
-/* Subtle breathing animation for petals on the branches */
-@keyframes breathe-sakura {
-
-    0%,
-    100% {
-        transform: rotate(var(--base-rot)) scale(1);
-        opacity: 0.8;
-    }
-
-    50% {
-        transform: rotate(var(--target-rot)) scale(1.15);
-        opacity: 1;
-        box-shadow: 0 0 6px var(--clr-sakura-glow);
-    }
 }
 
 .titlebar-center {
@@ -385,6 +402,10 @@ body {
     align-items: center;
     width: 46px;
     height: 100%;
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
     color: var(--text-muted);
     cursor: default;
     transition: background-color 0.15s, color 0.15s;
@@ -427,6 +448,16 @@ body {
     animation-delay: var(--anim-delay, 0s);
 }
 
+/* L'entrée orchestrée ne joue qu'au premier affichage : ensuite, les
+   changements de vue (display none → flex) montrent le contenu sans rejouer
+   la chorégraphie (registre produit : pas de séquence de chargement répétée) */
+.app-ready.anim-entries-done .animate-entry,
+.app-ready.anim-entries-done .pop-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+}
+
 @keyframes entrySlideUp {
     to {
         opacity: 1;
@@ -448,7 +479,9 @@ body {
     padding: 2rem 1.5rem;
     position: relative;
     border-right: 1px solid rgba(212, 175, 55, 0.1);
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Transition structurelle ponctuelle (repli volontaire du menu) :
+       on n'anime que width — animer padding double le layout-thrash */
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 100;
 }
 
@@ -565,20 +598,21 @@ body {
 }
 
 .menu-item.active {
-    color: var(--clr-gold);
+    color: #FFFFFF;
     opacity: 1;
-    border-left: 3px solid var(--clr-gold);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .menu-item.active .menu-item-bg {
     left: 0;
-    background-color: var(--clr-gold-dim);
+    background: linear-gradient(135deg, var(--clr-accent-strong) 0%, var(--clr-dark-green) 100%);
+    border: 1px solid var(--clr-accent-border);
     transition: none;
     /* override hover animation for active */
 }
 
 .menu-item i {
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.3s var(--ease-out);
 }
 
 .menu-item:hover i {
@@ -586,7 +620,7 @@ body {
 }
 
 .menu-item.active i {
-    color: var(--clr-gold);
+    color: #FFFFFF;
 }
 
 .menu-item.menu-item-disabled {
@@ -615,8 +649,9 @@ body {
 }
 
 .date-info h1 {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     font-weight: 700;
+    letter-spacing: -0.5px;
     margin-bottom: 4px;
 }
 
@@ -645,7 +680,7 @@ body {
 }
 
 .location i {
-    color: var(--clr-gold);
+    color: var(--clr-gold-text);
 }
 
 /* Location warning banner */
@@ -657,7 +692,7 @@ body {
     background: var(--clr-gold-dim);
     border: 1px solid var(--clr-gold);
     border-radius: var(--radius-md);
-    color: var(--clr-gold);
+    color: var(--clr-gold-text);
     font-size: 0.85rem;
     margin-top: 12px;
     width: 100%;
@@ -686,21 +721,59 @@ body {
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    background-color: var(--clr-gold);
+    background-color: var(--clr-accent-strong);
     display: flex;
     justify-content: center;
     align-items: center;
-    color: var(--clr-dark-green);
+    color: #FFFFFF;
     font-size: 1.2rem;
     box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
 }
 
-/* Dashboard Grid */
+/* Dashboard Grid — 12 colonnes (maquette) */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
+    grid-template-columns: repeat(12, 1fr);
     gap: 24px;
+}
+
+/* Rang 1 : prochaine prière + horaires du jour */
+.countdown-card {
+    grid-column: span 5;
+    order: 1;
+}
+
+.schedule-card {
+    grid-column: span 7;
+    order: 2;
+}
+
+/* Jeûne (visible en mode Ramadan uniquement) */
+.fasting-card {
+    grid-column: 1 / -1;
+    order: 3;
+}
+
+/* Rang 2 : aujourd'hui / khatm / dhikr */
+.tracker-card {
+    grid-column: span 4;
+    order: 4;
+}
+
+.khatm-card {
+    grid-column: span 4;
+    order: 5;
+}
+
+.dhikr-card {
+    grid-column: span 4;
+    order: 6;
+}
+
+/* Rang 3 : qibla pleine largeur */
+.qibla-card {
+    order: 7;
 }
 
 .card {
@@ -710,11 +783,16 @@ body {
     box-shadow: var(--shadow-sm);
     display: flex;
     flex-direction: column;
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+    transition: transform 0.4s var(--ease-out), box-shadow 0.4s ease;
 }
 
+/* L'élévation au survol est réservée à la seule carte réellement cliquable
+   (tracker) : la promettre sur des cartes inertes est une fausse affordance */
 .card:hover {
     box-shadow: var(--shadow-md);
+}
+
+#tracker-card:hover {
     transform: translateY(-5px);
 }
 
@@ -741,6 +819,11 @@ body {
     color: var(--clr-sand);
     position: relative;
     overflow: hidden;
+    /* Fond toujours vert foncé : le gris neutre y est illisible,
+       on rebascule le texte atténué sur une transparence du sable */
+    --text-muted: rgba(244, 235, 208, 0.75);
+    --clr-gold-text: var(--clr-gold);
+    --clr-iftar-text: var(--clr-iftar);
 }
 
 .premium-card::before {
@@ -751,18 +834,9 @@ body {
     width: 200%;
     height: 200%;
     background: radial-gradient(circle, rgba(212, 175, 55, 0.05) 0%, transparent 60%);
-    animation: rotateGlow 20s linear infinite;
+    /* Lueur statique : la rotation (rotateGlow) d'un dégradé radial centré est
+       invisible à l'œil mais compositait en continu sur chaque carte */
     pointer-events: none;
-}
-
-@keyframes rotateGlow {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(360deg);
-    }
 }
 
 .premium-card .card-header h2 {
@@ -899,10 +973,57 @@ body {
     opacity: 0.8;
 }
 
-/* Countdown Card */
+/* Countdown Card — héro "Prochaine prière" */
 .countdown-card {
-    align-items: center;
-    justify-content: space-between;
+    padding: 16px;
+    justify-content: stretch;
+}
+
+.countdown-hero {
+    display: flex;
+    gap: 24px;
+    flex: 1;
+    min-height: 0;
+}
+
+.countdown-art {
+    flex: 0 0 40%;
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    min-height: 230px;
+}
+
+.countdown-art svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.countdown-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 8px 8px 8px 0;
+}
+
+.countdown-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.countdown-prayer-name {
+    font-size: 2.1rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--clr-gold-light);
 }
 
 .badge {
@@ -941,7 +1062,10 @@ body {
 .countdown-display {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    /* Le bloc Sec passe à la ligne plutôt que de déborder de la carte
+       aux largeurs intermédiaires (~1000px) */
+    flex-wrap: wrap;
+    gap: clamp(6px, 0.4vw + 4px, 12px);
     margin: 20px 0;
 }
 
@@ -951,14 +1075,14 @@ body {
     align-items: center;
     background: var(--clr-sand-panel);
     border: 1px solid var(--clr-sand-panel-dark);
-    padding: 12px 16px;
+    padding: 12px clamp(10px, 0.6vw + 6px, 16px);
     border-radius: 12px;
-    min-width: 70px;
+    min-width: clamp(56px, 3.5vw + 40px, 70px);
     opacity: 0;
 }
 
 .app-ready .pop-in {
-    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation: popIn 0.5s var(--ease-out) forwards;
     animation-delay: var(--anim-delay, 0s);
 }
 
@@ -975,7 +1099,7 @@ body {
 }
 
 .time-unit .number {
-    font-size: 2rem;
+    font-size: clamp(1.5rem, 0.9rem + 0.9vw, 2rem);
     font-weight: 700;
     color: var(--clr-dark-green);
     line-height: 1;
@@ -997,20 +1121,6 @@ body {
     margin-top: 10px;
 }
 
-.blink {
-    animation: textBlink 1s infinite alternate;
-}
-
-@keyframes textBlink {
-    from {
-        opacity: 1;
-    }
-
-    to {
-        opacity: 0.3;
-    }
-}
-
 .btn-primary {
     width: 100%;
     background-color: var(--clr-green);
@@ -1022,7 +1132,7 @@ body {
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.2s var(--ease-out);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1056,7 +1166,7 @@ body {
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.2s var(--ease-out);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1147,19 +1257,32 @@ body {
     cursor: pointer;
 }
 
-.date-selector i {
+/* Chevrons de navigation : vrais boutons, restent stylés comme des icônes */
+.nav-chevron {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.date-selector .nav-chevron {
     padding: 6px;
     background: var(--clr-sand-panel);
     border-radius: 50%;
     transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.date-selector i:hover {
+.date-selector .nav-chevron:hover {
     background: var(--clr-sand-dark);
     transform: scale(1.1);
 }
 
-.date-selector i.nav-disabled {
+.date-selector .nav-chevron.nav-disabled {
     opacity: 0.3;
     cursor: not-allowed;
     pointer-events: none;
@@ -1193,7 +1316,7 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.3s var(--ease-out);
     border: 2px solid transparent;
     cursor: pointer;
 }
@@ -1281,18 +1404,16 @@ body {
 
 /* Highlighted (e.g. Maghrib/Iftar indicator, without being selected) */
 .prayer-item.highlight-iftar:not(.selected) {
-    border-color: var(--clr-gold);
-    background: linear-gradient(to bottom, var(--clr-sand-panel), var(--clr-sand-light));
+    border-color: var(--clr-iftar);
+    background: var(--clr-iftar-soft);
 }
 
-/* En mode sombre, --clr-sand-light n'est jamais redéfini (il alimente --bg-main
-   en clair) : on remplace le bas du dégradé par le panel sombre pour rester lisible. */
-[data-theme="dark"] .prayer-item.highlight-iftar:not(.selected) {
-    background: linear-gradient(to bottom, var(--clr-sand-panel), var(--clr-sand-panel-dark));
+.prayer-item.highlight-iftar:not(.selected) .prayer-icon {
+    color: var(--clr-iftar-text);
 }
 
 .prayer-item.highlight-iftar:not(.selected) .prayer-name span {
-    color: var(--clr-gold);
+    color: var(--clr-iftar-text);
     font-weight: 700;
 }
 
@@ -1332,7 +1453,7 @@ body {
     }
 }
 
-/* Notification bell toggle on prayer items */
+/* Notification bell toggle on prayer items (vrai bouton focusable) */
 .notif-bell {
     cursor: pointer;
     padding: 4px;
@@ -1340,6 +1461,11 @@ body {
     transition: transform 0.2s ease, opacity 0.2s ease, color 0.2s ease;
     position: relative;
     z-index: 2;
+    background: none;
+    border: none;
+    font: inherit;
+    color: inherit;
+    line-height: 1;
 }
 
 .notif-bell:hover {
@@ -1353,6 +1479,80 @@ body {
 
 .icon-gold {
     color: var(--clr-gold);
+}
+
+/* ── État d'erreur des horaires (donnée reine : jamais de panne silencieuse) ── */
+
+.prayer-data-error {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 20px 0;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--clr-glass-bg);
+    border: 1px solid var(--clr-glass-border);
+    max-width: 360px;
+}
+
+.prayer-data-error>i {
+    font-size: 1.4rem;
+    color: var(--clr-gold);
+}
+
+.prayer-data-error-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.prayer-data-error-text {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.prayer-data-error .btn-primary {
+    width: auto;
+    margin-top: 4px;
+    padding: 10px 18px;
+}
+
+.schedule-error {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.schedule-error i {
+    color: var(--clr-gold);
+}
+
+/* Provenance des horaires (confiance par la précision) */
+.prayer-source {
+    margin-top: 12px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* Cellule d'erreur du calendrier mensuel */
+.calendar-error-cell {
+    padding: 32px 16px;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.calendar-error-cell p {
+    margin-bottom: 16px;
+}
+
+.calendar-error-cell .btn-primary {
+    width: auto;
+    padding: 10px 18px;
 }
 
 /* Schedule Legend */
@@ -1404,8 +1604,8 @@ body {
 }
 
 .color-iftar {
-    background-color: var(--clr-sand-panel);
-    border: 2px solid var(--clr-gold);
+    background-color: var(--clr-iftar-soft);
+    border: 2px solid var(--clr-iftar);
 }
 
 /* Quote Card */
@@ -1510,7 +1710,9 @@ body {
     background: none;
     border: 1px solid var(--clr-glass-border);
     color: var(--text-muted);
-    padding: 4px 10px;
+    /* Cible cliquable ≥ 24px (WCAG 2.5.8) */
+    padding: 6px 12px;
+    min-height: 24px;
     border-radius: var(--radius-md);
     cursor: pointer;
     font-size: 0.78rem;
@@ -1551,7 +1753,7 @@ body {
 }
 
 .anim-bounce-hover {
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: transform 0.3s var(--ease-out);
 }
 
 .interactive-element:hover .anim-bounce-hover {
@@ -1573,6 +1775,19 @@ body {
 /* Show night only in dark mode */
 [data-theme="dark"] .sahara-bg {
     display: block;
+}
+
+/* Nuit émeraude : re-teinte les dunes du SVG (le CSS prime sur l'attribut fill) */
+[data-theme="dark"] .sahara-bg .dune-back {
+    fill: #12281E;
+}
+
+[data-theme="dark"] .sahara-bg .dune-mid {
+    fill: #0C1C15;
+}
+
+[data-theme="dark"] .sahara-bg .dune-front {
+    fill: #06110C;
 }
 
 .sahara-bg svg {
@@ -1660,7 +1875,10 @@ body {
 
 /* Adjust the selected/active item in the sidebar */
 [data-theme="dark"] .menu-item.active span,
-[data-theme="dark"] .menu-item.active i,
+[data-theme="dark"] .menu-item.active i {
+    color: #FFFFFF;
+}
+
 [data-theme="dark"] .highlight-gold {
     color: var(--clr-gold-light);
 }
@@ -1671,9 +1889,9 @@ body {
 }
 
 [data-theme="dark"] .prayer-item.selected {
-    background-color: rgba(26, 77, 46, 0.4);
+    background-color: rgba(47, 138, 93, 0.35);
     /* Translucent green selection */
-    border-color: var(--clr-green);
+    border-color: var(--clr-accent);
 }
 
 /* Base twinkling rhythms */
@@ -1747,9 +1965,31 @@ body {
 }
 
 /* Responsive adjustements */
+@media (max-width: 1280px) {
+
+    .tracker-card,
+    .khatm-card,
+    .dhikr-card {
+        grid-column: span 6;
+    }
+
+    .countdown-card,
+    .schedule-card {
+        grid-column: 1 / -1;
+    }
+}
+
 @media (max-width: 1024px) {
     .dashboard-grid {
         grid-template-columns: 1fr;
+    }
+
+    .dashboard-grid>.card {
+        grid-column: 1 / -1;
+    }
+
+    .countdown-art {
+        display: none;
     }
 
     .prayer-list {
@@ -1949,7 +2189,7 @@ body {
     max-width: calc(100vw - 40px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     z-index: 10000;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.4s var(--ease-out);
     box-sizing: border-box;
 }
 
@@ -2016,7 +2256,7 @@ body {
     border: 1px solid rgba(122, 139, 128, 0.2);
     text-decoration: none;
     color: var(--text-main);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.3s var(--ease-out);
 }
 
 .support-box:hover {
@@ -2145,7 +2385,7 @@ body {
 
 .settings-tab.active {
     background: var(--bg-card);
-    color: var(--clr-gold);
+    color: var(--clr-gold-text);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -2239,7 +2479,7 @@ body {
 }
 
 .popup-mosque-distance {
-    color: var(--clr-gold);
+    color: var(--clr-gold-text);
 }
 
 [data-theme="dark"] .leaflet-popup-content .map-select-btn,
@@ -2333,7 +2573,7 @@ body {
 }
 
 .notif-label i {
-    color: var(--clr-gold);
+    color: var(--clr-gold-text);
     width: 18px;
     text-align: center;
 }
@@ -2890,7 +3130,7 @@ body {
 }
 
 .auto-select-toast.updater-toast .fa-download {
-    color: var(--clr-gold);
+    color: var(--clr-gold-text);
     font-size: 1.2rem;
 }
 
@@ -2930,7 +3170,7 @@ body {
     border: 1px solid var(--clr-gold);
     border-radius: var(--radius-full);
     background: transparent;
-    color: var(--clr-gold);
+    color: var(--clr-gold-text);
     font-family: var(--font-main);
     font-size: 0.8rem;
     font-weight: 600;
@@ -3018,7 +3258,7 @@ body {
 
 .report-type-option:has(input[value="feature"]):hover i,
 .report-type-option:has(input[value="feature"]:checked) i {
-    color: var(--clr-gold);
+    color: var(--clr-gold-text);
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -3107,6 +3347,10 @@ body.mode-normal .ramadan-progress {
     border: 2px solid var(--clr-glass-border);
     cursor: pointer;
     transition: all 0.2s;
+    /* Vrai bouton : neutraliser les styles natifs */
+    padding: 0;
+    appearance: none;
+    flex-shrink: 0;
 }
 
 .tracker-dot.done {
@@ -3871,8 +4115,10 @@ body.mode-normal .ramadan-progress {
 }
 
 .dua-favorites-section {
-    border-left: 3px solid var(--clr-gold);
-    padding-left: 12px;
+    background: var(--clr-gold-dim);
+    border: 1px solid var(--clr-gold-dim);
+    border-radius: var(--radius-md);
+    padding: 12px;
 }
 
 .duas-empty,
@@ -4229,10 +4475,6 @@ body.mode-normal .ramadan-progress {
   display: none !important;
 }
 
-.platform-android #sakura-container {
-  display: none !important;
-}
-
 /* Sidebar → Navigation Drawer (overlay) on mobile */
 .platform-android .sidebar {
   position: fixed;
@@ -4325,4 +4567,260 @@ body.mode-normal .ramadan-progress {
 .platform-android .sidebar.minimized .logo span,
 .platform-android .sidebar.minimized .menu-item span {
   display: inline;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   DASHBOARD REDESIGN (maquette "nuit émeraude")
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Sidebar ── */
+
+/* Le fond du lien actif ne doit pas glisser au survol */
+.menu-item.active:hover .menu-item-bg {
+    transform: none;
+}
+
+[data-theme="dark"] .sidebar .logo {
+    color: #FFFFFF;
+}
+
+/* Interrupteur de thème (Mode Clair / Sombre) */
+.theme-switch {
+    margin-left: auto;
+    width: 38px;
+    height: 20px;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    position: relative;
+    flex-shrink: 0;
+    transition: background 0.3s ease;
+}
+
+.theme-switch::before {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #FFFFFF;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s ease;
+}
+
+html[data-theme="light"] .theme-switch {
+    background: var(--clr-accent);
+    border-color: var(--clr-accent);
+}
+
+html[data-theme="light"] .theme-switch::before {
+    transform: translateX(18px);
+}
+
+/* Carte de motivation en pied de sidebar */
+.sidebar-promo {
+    margin-top: 16px;
+    padding: 18px 16px 16px;
+    border-radius: 16px;
+    background: var(--clr-accent-soft);
+    border: 1px solid var(--clr-accent-border);
+    text-align: center;
+}
+
+.sidebar-promo-art {
+    width: 64px;
+    height: 48px;
+    display: block;
+    margin: 0 auto 10px;
+    color: var(--clr-accent);
+}
+
+.sidebar-promo-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-light);
+    line-height: 1.4;
+}
+
+.sidebar-promo-sub {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--clr-accent);
+    margin-top: 4px;
+}
+
+.sidebar.minimized .sidebar-promo {
+    display: none;
+}
+
+/* ── Header ── */
+
+[data-theme="dark"] .location {
+    background-color: var(--bg-card);
+    border: 1px solid var(--clr-glass-border);
+    color: var(--text-main);
+    backdrop-filter: var(--glass-blur);
+}
+
+.location i {
+    color: var(--clr-accent);
+}
+
+/* ── Horaires du jour ── */
+
+.schedule-card .card-header h2 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] .schedule-card .card-header h2 {
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] .date-selector {
+    color: var(--clr-accent);
+}
+
+/* ── Boutons (mode sombre : vert accent) ── */
+
+/* Blanc sur #2F8A5D = 4.3:1 (sous AA) : accent clair + encre on-accent (~9:1) */
+[data-theme="dark"] .btn-primary {
+    background-color: var(--clr-accent);
+    color: var(--clr-on-accent);
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background-color: #5FD49B;
+    color: var(--clr-on-accent);
+}
+
+/* ── Carte "Aujourd'hui" : citation du jour intégrée ── */
+
+.tracker-quote {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.18);
+    border: 1px solid var(--clr-accent-border);
+    position: relative;
+    z-index: 1;
+    cursor: auto;
+}
+
+.tracker-quote-icon {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--clr-accent);
+    margin-bottom: 8px;
+}
+
+.tracker-quote .arabic-text {
+    font-size: 1.1rem;
+    color: var(--clr-sand);
+    margin: 8px 0 4px;
+}
+
+.tracker-quote .transliteration {
+    font-size: 0.78rem;
+    margin-bottom: 4px;
+}
+
+.tracker-quote .translation {
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+.tracker-quote-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--clr-accent-border);
+}
+
+/* ── Khatm / Dhikr / Qibla : cartes neutres en mode sombre (maquette) ── */
+
+[data-theme="dark"] .khatm-card,
+[data-theme="dark"] .dhikr-card,
+[data-theme="dark"] .qibla-card {
+    background: var(--bg-card);
+}
+
+/* ── Dhikr ── */
+
+.dhikr-btn-increment {
+    background: var(--clr-accent-strong);
+    color: #FFFFFF;
+}
+
+.dhikr-actions .btn-icon-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+/* ── Qibla : carte pleine largeur, disposition horizontale ── */
+
+.qibla-card {
+    text-align: left;
+}
+
+#qibla-compass-container {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    padding: 4px 12px;
+}
+
+.qibla-card .qibla-compass-svg {
+    width: 160px;
+    height: 160px;
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.qibla-card .qibla-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    margin-top: 0;
+}
+
+.qibla-card .qibla-angle {
+    font-size: 2.2rem;
+    color: var(--clr-sand);
+    line-height: 1.1;
+}
+
+.qibla-card .qibla-direction {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.qibla-card .qibla-city {
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    #qibla-compass-container {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .qibla-card .qibla-info {
+        align-items: center;
+    }
 }

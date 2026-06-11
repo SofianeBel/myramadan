@@ -206,9 +206,9 @@ function checkNotifications() {
         playChime()
 
         if (name === 'Maghrib' && prefs.iftarNotification) {
-          notify('Rappel Iftar', `Maghrib dans ${prefs.advanceMinutes} min — Preparez l'Iftar !`)
+          notify('Rappel Iftar', `Maghrib dans ${prefs.advanceMinutes} min — Préparez l'Iftar !`)
         } else {
-          notify('Rappel de priere', `${name} dans ${prefs.advanceMinutes} min`)
+          notify('Rappel de prière', `${name} dans ${prefs.advanceMinutes} min`)
         }
       }
     }

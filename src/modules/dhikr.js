@@ -14,7 +14,7 @@ const DHIKR_STATE_KEY = 'dhikrState'
 const PRESETS = [
   {
     id: 'post-prayer',
-    name: 'Cycle post-priere',
+    name: 'Cycle post-prière',
     steps: [
       { arabic: '\u0633\u064F\u0628\u0652\u062D\u064E\u0627\u0646\u064E \u0627\u0644\u0644\u0651\u064E\u0647\u0650', transliteration: 'SubhanAllah', target: 33 },
       { arabic: '\u0627\u0644\u0652\u062D\u064E\u0645\u0652\u062F\u064F \u0644\u0650\u0644\u0651\u064E\u0647\u0650', transliteration: 'Alhamdulillah', target: 33 },

@@ -18,6 +18,7 @@ export function initTheme() {
   syncStatusBar(savedTheme)
 
   if (themeToggle) {
+    themeToggle.setAttribute('aria-checked', String(savedTheme === 'dark'))
     themeToggle.addEventListener('click', (e) => {
       e.preventDefault()
       const currentTheme = rootElement.getAttribute('data-theme')
@@ -27,6 +28,7 @@ export function initTheme() {
       storage.set('theme', newTheme)
       updateThemeIcon(newTheme === 'dark')
       syncStatusBar(newTheme)
+      themeToggle.setAttribute('aria-checked', String(newTheme === 'dark'))
     })
   }
 }

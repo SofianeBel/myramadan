@@ -110,8 +110,8 @@ function renderHistory() {
     const empty = document.createElement('p')
     empty.className = 'journal-empty'
     empty.textContent = selectedMonth === 'all'
-      ? 'Aucune entree pour le moment. Commence a ecrire !'
-      : 'Aucune entree ce mois-ci.'
+      ? 'Aucune entrée pour le moment. Écrivez votre première note de gratitude ci-dessus.'
+      : 'Aucune entrée ce mois-ci.'
     container.appendChild(empty)
     return
   }
