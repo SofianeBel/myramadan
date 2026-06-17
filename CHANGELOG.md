@@ -5,6 +5,12 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.10.1] - 2026-06-17
+
+### Corrigé
+
+- **Démarrage / horaires** — si le premier chargement des horaires expire ou échoue, l'app affiche l'état « Horaires indisponibles » et coupe les timers de jeûne, compte à rebours et notifications au lieu de rester sur une interface sans compte à rebours
+
 ## [1.10.0] - 2026-06-11
 
 ### Ajouté

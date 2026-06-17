@@ -5,9 +5,16 @@
 
 import storage from './storage.js'
 
-export const APP_VERSION = '1.10.0'
+export const APP_VERSION = '1.10.1'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.10.1',
+    date: '17 juin 2026',
+    changes: [
+      { type: 'fix', text: 'Démarrage — si les horaires ne chargent pas à temps, l\'app affiche un état d\'erreur clair au lieu de rester sans compte à rebours' },
+    ],
+  },
   {
     version: '1.10.0',
     date: '11 juin 2026',

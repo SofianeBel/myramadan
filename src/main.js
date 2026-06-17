@@ -142,8 +142,11 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
 
   if (!timings) {
     console.error('[main] No prayer data available from any source')
+    if (fastingInterval) { clearInterval(fastingInterval); fastingInterval = null }
+    stopCountdown()
+    stopNotifications()
     showPrayerDataError()
-    return
+    return false
   }
 
   clearPrayerDataError()
@@ -187,6 +190,8 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
   if (isToday) {
     publishTimings(timings, mode)
   }
+
+  return true
 }
 
 /**
@@ -448,11 +453,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 4. Load prayer data (Mawaqit or Aladhan)
     const mosqueSlug = getMosqueSlug()
-    await runStartupStepWithTimeout(
+    const initialPrayerDataLoaded = await runStartupStepWithTimeout(
       'initial prayer data',
       () => loadPrayerData(mosqueSlug),
-      STARTUP_PRAYER_DATA_TIMEOUT_MS
+      STARTUP_PRAYER_DATA_TIMEOUT_MS,
+      false
     )
+    if (!initialPrayerDataLoaded) showPrayerDataError()
 
     // 5. Date navigation (arrows to browse past/future prayer times)
     initDateNavigation(async (offset) => {

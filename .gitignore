@@ -29,6 +29,8 @@ aider.conf.yaml
 .github/workflows/codex*.yaml
 .github/copilot-instructions.md
 .github/skills/
+PRODUCT.md
+.workflow/
 
 # Logs temporaires
 build_log.txt
