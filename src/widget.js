@@ -118,7 +118,8 @@ function onTimings(event) {
 
 /**
  * Programme une réémission de 'widget-ready' juste après minuit, pour que le
- * main renvoie le dernier payload (le main non plus ne refetch pas à minuit).
+ * main renvoie le dernier payload. Le main recharge aussi les horaires au
+ * changement de jour (initDayChangeRefresh) et les repousse via publishTimings.
  */
 function armMidnightRollover() {
   if (midnightTimeout) clearTimeout(midnightTimeout)

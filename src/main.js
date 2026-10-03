@@ -40,12 +40,14 @@ import { publishTimings, initWidgetBridge } from './modules/widget-bridge.js'
 import { applyPlatformClass, isMobile } from './modules/platform.js'
 import { initModalA11y } from './modules/modal-a11y.js'
 import { revealApp, runStartupStep, runStartupStepWithTimeout, createLatestGuard } from './modules/startup.js'
+import { formatLocalDate } from './modules/local-date.js'
 
 // Intervals
 let fastingInterval = null
 const STARTUP_GEOLOCATION_TIMEOUT_MS = 3500
 const STARTUP_AUTO_SELECT_TIMEOUT_MS = 4500
 const STARTUP_PRAYER_DATA_TIMEOUT_MS = 8000
+const DAY_CHANGE_CHECK_MS = 60_000
 
 // Dernier recours documenté quand aucune position n'est disponible :
 // GPS → coords sauvegardées → Paris
@@ -273,6 +275,26 @@ function initPrayerRetry() {
 }
 
 /**
+ * Recharge les horaires au changement de jour. L'app vit des jours dans le tray
+ * (autostart + close-to-tray) : sans ça, compte à rebours, rappels et mini-widget
+ * restent sur les horaires de la veille. Vérification par minute plutôt qu'un
+ * timer à minuit, qui serait retardé par la mise en veille du PC.
+ */
+function initDayChangeRefresh() {
+  let loadedDay = formatLocalDate()
+  setInterval(() => {
+    const today = formatLocalDate()
+    if (today === loadedDay) return
+    loadedDay = today
+    runStartupStepWithTimeout(
+      'day change prayer data',
+      () => loadPrayerData(getMosqueSlug(), getOffset()),
+      STARTUP_PRAYER_DATA_TIMEOUT_MS
+    )
+  }, DAY_CHANGE_CHECK_MS)
+}
+
+/**
  * Show/hide today-only widgets (countdown, fasting progress).
  */
 function setTodayOnlyWidgetsVisible(isToday) {
@@ -471,6 +493,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       false
     )
     if (initialPrayerDataLoaded === false) showPrayerDataError()
+
+    // 4.1. Rechargement automatique au changement de jour
+    initDayChangeRefresh()
 
     // 5. Date navigation (arrows to browse past/future prayer times)
     initDateNavigation(async (offset) => {
