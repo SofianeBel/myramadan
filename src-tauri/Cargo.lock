@@ -2360,7 +2360,7 @@ checksum = "743fb55ba31b18fb1ecef6bdc9aa2743314978ac084044301a7eee33fb99a20d"
 
 [[package]]
 name = "myramadan"
-version = "1.10.1"
+version = "1.10.2"
 dependencies = [
  "reqwest 0.12.28",
  "serde",

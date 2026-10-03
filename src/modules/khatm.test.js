@@ -7,6 +7,7 @@ import {
   defaultTargetDate,
   setHijriContext,
   rollupOldPages,
+  initKhatm,
 } from './khatm.js'
 import storage from './storage.js'
 
@@ -354,5 +355,34 @@ describe('defaultTargetDate', () => {
     const result = defaultTargetDate(hijri, '2026-03-30')
     // +(30 − 30) = 0 → clampé à 1
     expect(result).toBe('2026-03-31')
+  })
+})
+
+// ─── initKhatm : re-rendu sur khatm-refresh ───
+
+describe('initKhatm — khatm-refresh', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '<div id="khatm-card"><div id="khatm-body"></div></div>'
+  })
+
+  it('ne réinitialise pas le formulaire en cours de saisie sans plan actif', () => {
+    initKhatm()
+    const offsetInput = document.querySelectorAll('#khatm-body .khatm-input')[2]
+    offsetInput.value = '120'
+
+    document.dispatchEvent(new CustomEvent('khatm-refresh'))
+
+    const after = document.querySelectorAll('#khatm-body .khatm-input')[2]
+    expect(after).toBe(offsetInput)
+    expect(after.value).toBe('120')
+  })
+
+  it('re-rend la carte quand un plan est actif', () => {
+    initKhatm()
+    storage.set('khatmPlan', basePlan({ startDate: '2000-01-01', targetDate: '2999-12-31' }))
+
+    document.dispatchEvent(new CustomEvent('khatm-refresh'))
+
+    expect(document.querySelector('#khatm-body .khatm-pages-line')).not.toBeNull()
   })
 })

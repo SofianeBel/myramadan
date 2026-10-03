@@ -39,13 +39,15 @@ import { initBackup } from './modules/backup.js'
 import { publishTimings, initWidgetBridge } from './modules/widget-bridge.js'
 import { applyPlatformClass, isMobile } from './modules/platform.js'
 import { initModalA11y } from './modules/modal-a11y.js'
-import { revealApp, runStartupStep, runStartupStepWithTimeout } from './modules/startup.js'
+import { revealApp, runStartupStep, runStartupStepWithTimeout, createLatestGuard } from './modules/startup.js'
+import { formatLocalDate } from './modules/local-date.js'
 
 // Intervals
 let fastingInterval = null
 const STARTUP_GEOLOCATION_TIMEOUT_MS = 3500
 const STARTUP_AUTO_SELECT_TIMEOUT_MS = 4500
 const STARTUP_PRAYER_DATA_TIMEOUT_MS = 8000
+const DAY_CHANGE_CHECK_MS = 60_000
 
 // Dernier recours documenté quand aucune position n'est disponible :
 // GPS → coords sauvegardées → Paris
@@ -53,6 +55,10 @@ const PARIS_FALLBACK = { lat: 48.8566, lon: 2.3522 }
 
 // Derniers arguments de chargement — utilisés par le bouton « Réessayer »
 let lastLoadArgs = { mosqueSlug: null, offset: 0 }
+
+// Chargements concurrents (timeout au démarrage, navigation, réglages, réessai) :
+// seul le plus récent a le droit de modifier l'interface
+const beginPrayerLoad = createLatestGuard()
 
 
 /**
@@ -74,8 +80,11 @@ function updateRamadanProgress(day) {
  * Load prayer data and refresh all dependent UI.
  * Strategy: Mawaqit (if mosque set) → Aladhan (fallback)
  * Hijri date: always from Aladhan (Mawaqit doesn't provide it)
+ * @returns {Promise<boolean|null>} true = chargé, false = échec,
+ *   null = remplacé par un chargement plus récent (aucune modification de l'UI)
  */
 async function loadPrayerData(mosqueSlug, offset = 0) {
+  const isCurrent = beginPrayerLoad()
   let timings = null
   let currentHijriDate = null
   const isToday = offset === 0
@@ -107,6 +116,7 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
   let usedMawaqit = false
   if (mosqueSlug && isToday) {
     const mawaqitData = await fetchMawaqitTimes(mosqueSlug)
+    if (!isCurrent()) return null
     if (mawaqitData) {
       timings = mawaqitData.timings
       usedMawaqit = true
@@ -116,6 +126,7 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
   // 2. Fallback (or non-today): Aladhan with optional date
   if (!timings) {
     const aladhanData = await fetchPrayerTimes(locationParams, aladhanDate)
+    if (!isCurrent()) return null
     if (aladhanData) {
       timings = aladhanData.timings
       currentHijriDate = aladhanData.hijriDate
@@ -127,6 +138,7 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
   if (mosqueSlug && isToday && timings) {
     // Mawaqit provided times for today — fetch Hijri separately
     const hijriDate = await fetchHijriDate(locationParams)
+    if (!isCurrent()) return null
     if (hijriDate) {
       currentHijriDate = hijriDate
       updateDates(hijriDate, 0)
@@ -134,6 +146,7 @@ async function loadPrayerData(mosqueSlug, offset = 0) {
   } else if (mosqueSlug && !isToday && timings) {
     // Mosque set but non-today — Hijri needs date param
     const hijriDate = await fetchHijriDate(locationParams, aladhanDate)
+    if (!isCurrent()) return null
     if (hijriDate) {
       currentHijriDate = hijriDate
       updateDates(hijriDate, offset)
@@ -259,6 +272,26 @@ function initPrayerRetry() {
       retryBtn.disabled = false
     }
   })
+}
+
+/**
+ * Recharge les horaires au changement de jour. L'app vit des jours dans le tray
+ * (autostart + close-to-tray) : sans ça, compte à rebours, rappels et mini-widget
+ * restent sur les horaires de la veille. Vérification par minute plutôt qu'un
+ * timer à minuit, qui serait retardé par la mise en veille du PC.
+ */
+function initDayChangeRefresh() {
+  let loadedDay = formatLocalDate()
+  setInterval(() => {
+    const today = formatLocalDate()
+    if (today === loadedDay) return
+    loadedDay = today
+    runStartupStepWithTimeout(
+      'day change prayer data',
+      () => loadPrayerData(getMosqueSlug(), getOffset()),
+      STARTUP_PRAYER_DATA_TIMEOUT_MS
+    )
+  }, DAY_CHANGE_CHECK_MS)
 }
 
 /**
@@ -459,7 +492,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       STARTUP_PRAYER_DATA_TIMEOUT_MS,
       false
     )
-    if (!initialPrayerDataLoaded) showPrayerDataError()
+    if (initialPrayerDataLoaded === false) showPrayerDataError()
+
+    // 4.1. Rechargement automatique au changement de jour
+    initDayChangeRefresh()
 
     // 5. Date navigation (arrows to browse past/future prayer times)
     initDateNavigation(async (offset) => {

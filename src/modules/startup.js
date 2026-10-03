@@ -37,6 +37,20 @@ export async function runStartupStepWithTimeout(name, task, timeoutMs, fallback 
   }
 }
 
+/**
+ * Garde « dernier appel gagnant » pour les chargements concurrents.
+ * Chaque appel de begin() invalide les précédents ; la fonction renvoyée
+ * indique si cet appel est toujours le plus récent.
+ * @returns {() => () => boolean}
+ */
+export function createLatestGuard() {
+  let current = 0
+  return function begin() {
+    const id = ++current
+    return () => id === current
+  }
+}
+
 export function revealApp() {
   document.getElementById('splash-screen')?.classList.add('hidden')
   document.querySelector('.app-container')?.classList.add('app-ready')

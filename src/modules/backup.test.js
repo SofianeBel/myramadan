@@ -10,6 +10,7 @@ import {
   buildExport,
   validateImport,
   summarizeImport,
+  applyImport,
 } from './backup.js'
 import storage from './storage.js'
 
@@ -280,5 +281,24 @@ describe('summarizeImport', () => {
     expect(summary.practiceDays).toBe(0)
     expect(summary.journalEntries).toBe(0)
     expect(summary.mosqueName).toBeNull()
+  })
+})
+
+// ─── applyImport ───
+
+describe('applyImport', () => {
+  it('remplace les données et supprime les clés absentes de la sauvegarde', () => {
+    storage.set('mosqueSlug', 'ancienne-mosquee')
+    storage.set('khatmPlan', { active: true, rolledUpPages: 200 })
+    storage.set('journal', { '2026-06-01': 'ancien' })
+    storage.set('prayerTimesCache', { garde: true })
+
+    applyImport({ journal: { '2026-06-10': 'nouveau' } })
+
+    expect(storage.get('journal')).toEqual({ '2026-06-10': 'nouveau' })
+    expect(storage.get('mosqueSlug')).toBeNull()
+    expect(storage.get('khatmPlan')).toBeNull()
+    // Hors whitelist (caches) : jamais touché par l'import
+    expect(storage.get('prayerTimesCache')).toEqual({ garde: true })
   })
 })

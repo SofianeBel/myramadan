@@ -5,6 +5,16 @@ Toutes les modifications notables de GuideME Ramadan Edition sont documentées d
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
+## [1.10.2] - 2026-10-03
+
+### Corrigé
+
+- **Horaires / jour suivant** — l'app recharge les horaires au changement de jour (vérification par minute, robuste à la mise en veille). Avant, l'app restée dans le tray gardait les horaires de la veille (compte à rebours, rappels, mini-widget)
+- **Horaires / chargements concurrents** — un chargement plus ancien (timeout au démarrage, navigation, réglages, réessai) ne peut plus écraser des données plus récentes, afficher l'erreur ou couper les notifications (`createLatestGuard`)
+- **Khatm** — le formulaire de création n'est plus reconstruit (saisie effacée) à chaque enregistrement du suivi
+- **Mini-widget** — la fermeture par l'OS (Alt+F4) émet `guideme://widget-hidden` : `widgetEnabled` et la case du réglage restent synchronisés
+- **Import de sauvegarde** — remplacement total : les clés de la whitelist absentes de la sauvegarde sont supprimées ; texte de confirmation clarifié
+
 ## [1.10.1] - 2026-06-17
 
 ### Corrigé

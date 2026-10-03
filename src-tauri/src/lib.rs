@@ -182,6 +182,11 @@ pub fn run() {
                 if let tauri::WindowEvent::CloseRequested { api, .. } = _event {
                     api.prevent_close();
                     let _ = _window.hide();
+                    // Fermeture OS du widget (Alt+F4…) : prévient le main comme le
+                    // bouton ×, sinon `widgetEnabled` reste vrai et la case cochée.
+                    if _window.label() == "widget" {
+                        let _ = _window.emit_to("main", "guideme://widget-hidden", ());
+                    }
                 }
             }
         })

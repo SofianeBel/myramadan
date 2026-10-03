@@ -5,9 +5,20 @@
 
 import storage from './storage.js'
 
-export const APP_VERSION = '1.10.1'
+export const APP_VERSION = '1.10.2'
 
 const CHANGELOG_ENTRIES = [
+  {
+    version: '1.10.2',
+    date: '3 octobre 2026',
+    changes: [
+      { type: 'fix', text: 'Horaires — rechargement automatique au changement de jour (l\'app restée ouverte dans la zone de notification gardait les horaires de la veille)' },
+      { type: 'fix', text: 'Horaires — un ancien chargement lent ne peut plus écraser des horaires plus récents ni couper les rappels' },
+      { type: 'fix', text: 'Khatm — le formulaire ne s\'efface plus quand vous cochez une prière dans le suivi' },
+      { type: 'fix', text: 'Mini-widget — la fermeture par Alt+F4 décoche bien le réglage' },
+      { type: 'fix', text: 'Import de sauvegarde — remplace désormais toutes les données (plus de mélange avec l\'ancien plan de khatm ou l\'ancienne mosquée)' },
+    ],
+  },
   {
     version: '1.10.1',
     date: '17 juin 2026',
