@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 
-import { revealApp, runStartupStep, runStartupStepWithTimeout } from './startup.js'
+import { revealApp, runStartupStep, runStartupStepWithTimeout, createLatestGuard } from './startup.js'
 
 describe('startup guards', () => {
   beforeEach(() => {
@@ -49,5 +49,17 @@ describe('startup guards', () => {
 
     expect(document.getElementById('splash-screen').classList.contains('hidden')).toBe(true)
     expect(document.querySelector('.app-container').classList.contains('app-ready')).toBe(true)
+  })
+})
+
+describe('createLatestGuard', () => {
+  it("invalide un appel dès qu'un appel plus récent commence", () => {
+    const begin = createLatestGuard()
+    const first = begin()
+    expect(first()).toBe(true)
+
+    const second = begin()
+    expect(first()).toBe(false)
+    expect(second()).toBe(true)
   })
 })
