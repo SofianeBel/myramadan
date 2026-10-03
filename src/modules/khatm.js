@@ -460,6 +460,11 @@ export function initKhatm() {
 
   renderKhatm()
 
-  // Re-rendu en direct quand le tracker enregistre des pages
-  document.addEventListener('khatm-refresh', renderKhatm)
+  // Re-rendu en direct quand le tracker enregistre des pages.
+  // Sans plan actif, la carte affiche le formulaire : le reconstruire effacerait
+  // la saisie en cours (et les pages du tracker ne le concernent pas).
+  document.addEventListener('khatm-refresh', () => {
+    const current = getPlan()
+    if (current && current.active) renderKhatm()
+  })
 }
