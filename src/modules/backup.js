@@ -168,6 +168,22 @@ export function summarizeImport(data) {
   }
 }
 
+/**
+ * Applique une sauvegarde validée en remplacement total : chaque clé de la
+ * whitelist absente de la sauvegarde est supprimée (sinon l'ancien état — plan
+ * de khatm, mosquée… — se mélangerait aux données importées).
+ * @param {Object} data Données validées (issues de validateImport)
+ */
+export function applyImport(data) {
+  for (const key of EXPORT_KEYS) {
+    if (Object.prototype.hasOwnProperty.call(data, key)) {
+      storage.set(key, data[key])
+    } else {
+      storage.remove(key)
+    }
+  }
+}
+
 // ─── UI helpers ───
 
 // Toast de succès (mirroir léger de showAutoSelectToast dans main.js — pas d'import croisé)
@@ -318,15 +334,13 @@ export async function importData() {
     const practiceDays = summary.practiceDays
     const journalEntries = summary.journalEntries
     const confirmed = await ask(
-      `${practiceDays} jour${practiceDays > 1 ? 's' : ''} de suivi et ${journalEntries} entrée${journalEntries > 1 ? 's' : ''} de journal seront remplacés. Continuer ?`,
+      `Vos données actuelles seront remplacées par cette sauvegarde (${practiceDays} jour${practiceDays > 1 ? 's' : ''} de suivi, ${journalEntries} entrée${journalEntries > 1 ? 's' : ''} de journal). Continuer ?`,
       { title: 'Importer la sauvegarde', kind: 'warning' }
     )
 
     if (!confirmed) return
 
-    for (const [key, value] of Object.entries(result.data)) {
-      storage.set(key, value)
-    }
+    applyImport(result.data)
 
     // Obligatoire : forcer l'écriture disque avant le reload (writes fire-and-forget sinon perdus)
     await storage.flush()
